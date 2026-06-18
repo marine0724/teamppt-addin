@@ -1,0 +1,983 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<pkg:package xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:ns3="http://schemas.microsoft.com/office/drawing/2014/main">
+  <pkg:part pkg:name="/ppt/slides/slide1.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml">
+    <pkg:xmlData>
+      <p:sld>
+        <p:cSld>
+          <p:spTree>
+            <p:nvGrpSpPr>
+              <p:cNvPr id="1" name="">
+                <a:extLst>
+                  <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                    <ns3:creationId id="{A79E8B7A-A5F8-AC5C-E97C-9DE1BAD3F375}"/>
+                  </a:ext>
+                </a:extLst>
+              </p:cNvPr>
+              <p:cNvGrpSpPr/>
+              <p:nvPr/>
+            </p:nvGrpSpPr>
+            <p:grpSpPr>
+              <a:xfrm>
+                <a:off x="0" y="0"/>
+                <a:ext cx="0" cy="0"/>
+                <a:chOff x="0" y="0"/>
+                <a:chExt cx="0" cy="0"/>
+              </a:xfrm>
+            </p:grpSpPr>
+            <p:sp>
+              <p:nvSpPr>
+                <p:cNvPr id="3" name="Text Box 5">
+                  <a:extLst>
+                    <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                      <ns3:creationId id="{3A5A3871-16A0-A3C3-66A4-88BB717C4916}"/>
+                    </a:ext>
+                  </a:extLst>
+                </p:cNvPr>
+                <p:cNvSpPr txBox="1">
+                  <a:spLocks noChangeArrowheads="1"/>
+                </p:cNvSpPr>
+                <p:nvPr/>
+              </p:nvSpPr>
+              <p:spPr bwMode="auto">
+                <a:xfrm>
+                  <a:off x="489820" y="553465"/>
+                  <a:ext cx="429605" cy="391715"/>
+                </a:xfrm>
+                <a:prstGeom prst="rect">
+                  <a:avLst/>
+                </a:prstGeom>
+                <a:noFill/>
+                <a:ln w="9525">
+                  <a:noFill/>
+                  <a:miter lim="800000"/>
+                  <a:headEnd/>
+                  <a:tailEnd/>
+                </a:ln>
+              </p:spPr>
+              <p:txBody>
+                <a:bodyPr wrap="none" lIns="0" tIns="0" rIns="0" bIns="0" anchor="b">
+                  <a:spAutoFit/>
+                  <a:scene3d>
+                    <a:camera prst="orthographicFront"/>
+                    <a:lightRig rig="threePt" dir="t"/>
+                  </a:scene3d>
+                  <a:sp3d>
+                    <a:bevelT w="0" h="0"/>
+                  </a:sp3d>
+                </a:bodyPr>
+                <a:lstStyle>
+                  <a:defPPr>
+                    <a:defRPr lang="ko-KR"/>
+                  </a:defPPr>
+                  <a:lvl1pPr lvl="0" defTabSz="1067745" fontAlgn="base" latinLnBrk="0">
+                    <a:spcBef>
+                      <a:spcPct val="0"/>
+                    </a:spcBef>
+                    <a:spcAft>
+                      <a:spcPts val="0"/>
+                    </a:spcAft>
+                    <a:defRPr kumimoji="1" sz="1200">
+                      <a:gradFill>
+                        <a:gsLst>
+                          <a:gs pos="0">
+                            <a:srgbClr val="595959"/>
+                          </a:gs>
+                          <a:gs pos="100000">
+                            <a:srgbClr val="595959"/>
+                          </a:gs>
+                        </a:gsLst>
+                        <a:lin ang="16200000" scaled="1"/>
+                      </a:gradFill>
+                      <a:latin typeface="LG스마트체 SemiBold" panose="020B0600000101010101" pitchFamily="50" charset="-127"/>
+                      <a:ea typeface="LG스마트체 SemiBold" panose="020B0600000101010101" pitchFamily="50" charset="-127"/>
+                      <a:cs typeface="굴림" pitchFamily="50" charset="-127"/>
+                    </a:defRPr>
+                  </a:lvl1pPr>
+                </a:lstStyle>
+                <a:p>
+                  <a:pPr marL="0" marR="0" lvl="0" indent="0" algn="l" defTabSz="1067745" rtl="0" eaLnBrk="1" fontAlgn="base" latinLnBrk="0" hangingPunct="1">
+                    <a:lnSpc>
+                      <a:spcPct val="100000"/>
+                    </a:lnSpc>
+                    <a:spcBef>
+                      <a:spcPct val="0"/>
+                    </a:spcBef>
+                    <a:spcAft>
+                      <a:spcPts val="0"/>
+                    </a:spcAft>
+                    <a:buClrTx/>
+                    <a:buSzTx/>
+                    <a:buFontTx/>
+                    <a:buNone/>
+                    <a:tabLst/>
+                    <a:defRPr/>
+                  </a:pPr>
+                  <a:r>
+                    <a:rPr kumimoji="1" lang="en-US" altLang="ko-KR" sz="2800" i="0" u="none" strike="noStrike" kern="0" cap="none" spc="-20" normalizeH="0" noProof="0" dirty="0">
+                      <a:gradFill>
+                        <a:gsLst>
+                          <a:gs pos="100000">
+                            <a:srgbClr val="3472FE"/>
+                          </a:gs>
+                          <a:gs pos="0">
+                            <a:srgbClr val="3472FE">
+                              <a:lumMod val="80000"/>
+                            </a:srgbClr>
+                          </a:gs>
+                        </a:gsLst>
+                        <a:lin ang="2700000" scaled="0"/>
+                      </a:gradFill>
+                      <a:effectLst/>
+                      <a:uLnTx/>
+                      <a:uFillTx/>
+                      <a:latin typeface="페이퍼로지 8 ExtraBold" pitchFamily="2" charset="-127"/>
+                      <a:ea typeface="페이퍼로지 8 ExtraBold" pitchFamily="2" charset="-127"/>
+                    </a:rPr>
+                    <a:t>01</a:t>
+                  </a:r>
+                  <a:endParaRPr kumimoji="1" lang="ko-KR" altLang="en-US" sz="2000" i="0" u="none" strike="noStrike" kern="0" cap="none" spc="-20" normalizeH="0" noProof="0" dirty="0">
+                    <a:gradFill>
+                      <a:gsLst>
+                        <a:gs pos="100000">
+                          <a:srgbClr val="3472FE"/>
+                        </a:gs>
+                        <a:gs pos="0">
+                          <a:srgbClr val="3472FE">
+                            <a:lumMod val="80000"/>
+                          </a:srgbClr>
+                        </a:gs>
+                      </a:gsLst>
+                      <a:lin ang="2700000" scaled="0"/>
+                    </a:gradFill>
+                    <a:effectLst/>
+                    <a:uLnTx/>
+                    <a:uFillTx/>
+                    <a:latin typeface="페이퍼로지 7 Bold" pitchFamily="2" charset="-127"/>
+                    <a:ea typeface="페이퍼로지 7 Bold" pitchFamily="2" charset="-127"/>
+                  </a:endParaRPr>
+                </a:p>
+              </p:txBody>
+            </p:sp>
+            <p:sp>
+              <p:nvSpPr>
+                <p:cNvPr id="4" name="Text Box 5">
+                  <a:extLst>
+                    <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                      <ns3:creationId id="{5C75D568-42CC-46CB-0202-677BE7462912}"/>
+                    </a:ext>
+                  </a:extLst>
+                </p:cNvPr>
+                <p:cNvSpPr txBox="1">
+                  <a:spLocks noChangeArrowheads="1"/>
+                </p:cNvSpPr>
+                <p:nvPr/>
+              </p:nvSpPr>
+              <p:spPr bwMode="auto">
+                <a:xfrm>
+                  <a:off x="971807" y="638836"/>
+                  <a:ext cx="1078384" cy="279797"/>
+                </a:xfrm>
+                <a:prstGeom prst="rect">
+                  <a:avLst/>
+                </a:prstGeom>
+                <a:noFill/>
+                <a:ln w="9525">
+                  <a:noFill/>
+                  <a:miter lim="800000"/>
+                  <a:headEnd/>
+                  <a:tailEnd/>
+                </a:ln>
+              </p:spPr>
+              <p:txBody>
+                <a:bodyPr wrap="none" lIns="0" tIns="0" rIns="0" bIns="0" anchor="b">
+                  <a:spAutoFit/>
+                  <a:scene3d>
+                    <a:camera prst="orthographicFront"/>
+                    <a:lightRig rig="threePt" dir="t"/>
+                  </a:scene3d>
+                  <a:sp3d>
+                    <a:bevelT w="0" h="0"/>
+                  </a:sp3d>
+                </a:bodyPr>
+                <a:lstStyle>
+                  <a:defPPr>
+                    <a:defRPr lang="ko-KR"/>
+                  </a:defPPr>
+                  <a:lvl1pPr lvl="0" defTabSz="1067745" fontAlgn="base" latinLnBrk="0">
+                    <a:spcBef>
+                      <a:spcPct val="0"/>
+                    </a:spcBef>
+                    <a:spcAft>
+                      <a:spcPts val="0"/>
+                    </a:spcAft>
+                    <a:defRPr kumimoji="1" sz="1200">
+                      <a:gradFill>
+                        <a:gsLst>
+                          <a:gs pos="0">
+                            <a:srgbClr val="595959"/>
+                          </a:gs>
+                          <a:gs pos="100000">
+                            <a:srgbClr val="595959"/>
+                          </a:gs>
+                        </a:gsLst>
+                        <a:lin ang="16200000" scaled="1"/>
+                      </a:gradFill>
+                      <a:latin typeface="LG스마트체 SemiBold" panose="020B0600000101010101" pitchFamily="50" charset="-127"/>
+                      <a:ea typeface="LG스마트체 SemiBold" panose="020B0600000101010101" pitchFamily="50" charset="-127"/>
+                      <a:cs typeface="굴림" pitchFamily="50" charset="-127"/>
+                    </a:defRPr>
+                  </a:lvl1pPr>
+                </a:lstStyle>
+                <a:p>
+                  <a:pPr marL="0" marR="0" lvl="0" indent="0" algn="l" defTabSz="1067745" rtl="0" eaLnBrk="1" fontAlgn="base" latinLnBrk="0" hangingPunct="1">
+                    <a:lnSpc>
+                      <a:spcPct val="100000"/>
+                    </a:lnSpc>
+                    <a:spcBef>
+                      <a:spcPct val="0"/>
+                    </a:spcBef>
+                    <a:spcAft>
+                      <a:spcPts val="0"/>
+                    </a:spcAft>
+                    <a:buClrTx/>
+                    <a:buSzTx/>
+                    <a:buFontTx/>
+                    <a:buNone/>
+                    <a:tabLst/>
+                    <a:defRPr/>
+                  </a:pPr>
+                  <a:r>
+                    <a:rPr kumimoji="1" lang="ko-KR" altLang="en-US" sz="2000" i="0" u="none" strike="noStrike" kern="0" cap="none" spc="0" normalizeH="0" baseline="0" noProof="0" dirty="0">
+                      <a:solidFill>
+                        <a:prstClr val="black">
+                          <a:lumMod val="75000"/>
+                          <a:lumOff val="25000"/>
+                        </a:prstClr>
+                      </a:solidFill>
+                      <a:effectLst/>
+                      <a:uLnTx/>
+                      <a:uFillTx/>
+                      <a:latin typeface="페이퍼로지 7 Bold" pitchFamily="2" charset="-127"/>
+                      <a:ea typeface="페이퍼로지 7 Bold" pitchFamily="2" charset="-127"/>
+                    </a:rPr>
+                    <a:t>페이지 제목</a:t>
+                  </a:r>
+                </a:p>
+              </p:txBody>
+            </p:sp>
+            <p:sp>
+              <p:nvSpPr>
+                <p:cNvPr id="5" name="사각형: 둥근 모서리 4">
+                  <a:extLst>
+                    <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                      <ns3:creationId id="{795884FC-8B8C-D348-B437-43248CD38D41}"/>
+                    </a:ext>
+                  </a:extLst>
+                </p:cNvPr>
+                <p:cNvSpPr/>
+                <p:nvPr/>
+              </p:nvSpPr>
+              <p:spPr>
+                <a:xfrm>
+                  <a:off x="334963" y="188913"/>
+                  <a:ext cx="11522075" cy="286357"/>
+                </a:xfrm>
+                <a:prstGeom prst="roundRect">
+                  <a:avLst>
+                    <a:gd name="adj" fmla="val 50000"/>
+                  </a:avLst>
+                </a:prstGeom>
+                <a:solidFill>
+                  <a:srgbClr val="EEEEEE"/>
+                </a:solidFill>
+                <a:ln>
+                  <a:noFill/>
+                </a:ln>
+              </p:spPr>
+              <p:style>
+                <a:lnRef idx="2">
+                  <a:schemeClr val="accent1">
+                    <a:shade val="15000"/>
+                  </a:schemeClr>
+                </a:lnRef>
+                <a:fillRef idx="1">
+                  <a:schemeClr val="accent1"/>
+                </a:fillRef>
+                <a:effectRef idx="0">
+                  <a:schemeClr val="accent1"/>
+                </a:effectRef>
+                <a:fontRef idx="minor">
+                  <a:schemeClr val="lt1"/>
+                </a:fontRef>
+              </p:style>
+              <p:txBody>
+                <a:bodyPr rtlCol="0" anchor="ctr"/>
+                <a:lstStyle/>
+                <a:p>
+                  <a:pPr algn="ctr"/>
+                  <a:endParaRPr lang="ko-KR" altLang="en-US"/>
+                </a:p>
+              </p:txBody>
+            </p:sp>
+            <p:sp>
+              <p:nvSpPr>
+                <p:cNvPr id="6" name="타원 5">
+                  <a:extLst>
+                    <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                      <ns3:creationId id="{16981227-F7BF-5685-2699-74DE78DF1F82}"/>
+                    </a:ext>
+                  </a:extLst>
+                </p:cNvPr>
+                <p:cNvSpPr/>
+                <p:nvPr/>
+              </p:nvSpPr>
+              <p:spPr>
+                <a:xfrm>
+                  <a:off x="11230353" y="552754"/>
+                  <a:ext cx="49177" cy="49177"/>
+                </a:xfrm>
+                <a:prstGeom prst="ellipse">
+                  <a:avLst/>
+                </a:prstGeom>
+                <a:noFill/>
+                <a:ln w="6350">
+                  <a:solidFill>
+                    <a:srgbClr val="3472FE"/>
+                  </a:solidFill>
+                </a:ln>
+              </p:spPr>
+              <p:style>
+                <a:lnRef idx="2">
+                  <a:schemeClr val="accent1">
+                    <a:shade val="50000"/>
+                  </a:schemeClr>
+                </a:lnRef>
+                <a:fillRef idx="1">
+                  <a:schemeClr val="accent1"/>
+                </a:fillRef>
+                <a:effectRef idx="0">
+                  <a:schemeClr val="accent1"/>
+                </a:effectRef>
+                <a:fontRef idx="minor">
+                  <a:schemeClr val="lt1"/>
+                </a:fontRef>
+              </p:style>
+              <p:txBody>
+                <a:bodyPr rtlCol="0" anchor="ctr"/>
+                <a:lstStyle/>
+                <a:p>
+                  <a:pPr marL="0" marR="0" lvl="0" indent="0" algn="ctr" defTabSz="914400" rtl="0" eaLnBrk="1" fontAlgn="auto" latinLnBrk="1" hangingPunct="1">
+                    <a:lnSpc>
+                      <a:spcPct val="100000"/>
+                    </a:lnSpc>
+                    <a:spcBef>
+                      <a:spcPts val="0"/>
+                    </a:spcBef>
+                    <a:spcAft>
+                      <a:spcPts val="0"/>
+                    </a:spcAft>
+                    <a:buClrTx/>
+                    <a:buSzTx/>
+                    <a:buFontTx/>
+                    <a:buNone/>
+                    <a:tabLst/>
+                    <a:defRPr/>
+                  </a:pPr>
+                  <a:endParaRPr kumimoji="0" lang="ko-KR" altLang="en-US" sz="2000" b="0" i="0" u="none" strike="noStrike" kern="1200" cap="none" spc="0" normalizeH="0" baseline="0" noProof="0" dirty="0">
+                    <a:ln>
+                      <a:solidFill>
+                        <a:srgbClr val="4BACC6">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                    </a:ln>
+                    <a:solidFill>
+                      <a:prstClr val="white"/>
+                    </a:solidFill>
+                    <a:effectLst/>
+                    <a:uLnTx/>
+                    <a:uFillTx/>
+                    <a:latin typeface="페이퍼로지 4 Regular" pitchFamily="2" charset="-127"/>
+                    <a:ea typeface="페이퍼로지 4 Regular" pitchFamily="2" charset="-127"/>
+                    <a:cs typeface="+mn-cs"/>
+                  </a:endParaRPr>
+                </a:p>
+              </p:txBody>
+            </p:sp>
+            <p:sp>
+              <p:nvSpPr>
+                <p:cNvPr id="7" name="타원 6">
+                  <a:extLst>
+                    <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                      <ns3:creationId id="{BAD38CFA-8A35-96B8-8975-C2B5D4E7CE29}"/>
+                    </a:ext>
+                  </a:extLst>
+                </p:cNvPr>
+                <p:cNvSpPr/>
+                <p:nvPr/>
+              </p:nvSpPr>
+              <p:spPr>
+                <a:xfrm>
+                  <a:off x="11104075" y="552754"/>
+                  <a:ext cx="49177" cy="49177"/>
+                </a:xfrm>
+                <a:prstGeom prst="ellipse">
+                  <a:avLst/>
+                </a:prstGeom>
+                <a:noFill/>
+                <a:ln w="6350">
+                  <a:solidFill>
+                    <a:srgbClr val="3472FE"/>
+                  </a:solidFill>
+                </a:ln>
+              </p:spPr>
+              <p:style>
+                <a:lnRef idx="2">
+                  <a:schemeClr val="accent1">
+                    <a:shade val="50000"/>
+                  </a:schemeClr>
+                </a:lnRef>
+                <a:fillRef idx="1">
+                  <a:schemeClr val="accent1"/>
+                </a:fillRef>
+                <a:effectRef idx="0">
+                  <a:schemeClr val="accent1"/>
+                </a:effectRef>
+                <a:fontRef idx="minor">
+                  <a:schemeClr val="lt1"/>
+                </a:fontRef>
+              </p:style>
+              <p:txBody>
+                <a:bodyPr rtlCol="0" anchor="ctr"/>
+                <a:lstStyle/>
+                <a:p>
+                  <a:pPr marL="0" marR="0" lvl="0" indent="0" algn="ctr" defTabSz="914400" rtl="0" eaLnBrk="1" fontAlgn="auto" latinLnBrk="1" hangingPunct="1">
+                    <a:lnSpc>
+                      <a:spcPct val="100000"/>
+                    </a:lnSpc>
+                    <a:spcBef>
+                      <a:spcPts val="0"/>
+                    </a:spcBef>
+                    <a:spcAft>
+                      <a:spcPts val="0"/>
+                    </a:spcAft>
+                    <a:buClrTx/>
+                    <a:buSzTx/>
+                    <a:buFontTx/>
+                    <a:buNone/>
+                    <a:tabLst/>
+                    <a:defRPr/>
+                  </a:pPr>
+                  <a:endParaRPr kumimoji="0" lang="ko-KR" altLang="en-US" sz="2000" b="0" i="0" u="none" strike="noStrike" kern="1200" cap="none" spc="0" normalizeH="0" baseline="0" noProof="0" dirty="0">
+                    <a:ln>
+                      <a:solidFill>
+                        <a:srgbClr val="4BACC6">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                    </a:ln>
+                    <a:solidFill>
+                      <a:prstClr val="white"/>
+                    </a:solidFill>
+                    <a:effectLst/>
+                    <a:uLnTx/>
+                    <a:uFillTx/>
+                    <a:latin typeface="페이퍼로지 4 Regular" pitchFamily="2" charset="-127"/>
+                    <a:ea typeface="페이퍼로지 4 Regular" pitchFamily="2" charset="-127"/>
+                    <a:cs typeface="+mn-cs"/>
+                  </a:endParaRPr>
+                </a:p>
+              </p:txBody>
+            </p:sp>
+            <p:sp>
+              <p:nvSpPr>
+                <p:cNvPr id="8" name="타원 7">
+                  <a:extLst>
+                    <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                      <ns3:creationId id="{E05B3113-8E27-A760-4D3E-646C7BCFAEA3}"/>
+                    </a:ext>
+                  </a:extLst>
+                </p:cNvPr>
+                <p:cNvSpPr/>
+                <p:nvPr/>
+              </p:nvSpPr>
+              <p:spPr>
+                <a:xfrm>
+                  <a:off x="11482907" y="552754"/>
+                  <a:ext cx="49177" cy="49177"/>
+                </a:xfrm>
+                <a:prstGeom prst="ellipse">
+                  <a:avLst/>
+                </a:prstGeom>
+                <a:noFill/>
+                <a:ln w="6350">
+                  <a:solidFill>
+                    <a:srgbClr val="3472FE"/>
+                  </a:solidFill>
+                </a:ln>
+              </p:spPr>
+              <p:style>
+                <a:lnRef idx="2">
+                  <a:schemeClr val="accent1">
+                    <a:shade val="50000"/>
+                  </a:schemeClr>
+                </a:lnRef>
+                <a:fillRef idx="1">
+                  <a:schemeClr val="accent1"/>
+                </a:fillRef>
+                <a:effectRef idx="0">
+                  <a:schemeClr val="accent1"/>
+                </a:effectRef>
+                <a:fontRef idx="minor">
+                  <a:schemeClr val="lt1"/>
+                </a:fontRef>
+              </p:style>
+              <p:txBody>
+                <a:bodyPr rtlCol="0" anchor="ctr"/>
+                <a:lstStyle/>
+                <a:p>
+                  <a:pPr marL="0" marR="0" lvl="0" indent="0" algn="ctr" defTabSz="914400" rtl="0" eaLnBrk="1" fontAlgn="auto" latinLnBrk="1" hangingPunct="1">
+                    <a:lnSpc>
+                      <a:spcPct val="100000"/>
+                    </a:lnSpc>
+                    <a:spcBef>
+                      <a:spcPts val="0"/>
+                    </a:spcBef>
+                    <a:spcAft>
+                      <a:spcPts val="0"/>
+                    </a:spcAft>
+                    <a:buClrTx/>
+                    <a:buSzTx/>
+                    <a:buFontTx/>
+                    <a:buNone/>
+                    <a:tabLst/>
+                    <a:defRPr/>
+                  </a:pPr>
+                  <a:endParaRPr kumimoji="0" lang="ko-KR" altLang="en-US" sz="2000" b="0" i="0" u="none" strike="noStrike" kern="1200" cap="none" spc="0" normalizeH="0" baseline="0" noProof="0" dirty="0">
+                    <a:ln>
+                      <a:solidFill>
+                        <a:srgbClr val="4BACC6">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                    </a:ln>
+                    <a:solidFill>
+                      <a:prstClr val="white"/>
+                    </a:solidFill>
+                    <a:effectLst/>
+                    <a:uLnTx/>
+                    <a:uFillTx/>
+                    <a:latin typeface="페이퍼로지 4 Regular" pitchFamily="2" charset="-127"/>
+                    <a:ea typeface="페이퍼로지 4 Regular" pitchFamily="2" charset="-127"/>
+                    <a:cs typeface="+mn-cs"/>
+                  </a:endParaRPr>
+                </a:p>
+              </p:txBody>
+            </p:sp>
+            <p:sp>
+              <p:nvSpPr>
+                <p:cNvPr id="9" name="타원 8">
+                  <a:extLst>
+                    <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                      <ns3:creationId id="{78DB45D3-B796-06DC-314C-2DF7A71DF44C}"/>
+                    </a:ext>
+                  </a:extLst>
+                </p:cNvPr>
+                <p:cNvSpPr/>
+                <p:nvPr/>
+              </p:nvSpPr>
+              <p:spPr>
+                <a:xfrm>
+                  <a:off x="11356631" y="552754"/>
+                  <a:ext cx="49177" cy="49177"/>
+                </a:xfrm>
+                <a:prstGeom prst="ellipse">
+                  <a:avLst/>
+                </a:prstGeom>
+                <a:noFill/>
+                <a:ln w="6350">
+                  <a:solidFill>
+                    <a:srgbClr val="3472FE"/>
+                  </a:solidFill>
+                </a:ln>
+              </p:spPr>
+              <p:style>
+                <a:lnRef idx="2">
+                  <a:schemeClr val="accent1">
+                    <a:shade val="50000"/>
+                  </a:schemeClr>
+                </a:lnRef>
+                <a:fillRef idx="1">
+                  <a:schemeClr val="accent1"/>
+                </a:fillRef>
+                <a:effectRef idx="0">
+                  <a:schemeClr val="accent1"/>
+                </a:effectRef>
+                <a:fontRef idx="minor">
+                  <a:schemeClr val="lt1"/>
+                </a:fontRef>
+              </p:style>
+              <p:txBody>
+                <a:bodyPr rtlCol="0" anchor="ctr"/>
+                <a:lstStyle/>
+                <a:p>
+                  <a:pPr marL="0" marR="0" lvl="0" indent="0" algn="ctr" defTabSz="914400" rtl="0" eaLnBrk="1" fontAlgn="auto" latinLnBrk="1" hangingPunct="1">
+                    <a:lnSpc>
+                      <a:spcPct val="100000"/>
+                    </a:lnSpc>
+                    <a:spcBef>
+                      <a:spcPts val="0"/>
+                    </a:spcBef>
+                    <a:spcAft>
+                      <a:spcPts val="0"/>
+                    </a:spcAft>
+                    <a:buClrTx/>
+                    <a:buSzTx/>
+                    <a:buFontTx/>
+                    <a:buNone/>
+                    <a:tabLst/>
+                    <a:defRPr/>
+                  </a:pPr>
+                  <a:endParaRPr kumimoji="0" lang="ko-KR" altLang="en-US" sz="2000" b="0" i="0" u="none" strike="noStrike" kern="1200" cap="none" spc="0" normalizeH="0" baseline="0" noProof="0" dirty="0">
+                    <a:ln>
+                      <a:solidFill>
+                        <a:srgbClr val="4BACC6">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                    </a:ln>
+                    <a:solidFill>
+                      <a:prstClr val="white"/>
+                    </a:solidFill>
+                    <a:effectLst/>
+                    <a:uLnTx/>
+                    <a:uFillTx/>
+                    <a:latin typeface="페이퍼로지 4 Regular" pitchFamily="2" charset="-127"/>
+                    <a:ea typeface="페이퍼로지 4 Regular" pitchFamily="2" charset="-127"/>
+                    <a:cs typeface="+mn-cs"/>
+                  </a:endParaRPr>
+                </a:p>
+              </p:txBody>
+            </p:sp>
+            <p:sp>
+              <p:nvSpPr>
+                <p:cNvPr id="10" name="타원 9">
+                  <a:extLst>
+                    <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                      <ns3:creationId id="{C496CB99-060B-75D8-6763-102177548FF6}"/>
+                    </a:ext>
+                  </a:extLst>
+                </p:cNvPr>
+                <p:cNvSpPr/>
+                <p:nvPr/>
+              </p:nvSpPr>
+              <p:spPr>
+                <a:xfrm>
+                  <a:off x="10977797" y="552754"/>
+                  <a:ext cx="49177" cy="49177"/>
+                </a:xfrm>
+                <a:prstGeom prst="ellipse">
+                  <a:avLst/>
+                </a:prstGeom>
+                <a:solidFill>
+                  <a:srgbClr val="3472FE"/>
+                </a:solidFill>
+                <a:ln w="6350">
+                  <a:solidFill>
+                    <a:srgbClr val="3472FE"/>
+                  </a:solidFill>
+                </a:ln>
+              </p:spPr>
+              <p:style>
+                <a:lnRef idx="2">
+                  <a:schemeClr val="accent1">
+                    <a:shade val="50000"/>
+                  </a:schemeClr>
+                </a:lnRef>
+                <a:fillRef idx="1">
+                  <a:schemeClr val="accent1"/>
+                </a:fillRef>
+                <a:effectRef idx="0">
+                  <a:schemeClr val="accent1"/>
+                </a:effectRef>
+                <a:fontRef idx="minor">
+                  <a:schemeClr val="lt1"/>
+                </a:fontRef>
+              </p:style>
+              <p:txBody>
+                <a:bodyPr rtlCol="0" anchor="ctr"/>
+                <a:lstStyle/>
+                <a:p>
+                  <a:pPr marL="0" marR="0" lvl="0" indent="0" algn="ctr" defTabSz="914400" rtl="0" eaLnBrk="1" fontAlgn="auto" latinLnBrk="1" hangingPunct="1">
+                    <a:lnSpc>
+                      <a:spcPct val="100000"/>
+                    </a:lnSpc>
+                    <a:spcBef>
+                      <a:spcPts val="0"/>
+                    </a:spcBef>
+                    <a:spcAft>
+                      <a:spcPts val="0"/>
+                    </a:spcAft>
+                    <a:buClrTx/>
+                    <a:buSzTx/>
+                    <a:buFontTx/>
+                    <a:buNone/>
+                    <a:tabLst/>
+                    <a:defRPr/>
+                  </a:pPr>
+                  <a:endParaRPr kumimoji="0" lang="ko-KR" altLang="en-US" sz="2000" b="0" i="0" u="none" strike="noStrike" kern="1200" cap="none" spc="0" normalizeH="0" baseline="0" noProof="0" dirty="0">
+                    <a:ln>
+                      <a:solidFill>
+                        <a:srgbClr val="4BACC6">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                    </a:ln>
+                    <a:solidFill>
+                      <a:prstClr val="white"/>
+                    </a:solidFill>
+                    <a:effectLst/>
+                    <a:uLnTx/>
+                    <a:uFillTx/>
+                    <a:latin typeface="페이퍼로지 4 Regular" pitchFamily="2" charset="-127"/>
+                    <a:ea typeface="페이퍼로지 4 Regular" pitchFamily="2" charset="-127"/>
+                    <a:cs typeface="+mn-cs"/>
+                  </a:endParaRPr>
+                </a:p>
+              </p:txBody>
+            </p:sp>
+            <p:sp>
+              <p:nvSpPr>
+                <p:cNvPr id="11" name="TextBox 10">
+                  <a:extLst>
+                    <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                      <ns3:creationId id="{1581F17E-756A-12BB-0344-90AB0EF84215}"/>
+                    </a:ext>
+                  </a:extLst>
+                </p:cNvPr>
+                <p:cNvSpPr txBox="1"/>
+                <p:nvPr/>
+              </p:nvSpPr>
+              <p:spPr>
+                <a:xfrm>
+                  <a:off x="10836964" y="283127"/>
+                  <a:ext cx="695121" cy="97929"/>
+                </a:xfrm>
+                <a:prstGeom prst="rect">
+                  <a:avLst/>
+                </a:prstGeom>
+                <a:noFill/>
+              </p:spPr>
+              <p:txBody>
+                <a:bodyPr wrap="none" lIns="0" tIns="0" rIns="0" bIns="0" rtlCol="0">
+                  <a:spAutoFit/>
+                </a:bodyPr>
+                <a:lstStyle/>
+                <a:p>
+                  <a:pPr marL="0" marR="0" lvl="0" indent="0" algn="r" defTabSz="1478092" rtl="0" eaLnBrk="1" fontAlgn="base" latinLnBrk="1" hangingPunct="1">
+                    <a:lnSpc>
+                      <a:spcPct val="100000"/>
+                    </a:lnSpc>
+                    <a:spcBef>
+                      <a:spcPts val="0"/>
+                    </a:spcBef>
+                    <a:spcAft>
+                      <a:spcPct val="0"/>
+                    </a:spcAft>
+                    <a:buClrTx/>
+                    <a:buSzTx/>
+                    <a:buFontTx/>
+                    <a:buNone/>
+                    <a:tabLst/>
+                    <a:defRPr/>
+                  </a:pPr>
+                  <a:r>
+                    <a:rPr lang="ko-KR" altLang="en-US" sz="700">
+                      <a:solidFill>
+                        <a:schemeClr val="bg2">
+                          <a:lumMod val="25000"/>
+                        </a:schemeClr>
+                      </a:solidFill>
+                      <a:latin typeface="페이퍼로지 5 Medium" pitchFamily="2" charset="-127"/>
+                      <a:ea typeface="페이퍼로지 5 Medium" pitchFamily="2" charset="-127"/>
+                    </a:rPr>
+                    <a:t>프로젝트 제목 및 로고</a:t>
+                  </a:r>
+                  <a:endParaRPr kumimoji="0" lang="ko-KR" altLang="en-US" sz="700" i="0" u="none" strike="noStrike" kern="1200" cap="none" spc="0" normalizeH="0" baseline="0" noProof="0" dirty="0">
+                    <a:solidFill>
+                      <a:schemeClr val="bg2">
+                        <a:lumMod val="25000"/>
+                      </a:schemeClr>
+                    </a:solidFill>
+                    <a:effectLst/>
+                    <a:uLnTx/>
+                    <a:uFillTx/>
+                    <a:latin typeface="페이퍼로지 5 Medium" pitchFamily="2" charset="-127"/>
+                    <a:ea typeface="페이퍼로지 5 Medium" pitchFamily="2" charset="-127"/>
+                    <a:cs typeface="+mn-cs"/>
+                  </a:endParaRPr>
+                </a:p>
+              </p:txBody>
+            </p:sp>
+            <p:sp>
+              <p:nvSpPr>
+                <p:cNvPr id="12" name="직사각형 11">
+                  <a:extLst>
+                    <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                      <ns3:creationId id="{C0A30AA1-B7FB-21A4-B622-774944C2C288}"/>
+                    </a:ext>
+                  </a:extLst>
+                </p:cNvPr>
+                <p:cNvSpPr/>
+                <p:nvPr/>
+              </p:nvSpPr>
+              <p:spPr>
+                <a:xfrm>
+                  <a:off x="505058" y="276132"/>
+                  <a:ext cx="775271" cy="111919"/>
+                </a:xfrm>
+                <a:prstGeom prst="rect">
+                  <a:avLst/>
+                </a:prstGeom>
+                <a:noFill/>
+                <a:ln>
+                  <a:noFill/>
+                </a:ln>
+              </p:spPr>
+              <p:style>
+                <a:lnRef idx="2">
+                  <a:schemeClr val="accent1">
+                    <a:shade val="50000"/>
+                  </a:schemeClr>
+                </a:lnRef>
+                <a:fillRef idx="1">
+                  <a:schemeClr val="accent1"/>
+                </a:fillRef>
+                <a:effectRef idx="0">
+                  <a:schemeClr val="accent1"/>
+                </a:effectRef>
+                <a:fontRef idx="minor">
+                  <a:schemeClr val="lt1"/>
+                </a:fontRef>
+              </p:style>
+              <p:txBody>
+                <a:bodyPr wrap="none" lIns="0" tIns="0" rIns="0" bIns="0" rtlCol="0" anchor="ctr">
+                  <a:spAutoFit/>
+                </a:bodyPr>
+                <a:lstStyle/>
+                <a:p>
+                  <a:pPr marL="0" marR="0" lvl="0" indent="0" defTabSz="914400" rtl="0" eaLnBrk="1" fontAlgn="auto" latinLnBrk="1" hangingPunct="1">
+                    <a:lnSpc>
+                      <a:spcPct val="100000"/>
+                    </a:lnSpc>
+                    <a:spcBef>
+                      <a:spcPts val="0"/>
+                    </a:spcBef>
+                    <a:spcAft>
+                      <a:spcPts val="0"/>
+                    </a:spcAft>
+                    <a:buClrTx/>
+                    <a:buSzTx/>
+                    <a:buFontTx/>
+                    <a:buNone/>
+                    <a:tabLst/>
+                    <a:defRPr/>
+                  </a:pPr>
+                  <a:r>
+                    <a:rPr kumimoji="0" lang="en-US" altLang="ko-KR" sz="600" i="0" u="none" strike="noStrike" kern="1200" cap="none" spc="0" normalizeH="0" baseline="0" noProof="0" dirty="0">
+                      <a:solidFill>
+                        <a:srgbClr val="3472FE"/>
+                      </a:solidFill>
+                      <a:effectLst/>
+                      <a:uLnTx/>
+                      <a:uFillTx/>
+                      <a:latin typeface="페이퍼로지 5 Medium" pitchFamily="2" charset="-127"/>
+                      <a:ea typeface="페이퍼로지 5 Medium" pitchFamily="2" charset="-127"/>
+                      <a:cs typeface="Arial" panose="020B0604020202020204" pitchFamily="34" charset="0"/>
+                    </a:rPr>
+                    <a:t>CHAPTER</a:t>
+                  </a:r>
+                  <a:r>
+                    <a:rPr kumimoji="0" lang="en-US" altLang="ko-KR" sz="700" i="0" u="none" strike="noStrike" kern="1200" cap="none" spc="0" normalizeH="0" baseline="0" noProof="0" dirty="0">
+                      <a:solidFill>
+                        <a:srgbClr val="3472FE"/>
+                      </a:solidFill>
+                      <a:effectLst/>
+                      <a:uLnTx/>
+                      <a:uFillTx/>
+                      <a:latin typeface="페이퍼로지 7 Bold" pitchFamily="2" charset="-127"/>
+                      <a:ea typeface="페이퍼로지 7 Bold" pitchFamily="2" charset="-127"/>
+                      <a:cs typeface="Arial" panose="020B0604020202020204" pitchFamily="34" charset="0"/>
+                    </a:rPr>
+                    <a:t> </a:t>
+                  </a:r>
+                  <a:r>
+                    <a:rPr kumimoji="0" lang="en-US" altLang="ko-KR" sz="800" i="0" u="none" strike="noStrike" kern="1200" cap="none" spc="0" normalizeH="0" baseline="0" noProof="0" dirty="0">
+                      <a:solidFill>
+                        <a:srgbClr val="3472FE"/>
+                      </a:solidFill>
+                      <a:effectLst/>
+                      <a:uLnTx/>
+                      <a:uFillTx/>
+                      <a:latin typeface="페이퍼로지 7 Bold" pitchFamily="2" charset="-127"/>
+                      <a:ea typeface="페이퍼로지 7 Bold" pitchFamily="2" charset="-127"/>
+                      <a:cs typeface="Arial" panose="020B0604020202020204" pitchFamily="34" charset="0"/>
+                      <a:sym typeface="HYSymbolC" pitchFamily="18" charset="2"/>
+                    </a:rPr>
+                    <a:t>01</a:t>
+                  </a:r>
+                  <a:r>
+                    <a:rPr kumimoji="0" lang="ko-KR" altLang="en-US" sz="800" i="0" u="none" strike="noStrike" kern="1200" cap="none" spc="0" normalizeH="0" baseline="0" noProof="0" dirty="0">
+                      <a:solidFill>
+                        <a:srgbClr val="3472FE"/>
+                      </a:solidFill>
+                      <a:effectLst/>
+                      <a:uLnTx/>
+                      <a:uFillTx/>
+                      <a:latin typeface="페이퍼로지 7 Bold" pitchFamily="2" charset="-127"/>
+                      <a:ea typeface="페이퍼로지 7 Bold" pitchFamily="2" charset="-127"/>
+                      <a:cs typeface="Arial" panose="020B0604020202020204" pitchFamily="34" charset="0"/>
+                      <a:sym typeface="HYSymbolC" pitchFamily="18" charset="2"/>
+                    </a:rPr>
+                    <a:t> </a:t>
+                  </a:r>
+                  <a:r>
+                    <a:rPr kumimoji="0" lang="ko-KR" altLang="en-US" sz="800" i="0" u="none" strike="noStrike" kern="1200" cap="none" spc="0" normalizeH="0" baseline="0" noProof="0" dirty="0" err="1">
+                      <a:solidFill>
+                        <a:prstClr val="black">
+                          <a:lumMod val="75000"/>
+                          <a:lumOff val="25000"/>
+                        </a:prstClr>
+                      </a:solidFill>
+                      <a:effectLst/>
+                      <a:uLnTx/>
+                      <a:uFillTx/>
+                      <a:latin typeface="페이퍼로지 6 SemiBold" pitchFamily="2" charset="-127"/>
+                      <a:ea typeface="페이퍼로지 6 SemiBold" pitchFamily="2" charset="-127"/>
+                      <a:sym typeface="HYSymbolC" pitchFamily="18" charset="2"/>
+                    </a:rPr>
+                    <a:t>대제목</a:t>
+                  </a:r>
+                  <a:endParaRPr kumimoji="0" lang="ko-KR" altLang="en-US" sz="800" i="0" u="none" strike="noStrike" kern="1200" cap="none" spc="0" normalizeH="0" baseline="0" noProof="0" dirty="0">
+                    <a:solidFill>
+                      <a:prstClr val="black">
+                        <a:lumMod val="75000"/>
+                        <a:lumOff val="25000"/>
+                      </a:prstClr>
+                    </a:solidFill>
+                    <a:effectLst/>
+                    <a:uLnTx/>
+                    <a:uFillTx/>
+                    <a:latin typeface="페이퍼로지 6 SemiBold" pitchFamily="2" charset="-127"/>
+                    <a:ea typeface="페이퍼로지 6 SemiBold" pitchFamily="2" charset="-127"/>
+                    <a:sym typeface="HYSymbolC" pitchFamily="18" charset="2"/>
+                  </a:endParaRPr>
+                </a:p>
+              </p:txBody>
+            </p:sp>
+          </p:spTree>
+        </p:cSld>
+      </p:sld>
+    </pkg:xmlData>
+  </pkg:part>
+</pkg:package>

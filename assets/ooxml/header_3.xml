@@ -1,0 +1,1095 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<pkg:package xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:ns3="http://schemas.microsoft.com/office/drawing/2014/main" xmlns:ns4="http://schemas.microsoft.com/office/drawing/2016/SVG/main" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <pkg:part pkg:name="/ppt/slides/slide1.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml">
+    <pkg:xmlData>
+      <p:sld>
+        <p:cSld>
+          <p:spTree>
+            <p:nvGrpSpPr>
+              <p:cNvPr id="1" name="" />
+              <p:cNvGrpSpPr />
+              <p:nvPr />
+            </p:nvGrpSpPr>
+            <p:grpSpPr />
+            <p:grpSp>
+              <p:nvGrpSpPr>
+                <p:cNvPr id="236" name="그룹 235">
+                  <a:extLst>
+                    <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                      <ns3:creationId id="{A6F97F4C-8783-084F-ACEA-0623B2748815}" />
+                    </a:ext>
+                  </a:extLst>
+                </p:cNvPr>
+                <p:cNvGrpSpPr />
+                <p:nvPr />
+              </p:nvGrpSpPr>
+              <p:grpSpPr>
+                <a:xfrm>
+                  <a:off x="2849533" y="4230708" />
+                  <a:ext cx="8429799" cy="714684" />
+                  <a:chOff x="2430272" y="3042625" />
+                  <a:chExt cx="9272779" cy="786152" />
+                </a:xfrm>
+              </p:grpSpPr>
+              <p:sp>
+                <p:nvSpPr>
+                  <p:cNvPr id="79" name="사각형: 둥근 모서리 78">
+                    <a:extLst>
+                      <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                        <ns3:creationId id="{ED7DE9E1-693E-6605-F3EC-FE5A98317462}" />
+                      </a:ext>
+                    </a:extLst>
+                  </p:cNvPr>
+                  <p:cNvSpPr />
+                  <p:nvPr />
+                </p:nvSpPr>
+                <p:spPr>
+                  <a:xfrm>
+                    <a:off x="2749221" y="3389267" />
+                    <a:ext cx="8953830" cy="439510" />
+                  </a:xfrm>
+                  <a:prstGeom prst="roundRect">
+                    <a:avLst />
+                  </a:prstGeom>
+                  <a:solidFill>
+                    <a:schemeClr val="bg1">
+                      <a:lumMod val="95000" />
+                    </a:schemeClr>
+                  </a:solidFill>
+                  <a:ln w="9525" cap="flat">
+                    <a:noFill />
+                    <a:prstDash val="solid" />
+                    <a:miter />
+                  </a:ln>
+                </p:spPr>
+                <p:txBody>
+                  <a:bodyPr rtlCol="0" anchor="ctr" />
+                  <a:lstStyle />
+                  <a:p>
+                    <a:pPr lvl="0" algn="ctr" />
+                    <a:endParaRPr lang="ko-KR" altLang="en-US" sz="2000" />
+                  </a:p>
+                </p:txBody>
+              </p:sp>
+              <p:sp>
+                <p:nvSpPr>
+                  <p:cNvPr id="80" name="사각형: 둥근 한쪽 모서리 79">
+                    <a:extLst>
+                      <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                        <ns3:creationId id="{689DC3B8-7A0C-5F9A-F1BC-8FA940D9302F}" />
+                      </a:ext>
+                    </a:extLst>
+                  </p:cNvPr>
+                  <p:cNvSpPr />
+                  <p:nvPr />
+                </p:nvSpPr>
+                <p:spPr>
+                  <a:xfrm rot="5400000">
+                    <a:off x="2427891" y="3045006" />
+                    <a:ext cx="323850" cy="319088" />
+                  </a:xfrm>
+                  <a:prstGeom prst="round1Rect">
+                    <a:avLst />
+                  </a:prstGeom>
+                  <a:solidFill>
+                    <a:srgbClr val="3472FE" />
+                  </a:solidFill>
+                  <a:ln w="9525" cap="flat">
+                    <a:noFill />
+                    <a:prstDash val="solid" />
+                    <a:miter />
+                  </a:ln>
+                </p:spPr>
+                <p:txBody>
+                  <a:bodyPr rtlCol="0" anchor="ctr" />
+                  <a:lstStyle />
+                  <a:p>
+                    <a:pPr algn="ctr" />
+                    <a:endParaRPr lang="ko-KR" altLang="en-US" sz="2000" />
+                  </a:p>
+                </p:txBody>
+              </p:sp>
+              <p:grpSp>
+                <p:nvGrpSpPr>
+                  <p:cNvPr id="122" name="그룹 121">
+                    <a:extLst>
+                      <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                        <ns3:creationId id="{55D6A469-EEEE-3528-A985-EC65D62979DF}" />
+                      </a:ext>
+                    </a:extLst>
+                  </p:cNvPr>
+                  <p:cNvGrpSpPr />
+                  <p:nvPr />
+                </p:nvGrpSpPr>
+                <p:grpSpPr>
+                  <a:xfrm>
+                    <a:off x="8208909" y="3091515" />
+                    <a:ext cx="3372825" cy="233671" />
+                    <a:chOff x="8088001" y="3025781" />
+                    <a:chExt cx="3372825" cy="233671" />
+                  </a:xfrm>
+                </p:grpSpPr>
+                <p:sp>
+                  <p:nvSpPr>
+                    <p:cNvPr id="92" name="TextBox 91">
+                      <a:extLst>
+                        <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                          <ns3:creationId id="{4D73A2E0-E334-4198-8938-85670341F810}" />
+                        </a:ext>
+                      </a:extLst>
+                    </p:cNvPr>
+                    <p:cNvSpPr txBox="1" />
+                    <p:nvPr />
+                  </p:nvSpPr>
+                  <p:spPr>
+                    <a:xfrm>
+                      <a:off x="8088001" y="3025781" />
+                      <a:ext cx="494615" cy="233671" />
+                    </a:xfrm>
+                    <a:prstGeom prst="roundRect">
+                      <a:avLst />
+                    </a:prstGeom>
+                    <a:noFill />
+                    <a:ln w="3175">
+                      <a:noFill />
+                    </a:ln>
+                  </p:spPr>
+                  <p:txBody>
+                    <a:bodyPr wrap="none" lIns="108000" tIns="36000" rIns="108000" bIns="36000">
+                      <a:spAutoFit />
+                    </a:bodyPr>
+                    <a:lstStyle>
+                      <a:defPPr>
+                        <a:defRPr lang="ko-KR" />
+                      </a:defPPr>
+                      <a:lvl1pPr>
+                        <a:defRPr sz="900">
+                          <a:solidFill>
+                            <a:srgbClr val="014DA2" />
+                          </a:solidFill>
+                          <a:latin typeface="프리젠테이션 5 Medium" pitchFamily="2" charset="-127" />
+                          <a:ea typeface="프리젠테이션 5 Medium" pitchFamily="2" charset="-127" />
+                          <a:cs typeface="Pretendard ExtraBold" panose="02000903000000020004" pitchFamily="50" charset="-127" />
+                        </a:defRPr>
+                      </a:lvl1pPr>
+                    </a:lstStyle>
+                    <a:p>
+                      <a:r>
+                        <a:rPr lang="ko-KR" altLang="en-US" dirty="0">
+                          <a:solidFill>
+                            <a:srgbClr val="3472FE" />
+                          </a:solidFill>
+                        </a:rPr>
+                        <a:t>분류 </a:t>
+                      </a:r>
+                      <a:r>
+                        <a:rPr lang="en-US" altLang="ko-KR" dirty="0">
+                          <a:solidFill>
+                            <a:srgbClr val="3472FE" />
+                          </a:solidFill>
+                        </a:rPr>
+                        <a:t>1</a:t>
+                      </a:r>
+                      <a:endParaRPr lang="ko-KR" altLang="en-US" dirty="0">
+                        <a:solidFill>
+                          <a:srgbClr val="3472FE" />
+                        </a:solidFill>
+                      </a:endParaRPr>
+                    </a:p>
+                  </p:txBody>
+                </p:sp>
+                <p:sp>
+                  <p:nvSpPr>
+                    <p:cNvPr id="93" name="TextBox 92">
+                      <a:extLst>
+                        <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                          <ns3:creationId id="{2EEBBB11-BA3D-5708-9C5F-4581BB2CC902}" />
+                        </a:ext>
+                      </a:extLst>
+                    </p:cNvPr>
+                    <p:cNvSpPr txBox="1" />
+                    <p:nvPr />
+                  </p:nvSpPr>
+                  <p:spPr>
+                    <a:xfrm>
+                      <a:off x="8809220" y="3025781" />
+                      <a:ext cx="492949" cy="233671" />
+                    </a:xfrm>
+                    <a:prstGeom prst="roundRect">
+                      <a:avLst />
+                    </a:prstGeom>
+                    <a:noFill />
+                    <a:ln w="3175">
+                      <a:noFill />
+                    </a:ln>
+                  </p:spPr>
+                  <p:txBody>
+                    <a:bodyPr wrap="none" lIns="108000" tIns="36000" rIns="108000" bIns="36000">
+                      <a:spAutoFit />
+                    </a:bodyPr>
+                    <a:lstStyle />
+                    <a:p>
+                      <a:r>
+                        <a:rPr lang="ko-KR" altLang="en-US" sz="900" dirty="0">
+                          <a:solidFill>
+                            <a:schemeClr val="bg1">
+                              <a:lumMod val="65000" />
+                            </a:schemeClr>
+                          </a:solidFill>
+                          <a:latin typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                          <a:ea typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                          <a:cs typeface="Pretendard ExtraBold" panose="02000903000000020004" pitchFamily="50" charset="-127" />
+                        </a:rPr>
+                        <a:t>분류 </a:t>
+                      </a:r>
+                      <a:r>
+                        <a:rPr lang="en-US" altLang="ko-KR" sz="900" dirty="0">
+                          <a:solidFill>
+                            <a:schemeClr val="bg1">
+                              <a:lumMod val="65000" />
+                            </a:schemeClr>
+                          </a:solidFill>
+                          <a:latin typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                          <a:ea typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                          <a:cs typeface="Pretendard ExtraBold" panose="02000903000000020004" pitchFamily="50" charset="-127" />
+                        </a:rPr>
+                        <a:t>2</a:t>
+                      </a:r>
+                      <a:endParaRPr lang="ko-KR" altLang="en-US" sz="900" dirty="0">
+                        <a:solidFill>
+                          <a:schemeClr val="bg1">
+                            <a:lumMod val="65000" />
+                          </a:schemeClr>
+                        </a:solidFill>
+                        <a:latin typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                        <a:ea typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                        <a:cs typeface="Pretendard ExtraBold" panose="02000903000000020004" pitchFamily="50" charset="-127" />
+                      </a:endParaRPr>
+                    </a:p>
+                  </p:txBody>
+                </p:sp>
+                <p:sp>
+                  <p:nvSpPr>
+                    <p:cNvPr id="94" name="TextBox 93">
+                      <a:extLst>
+                        <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                          <ns3:creationId id="{2F29B0E4-26AF-C91F-6DC8-72B058BCEBA2}" />
+                        </a:ext>
+                      </a:extLst>
+                    </p:cNvPr>
+                    <p:cNvSpPr txBox="1" />
+                    <p:nvPr />
+                  </p:nvSpPr>
+                  <p:spPr>
+                    <a:xfrm>
+                      <a:off x="9528773" y="3025781" />
+                      <a:ext cx="492949" cy="233671" />
+                    </a:xfrm>
+                    <a:prstGeom prst="roundRect">
+                      <a:avLst />
+                    </a:prstGeom>
+                    <a:noFill />
+                    <a:ln w="3175">
+                      <a:noFill />
+                    </a:ln>
+                  </p:spPr>
+                  <p:txBody>
+                    <a:bodyPr wrap="none" lIns="108000" tIns="36000" rIns="108000" bIns="36000">
+                      <a:spAutoFit />
+                    </a:bodyPr>
+                    <a:lstStyle />
+                    <a:p>
+                      <a:r>
+                        <a:rPr lang="ko-KR" altLang="en-US" sz="900" dirty="0">
+                          <a:solidFill>
+                            <a:schemeClr val="bg1">
+                              <a:lumMod val="65000" />
+                            </a:schemeClr>
+                          </a:solidFill>
+                          <a:latin typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                          <a:ea typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                          <a:cs typeface="Pretendard ExtraBold" panose="02000903000000020004" pitchFamily="50" charset="-127" />
+                        </a:rPr>
+                        <a:t>분류 </a:t>
+                      </a:r>
+                      <a:r>
+                        <a:rPr lang="en-US" altLang="ko-KR" sz="900" dirty="0">
+                          <a:solidFill>
+                            <a:schemeClr val="bg1">
+                              <a:lumMod val="65000" />
+                            </a:schemeClr>
+                          </a:solidFill>
+                          <a:latin typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                          <a:ea typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                          <a:cs typeface="Pretendard ExtraBold" panose="02000903000000020004" pitchFamily="50" charset="-127" />
+                        </a:rPr>
+                        <a:t>3</a:t>
+                      </a:r>
+                      <a:endParaRPr lang="ko-KR" altLang="en-US" sz="900" dirty="0">
+                        <a:solidFill>
+                          <a:schemeClr val="bg1">
+                            <a:lumMod val="65000" />
+                          </a:schemeClr>
+                        </a:solidFill>
+                        <a:latin typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                        <a:ea typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                        <a:cs typeface="Pretendard ExtraBold" panose="02000903000000020004" pitchFamily="50" charset="-127" />
+                      </a:endParaRPr>
+                    </a:p>
+                  </p:txBody>
+                </p:sp>
+                <p:sp>
+                  <p:nvSpPr>
+                    <p:cNvPr id="95" name="TextBox 94">
+                      <a:extLst>
+                        <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                          <ns3:creationId id="{887D1C24-DACE-0F3B-67D0-745B342D551E}" />
+                        </a:ext>
+                      </a:extLst>
+                    </p:cNvPr>
+                    <p:cNvSpPr txBox="1" />
+                    <p:nvPr />
+                  </p:nvSpPr>
+                  <p:spPr>
+                    <a:xfrm>
+                      <a:off x="10248326" y="3025781" />
+                      <a:ext cx="492949" cy="233671" />
+                    </a:xfrm>
+                    <a:prstGeom prst="roundRect">
+                      <a:avLst />
+                    </a:prstGeom>
+                    <a:noFill />
+                    <a:ln w="3175">
+                      <a:noFill />
+                    </a:ln>
+                  </p:spPr>
+                  <p:txBody>
+                    <a:bodyPr wrap="none" lIns="108000" tIns="36000" rIns="108000" bIns="36000">
+                      <a:spAutoFit />
+                    </a:bodyPr>
+                    <a:lstStyle>
+                      <a:defPPr>
+                        <a:defRPr lang="ko-KR" />
+                      </a:defPPr>
+                      <a:lvl1pPr>
+                        <a:defRPr sz="900">
+                          <a:solidFill>
+                            <a:schemeClr val="bg1">
+                              <a:lumMod val="65000" />
+                            </a:schemeClr>
+                          </a:solidFill>
+                          <a:latin typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                          <a:ea typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                          <a:cs typeface="Pretendard ExtraBold" panose="02000903000000020004" pitchFamily="50" charset="-127" />
+                        </a:defRPr>
+                      </a:lvl1pPr>
+                    </a:lstStyle>
+                    <a:p>
+                      <a:r>
+                        <a:rPr lang="ko-KR" altLang="en-US" dirty="0" />
+                        <a:t>분류 </a:t>
+                      </a:r>
+                      <a:r>
+                        <a:rPr lang="en-US" altLang="ko-KR" dirty="0" />
+                        <a:t>4</a:t>
+                      </a:r>
+                      <a:endParaRPr lang="ko-KR" altLang="en-US" dirty="0" />
+                    </a:p>
+                  </p:txBody>
+                </p:sp>
+                <p:sp>
+                  <p:nvSpPr>
+                    <p:cNvPr id="96" name="TextBox 95">
+                      <a:extLst>
+                        <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                          <ns3:creationId id="{E1195A53-DEE2-706D-EF65-474A4FE751E8}" />
+                        </a:ext>
+                      </a:extLst>
+                    </p:cNvPr>
+                    <p:cNvSpPr txBox="1" />
+                    <p:nvPr />
+                  </p:nvSpPr>
+                  <p:spPr>
+                    <a:xfrm>
+                      <a:off x="10967877" y="3025781" />
+                      <a:ext cx="492949" cy="233671" />
+                    </a:xfrm>
+                    <a:prstGeom prst="roundRect">
+                      <a:avLst />
+                    </a:prstGeom>
+                    <a:noFill />
+                    <a:ln w="3175">
+                      <a:noFill />
+                    </a:ln>
+                  </p:spPr>
+                  <p:txBody>
+                    <a:bodyPr wrap="none" lIns="108000" tIns="36000" rIns="108000" bIns="36000">
+                      <a:spAutoFit />
+                    </a:bodyPr>
+                    <a:lstStyle />
+                    <a:p>
+                      <a:r>
+                        <a:rPr lang="ko-KR" altLang="en-US" sz="900" dirty="0">
+                          <a:solidFill>
+                            <a:schemeClr val="bg1">
+                              <a:lumMod val="65000" />
+                            </a:schemeClr>
+                          </a:solidFill>
+                          <a:latin typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                          <a:ea typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                          <a:cs typeface="Pretendard ExtraBold" panose="02000903000000020004" pitchFamily="50" charset="-127" />
+                        </a:rPr>
+                        <a:t>분류 </a:t>
+                      </a:r>
+                      <a:r>
+                        <a:rPr lang="en-US" altLang="ko-KR" sz="900" dirty="0">
+                          <a:solidFill>
+                            <a:schemeClr val="bg1">
+                              <a:lumMod val="65000" />
+                            </a:schemeClr>
+                          </a:solidFill>
+                          <a:latin typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                          <a:ea typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                          <a:cs typeface="Pretendard ExtraBold" panose="02000903000000020004" pitchFamily="50" charset="-127" />
+                        </a:rPr>
+                        <a:t>5</a:t>
+                      </a:r>
+                      <a:endParaRPr lang="ko-KR" altLang="en-US" sz="900" dirty="0">
+                        <a:solidFill>
+                          <a:schemeClr val="bg1">
+                            <a:lumMod val="65000" />
+                          </a:schemeClr>
+                        </a:solidFill>
+                        <a:latin typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                        <a:ea typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                        <a:cs typeface="Pretendard ExtraBold" panose="02000903000000020004" pitchFamily="50" charset="-127" />
+                      </a:endParaRPr>
+                    </a:p>
+                  </p:txBody>
+                </p:sp>
+                <p:cxnSp>
+                  <p:nvCxnSpPr>
+                    <p:cNvPr id="97" name="직선 연결선 96">
+                      <a:extLst>
+                        <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                          <ns3:creationId id="{DA3067C3-D32F-9C94-FB40-985A5D3B580A}" />
+                        </a:ext>
+                      </a:extLst>
+                    </p:cNvPr>
+                    <p:cNvCxnSpPr />
+                    <p:nvPr />
+                  </p:nvCxnSpPr>
+                  <p:spPr>
+                    <a:xfrm>
+                      <a:off x="8695918" y="3060235" />
+                      <a:ext cx="0" cy="161925" />
+                    </a:xfrm>
+                    <a:prstGeom prst="line">
+                      <a:avLst />
+                    </a:prstGeom>
+                    <a:ln w="6350">
+                      <a:solidFill>
+                        <a:schemeClr val="bg1">
+                          <a:lumMod val="65000" />
+                          <a:alpha val="50000" />
+                        </a:schemeClr>
+                      </a:solidFill>
+                    </a:ln>
+                  </p:spPr>
+                  <p:style>
+                    <a:lnRef idx="2">
+                      <a:schemeClr val="accent1" />
+                    </a:lnRef>
+                    <a:fillRef idx="0">
+                      <a:schemeClr val="accent1" />
+                    </a:fillRef>
+                    <a:effectRef idx="1">
+                      <a:schemeClr val="accent1" />
+                    </a:effectRef>
+                    <a:fontRef idx="minor">
+                      <a:schemeClr val="tx1" />
+                    </a:fontRef>
+                  </p:style>
+                </p:cxnSp>
+                <p:cxnSp>
+                  <p:nvCxnSpPr>
+                    <p:cNvPr id="98" name="직선 연결선 97">
+                      <a:extLst>
+                        <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                          <ns3:creationId id="{6D1B23AF-EA97-EE67-77D7-5D14F8D0B4F8}" />
+                        </a:ext>
+                      </a:extLst>
+                    </p:cNvPr>
+                    <p:cNvCxnSpPr />
+                    <p:nvPr />
+                  </p:nvCxnSpPr>
+                  <p:spPr>
+                    <a:xfrm>
+                      <a:off x="9415471" y="3060235" />
+                      <a:ext cx="0" cy="161925" />
+                    </a:xfrm>
+                    <a:prstGeom prst="line">
+                      <a:avLst />
+                    </a:prstGeom>
+                    <a:ln w="6350">
+                      <a:solidFill>
+                        <a:schemeClr val="bg1">
+                          <a:lumMod val="65000" />
+                          <a:alpha val="50000" />
+                        </a:schemeClr>
+                      </a:solidFill>
+                    </a:ln>
+                  </p:spPr>
+                  <p:style>
+                    <a:lnRef idx="2">
+                      <a:schemeClr val="accent1" />
+                    </a:lnRef>
+                    <a:fillRef idx="0">
+                      <a:schemeClr val="accent1" />
+                    </a:fillRef>
+                    <a:effectRef idx="1">
+                      <a:schemeClr val="accent1" />
+                    </a:effectRef>
+                    <a:fontRef idx="minor">
+                      <a:schemeClr val="tx1" />
+                    </a:fontRef>
+                  </p:style>
+                </p:cxnSp>
+                <p:cxnSp>
+                  <p:nvCxnSpPr>
+                    <p:cNvPr id="99" name="직선 연결선 98">
+                      <a:extLst>
+                        <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                          <ns3:creationId id="{F0A666C9-F46E-3D96-71AF-783217FAF802}" />
+                        </a:ext>
+                      </a:extLst>
+                    </p:cNvPr>
+                    <p:cNvCxnSpPr />
+                    <p:nvPr />
+                  </p:nvCxnSpPr>
+                  <p:spPr>
+                    <a:xfrm>
+                      <a:off x="10135024" y="3060235" />
+                      <a:ext cx="0" cy="161925" />
+                    </a:xfrm>
+                    <a:prstGeom prst="line">
+                      <a:avLst />
+                    </a:prstGeom>
+                    <a:ln w="6350">
+                      <a:solidFill>
+                        <a:schemeClr val="bg1">
+                          <a:lumMod val="65000" />
+                          <a:alpha val="50000" />
+                        </a:schemeClr>
+                      </a:solidFill>
+                    </a:ln>
+                  </p:spPr>
+                  <p:style>
+                    <a:lnRef idx="2">
+                      <a:schemeClr val="accent1" />
+                    </a:lnRef>
+                    <a:fillRef idx="0">
+                      <a:schemeClr val="accent1" />
+                    </a:fillRef>
+                    <a:effectRef idx="1">
+                      <a:schemeClr val="accent1" />
+                    </a:effectRef>
+                    <a:fontRef idx="minor">
+                      <a:schemeClr val="tx1" />
+                    </a:fontRef>
+                  </p:style>
+                </p:cxnSp>
+                <p:cxnSp>
+                  <p:nvCxnSpPr>
+                    <p:cNvPr id="100" name="직선 연결선 99">
+                      <a:extLst>
+                        <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                          <ns3:creationId id="{F772AA6F-D9BE-E5F0-8B32-0F663D2B8C80}" />
+                        </a:ext>
+                      </a:extLst>
+                    </p:cNvPr>
+                    <p:cNvCxnSpPr />
+                    <p:nvPr />
+                  </p:nvCxnSpPr>
+                  <p:spPr>
+                    <a:xfrm>
+                      <a:off x="10854577" y="3060235" />
+                      <a:ext cx="0" cy="161925" />
+                    </a:xfrm>
+                    <a:prstGeom prst="line">
+                      <a:avLst />
+                    </a:prstGeom>
+                    <a:ln w="6350">
+                      <a:solidFill>
+                        <a:schemeClr val="bg1">
+                          <a:lumMod val="65000" />
+                          <a:alpha val="50000" />
+                        </a:schemeClr>
+                      </a:solidFill>
+                    </a:ln>
+                  </p:spPr>
+                  <p:style>
+                    <a:lnRef idx="2">
+                      <a:schemeClr val="accent1" />
+                    </a:lnRef>
+                    <a:fillRef idx="0">
+                      <a:schemeClr val="accent1" />
+                    </a:fillRef>
+                    <a:effectRef idx="1">
+                      <a:schemeClr val="accent1" />
+                    </a:effectRef>
+                    <a:fontRef idx="minor">
+                      <a:schemeClr val="tx1" />
+                    </a:fontRef>
+                  </p:style>
+                </p:cxnSp>
+              </p:grpSp>
+              <p:cxnSp>
+                <p:nvCxnSpPr>
+                  <p:cNvPr id="101" name="직선 연결선 100">
+                    <a:extLst>
+                      <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                        <ns3:creationId id="{4D060793-7012-5DE1-8BF2-2364C4841517}" />
+                      </a:ext>
+                    </a:extLst>
+                  </p:cNvPr>
+                  <p:cNvCxnSpPr>
+                    <a:cxnSpLocks />
+                    <a:stCxn id="102" idx="6" />
+                    <a:endCxn id="105" idx="2" />
+                  </p:cNvCxnSpPr>
+                  <p:nvPr />
+                </p:nvCxnSpPr>
+                <p:spPr>
+                  <a:xfrm>
+                    <a:off x="3075193" y="3204551" />
+                    <a:ext cx="653405" cy="0" />
+                  </a:xfrm>
+                  <a:prstGeom prst="line">
+                    <a:avLst />
+                  </a:prstGeom>
+                  <a:ln w="6350">
+                    <a:solidFill>
+                      <a:schemeClr val="bg1">
+                        <a:lumMod val="75000" />
+                      </a:schemeClr>
+                    </a:solidFill>
+                  </a:ln>
+                </p:spPr>
+                <p:style>
+                  <a:lnRef idx="2">
+                    <a:schemeClr val="accent1" />
+                  </a:lnRef>
+                  <a:fillRef idx="0">
+                    <a:schemeClr val="accent1" />
+                  </a:fillRef>
+                  <a:effectRef idx="1">
+                    <a:schemeClr val="accent1" />
+                  </a:effectRef>
+                  <a:fontRef idx="minor">
+                    <a:schemeClr val="tx1" />
+                  </a:fontRef>
+                </p:style>
+              </p:cxnSp>
+              <p:sp>
+                <p:nvSpPr>
+                  <p:cNvPr id="102" name="타원 101">
+                    <a:extLst>
+                      <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                        <ns3:creationId id="{568134AF-BFBE-920B-C2FD-9C2D40ACFE26}" />
+                      </a:ext>
+                    </a:extLst>
+                  </p:cNvPr>
+                  <p:cNvSpPr />
+                  <p:nvPr />
+                </p:nvSpPr>
+                <p:spPr>
+                  <a:xfrm>
+                    <a:off x="2999788" y="3166848" />
+                    <a:ext cx="75405" cy="75405" />
+                  </a:xfrm>
+                  <a:prstGeom prst="ellipse">
+                    <a:avLst />
+                  </a:prstGeom>
+                  <a:solidFill>
+                    <a:srgbClr val="3472FE" />
+                  </a:solidFill>
+                  <a:ln w="6350">
+                    <a:noFill />
+                  </a:ln>
+                </p:spPr>
+                <p:style>
+                  <a:lnRef idx="2">
+                    <a:schemeClr val="accent1" />
+                  </a:lnRef>
+                  <a:fillRef idx="0">
+                    <a:schemeClr val="accent1" />
+                  </a:fillRef>
+                  <a:effectRef idx="1">
+                    <a:schemeClr val="accent1" />
+                  </a:effectRef>
+                  <a:fontRef idx="minor">
+                    <a:schemeClr val="tx1" />
+                  </a:fontRef>
+                </p:style>
+                <p:txBody>
+                  <a:bodyPr rtlCol="0" anchor="ctr" />
+                  <a:lstStyle />
+                  <a:p>
+                    <a:pPr algn="ctr" />
+                    <a:endParaRPr lang="ko-KR" altLang="en-US" sz="2000" />
+                  </a:p>
+                </p:txBody>
+              </p:sp>
+              <p:sp>
+                <p:nvSpPr>
+                  <p:cNvPr id="103" name="타원 102">
+                    <a:extLst>
+                      <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                        <ns3:creationId id="{DB4EB828-2AC9-E13E-A6B8-BCC4320C74ED}" />
+                      </a:ext>
+                    </a:extLst>
+                  </p:cNvPr>
+                  <p:cNvSpPr />
+                  <p:nvPr />
+                </p:nvSpPr>
+                <p:spPr>
+                  <a:xfrm>
+                    <a:off x="3179496" y="3176224" />
+                    <a:ext cx="56653" cy="56653" />
+                  </a:xfrm>
+                  <a:prstGeom prst="ellipse">
+                    <a:avLst />
+                  </a:prstGeom>
+                  <a:solidFill>
+                    <a:schemeClr val="bg1" />
+                  </a:solidFill>
+                  <a:ln w="6350">
+                    <a:solidFill>
+                      <a:schemeClr val="bg1">
+                        <a:lumMod val="75000" />
+                      </a:schemeClr>
+                    </a:solidFill>
+                  </a:ln>
+                </p:spPr>
+                <p:style>
+                  <a:lnRef idx="2">
+                    <a:schemeClr val="accent1" />
+                  </a:lnRef>
+                  <a:fillRef idx="0">
+                    <a:schemeClr val="accent1" />
+                  </a:fillRef>
+                  <a:effectRef idx="1">
+                    <a:schemeClr val="accent1" />
+                  </a:effectRef>
+                  <a:fontRef idx="minor">
+                    <a:schemeClr val="tx1" />
+                  </a:fontRef>
+                </p:style>
+                <p:txBody>
+                  <a:bodyPr rtlCol="0" anchor="ctr" />
+                  <a:lstStyle />
+                  <a:p>
+                    <a:pPr algn="ctr" />
+                    <a:endParaRPr lang="ko-KR" altLang="en-US" sz="2000" />
+                  </a:p>
+                </p:txBody>
+              </p:sp>
+              <p:sp>
+                <p:nvSpPr>
+                  <p:cNvPr id="104" name="타원 103">
+                    <a:extLst>
+                      <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                        <ns3:creationId id="{A60CED36-E0A1-52D9-DD3F-242D5D262F30}" />
+                      </a:ext>
+                    </a:extLst>
+                  </p:cNvPr>
+                  <p:cNvSpPr />
+                  <p:nvPr />
+                </p:nvSpPr>
+                <p:spPr>
+                  <a:xfrm>
+                    <a:off x="3370118" y="3176224" />
+                    <a:ext cx="56653" cy="56653" />
+                  </a:xfrm>
+                  <a:prstGeom prst="ellipse">
+                    <a:avLst />
+                  </a:prstGeom>
+                  <a:solidFill>
+                    <a:schemeClr val="bg1" />
+                  </a:solidFill>
+                  <a:ln w="6350">
+                    <a:solidFill>
+                      <a:schemeClr val="bg1">
+                        <a:lumMod val="75000" />
+                      </a:schemeClr>
+                    </a:solidFill>
+                  </a:ln>
+                </p:spPr>
+                <p:style>
+                  <a:lnRef idx="2">
+                    <a:schemeClr val="accent1" />
+                  </a:lnRef>
+                  <a:fillRef idx="0">
+                    <a:schemeClr val="accent1" />
+                  </a:fillRef>
+                  <a:effectRef idx="1">
+                    <a:schemeClr val="accent1" />
+                  </a:effectRef>
+                  <a:fontRef idx="minor">
+                    <a:schemeClr val="tx1" />
+                  </a:fontRef>
+                </p:style>
+                <p:txBody>
+                  <a:bodyPr rtlCol="0" anchor="ctr" />
+                  <a:lstStyle />
+                  <a:p>
+                    <a:pPr algn="ctr" />
+                    <a:endParaRPr lang="ko-KR" altLang="en-US" sz="2000" />
+                  </a:p>
+                </p:txBody>
+              </p:sp>
+              <p:sp>
+                <p:nvSpPr>
+                  <p:cNvPr id="105" name="타원 104">
+                    <a:extLst>
+                      <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                        <ns3:creationId id="{7EB9692B-ED8F-57E5-0C60-D6654E496E8C}" />
+                      </a:ext>
+                    </a:extLst>
+                  </p:cNvPr>
+                  <p:cNvSpPr />
+                  <p:nvPr />
+                </p:nvSpPr>
+                <p:spPr>
+                  <a:xfrm>
+                    <a:off x="3728598" y="3176224" />
+                    <a:ext cx="56653" cy="56653" />
+                  </a:xfrm>
+                  <a:prstGeom prst="ellipse">
+                    <a:avLst />
+                  </a:prstGeom>
+                  <a:solidFill>
+                    <a:schemeClr val="bg1" />
+                  </a:solidFill>
+                  <a:ln w="6350">
+                    <a:solidFill>
+                      <a:schemeClr val="bg1">
+                        <a:lumMod val="75000" />
+                      </a:schemeClr>
+                    </a:solidFill>
+                  </a:ln>
+                </p:spPr>
+                <p:style>
+                  <a:lnRef idx="2">
+                    <a:schemeClr val="accent1" />
+                  </a:lnRef>
+                  <a:fillRef idx="0">
+                    <a:schemeClr val="accent1" />
+                  </a:fillRef>
+                  <a:effectRef idx="1">
+                    <a:schemeClr val="accent1" />
+                  </a:effectRef>
+                  <a:fontRef idx="minor">
+                    <a:schemeClr val="tx1" />
+                  </a:fontRef>
+                </p:style>
+                <p:txBody>
+                  <a:bodyPr rtlCol="0" anchor="ctr" />
+                  <a:lstStyle />
+                  <a:p>
+                    <a:pPr algn="ctr" />
+                    <a:endParaRPr lang="ko-KR" altLang="en-US" sz="2000" />
+                  </a:p>
+                </p:txBody>
+              </p:sp>
+              <p:sp>
+                <p:nvSpPr>
+                  <p:cNvPr id="106" name="타원 105">
+                    <a:extLst>
+                      <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                        <ns3:creationId id="{6B671AB0-FC36-4D6B-99A1-955A45E728AE}" />
+                      </a:ext>
+                    </a:extLst>
+                  </p:cNvPr>
+                  <p:cNvSpPr />
+                  <p:nvPr />
+                </p:nvSpPr>
+                <p:spPr>
+                  <a:xfrm>
+                    <a:off x="3552930" y="3176224" />
+                    <a:ext cx="56653" cy="56653" />
+                  </a:xfrm>
+                  <a:prstGeom prst="ellipse">
+                    <a:avLst />
+                  </a:prstGeom>
+                  <a:solidFill>
+                    <a:schemeClr val="bg1" />
+                  </a:solidFill>
+                  <a:ln w="6350">
+                    <a:solidFill>
+                      <a:schemeClr val="bg1">
+                        <a:lumMod val="75000" />
+                      </a:schemeClr>
+                    </a:solidFill>
+                  </a:ln>
+                </p:spPr>
+                <p:style>
+                  <a:lnRef idx="2">
+                    <a:schemeClr val="accent1" />
+                  </a:lnRef>
+                  <a:fillRef idx="0">
+                    <a:schemeClr val="accent1" />
+                  </a:fillRef>
+                  <a:effectRef idx="1">
+                    <a:schemeClr val="accent1" />
+                  </a:effectRef>
+                  <a:fontRef idx="minor">
+                    <a:schemeClr val="tx1" />
+                  </a:fontRef>
+                </p:style>
+                <p:txBody>
+                  <a:bodyPr rtlCol="0" anchor="ctr" />
+                  <a:lstStyle />
+                  <a:p>
+                    <a:pPr algn="ctr" />
+                    <a:endParaRPr lang="ko-KR" altLang="en-US" sz="2000" />
+                  </a:p>
+                </p:txBody>
+              </p:sp>
+              <p:sp>
+                <p:nvSpPr>
+                  <p:cNvPr id="107" name="TextBox 106">
+                    <a:extLst>
+                      <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                        <ns3:creationId id="{93AD45E0-1DEC-6106-6AB1-6C953EAB895A}" />
+                      </a:ext>
+                    </a:extLst>
+                  </p:cNvPr>
+                  <p:cNvSpPr txBox="1" />
+                  <p:nvPr />
+                </p:nvSpPr>
+                <p:spPr>
+                  <a:xfrm>
+                    <a:off x="2433362" y="3089134" />
+                    <a:ext cx="312907" cy="246221" />
+                  </a:xfrm>
+                  <a:prstGeom prst="rect">
+                    <a:avLst />
+                  </a:prstGeom>
+                  <a:noFill />
+                </p:spPr>
+                <p:txBody>
+                  <a:bodyPr wrap="none">
+                    <a:spAutoFit />
+                  </a:bodyPr>
+                  <a:lstStyle />
+                  <a:p>
+                    <a:pPr algn="ctr" />
+                    <a:r>
+                      <a:rPr lang="en-US" altLang="ko-KR" sz="1000" dirty="0">
+                        <a:solidFill>
+                          <a:schemeClr val="bg1" />
+                        </a:solidFill>
+                        <a:latin typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                        <a:ea typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                        <a:cs typeface="Pretendard ExtraBold" panose="02000903000000020004" pitchFamily="50" charset="-127" />
+                      </a:rPr>
+                      <a:t>Ⅰ</a:t>
+                    </a:r>
+                    <a:endParaRPr lang="en-US" altLang="ko-KR" sz="1000" dirty="0">
+                      <a:solidFill>
+                        <a:schemeClr val="bg1" />
+                      </a:solidFill>
+                      <a:latin typeface="프리젠테이션 5 Medium" pitchFamily="2" charset="-127" />
+                      <a:ea typeface="프리젠테이션 5 Medium" pitchFamily="2" charset="-127" />
+                      <a:cs typeface="Pretendard ExtraBold" panose="02000903000000020004" pitchFamily="50" charset="-127" />
+                    </a:endParaRPr>
+                  </a:p>
+                </p:txBody>
+              </p:sp>
+              <p:sp>
+                <p:nvSpPr>
+                  <p:cNvPr id="108" name="TextBox 107">
+                    <a:extLst>
+                      <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                        <ns3:creationId id="{BDA2BCD4-CE00-4D5B-6319-ECAFBA5F8ECA}" />
+                      </a:ext>
+                    </a:extLst>
+                  </p:cNvPr>
+                  <p:cNvSpPr txBox="1" />
+                  <p:nvPr />
+                </p:nvSpPr>
+                <p:spPr>
+                  <a:xfrm>
+                    <a:off x="2979274" y="3456703" />
+                    <a:ext cx="676467" cy="304638" />
+                  </a:xfrm>
+                  <a:prstGeom prst="rect">
+                    <a:avLst />
+                  </a:prstGeom>
+                  <a:noFill />
+                </p:spPr>
+                <p:txBody>
+                  <a:bodyPr wrap="none" lIns="0" tIns="44166" rIns="0" bIns="44166" anchor="ctr" anchorCtr="0">
+                    <a:spAutoFit />
+                  </a:bodyPr>
+                  <a:lstStyle />
+                  <a:p>
+                    <a:r>
+                      <a:rPr lang="ko-KR" altLang="en-US" sz="1400" spc="-50" dirty="0">
+                        <a:latin typeface="프리젠테이션 6 SemiBold" pitchFamily="2" charset="-127" />
+                        <a:ea typeface="프리젠테이션 6 SemiBold" pitchFamily="2" charset="-127" />
+                      </a:rPr>
+                      <a:t>페이지 제목</a:t>
+                    </a:r>
+                    <a:endParaRPr lang="ko-KR" altLang="en-US" sz="1400" spc="-50" dirty="0">
+                      <a:latin typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                      <a:ea typeface="프리젠테이션 4 Regular" pitchFamily="2" charset="-127" />
+                    </a:endParaRPr>
+                  </a:p>
+                </p:txBody>
+              </p:sp>
+              <p:pic>
+                <p:nvPicPr>
+                  <p:cNvPr id="118" name="그래픽 117">
+                    <a:extLst>
+                      <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                        <ns3:creationId id="{60707CE2-A328-AF97-DE46-CDD12BD0696B}" />
+                      </a:ext>
+                    </a:extLst>
+                  </p:cNvPr>
+                  <p:cNvPicPr>
+                    <a:picLocks noChangeAspect="1" />
+                  </p:cNvPicPr>
+                  <p:nvPr />
+                </p:nvPicPr>
+                <p:blipFill>
+                  <a:blip>
+                    <a:extLst>
+                      <a:ext uri="{96DAC541-7B7A-43D3-8B79-37D633B846F1}">
+                        <ns4:svgBlip r:embed="rId2" />
+                      </a:ext>
+                    </a:extLst>
+                  </a:blip>
+                  <a:stretch>
+                    <a:fillRect />
+                  </a:stretch>
+                </p:blipFill>
+                <p:spPr>
+                  <a:xfrm>
+                    <a:off x="11098538" y="3556635" />
+                    <a:ext cx="377185" cy="104775" />
+                  </a:xfrm>
+                  <a:prstGeom prst="rect">
+                    <a:avLst />
+                  </a:prstGeom>
+                </p:spPr>
+              </p:pic>
+            </p:grpSp>
+          </p:spTree>
+        </p:cSld>
+      </p:sld>
+    </pkg:xmlData>
+  </pkg:part>
+</pkg:package>

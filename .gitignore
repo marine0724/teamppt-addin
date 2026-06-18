@@ -1,0 +1,18 @@
+# Build outputs
+src/*/bin/
+src/*/obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.cache
+
+# macOS
+.DS_Store
+
+# Thumbnails cache (runtime generated)
+thumbnails/
+
+# NuGet
+packages/
