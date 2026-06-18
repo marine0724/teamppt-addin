@@ -52,6 +52,8 @@
     <Compile Include="UI\CardControl.cs" />
     <Compile Include="UI\DragHandler.cs" />
     <Compile Include="UI\GhostWindow.cs" />
+    <Compile Include="UI\Wpf\AssetCard.cs" />
+    <Compile Include="UI\Wpf\AssetPanel.cs" />
     <Compile Include="Models\HeaderAsset.cs" />
     <Compile Include="Interop\IObjectSafety.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -5,29 +5,11 @@ using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using System.Windows.Forms.Integration;
+using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 
 namespace TeampptAddin
 {
-    /// <summary>
-    /// PowerPoint Task Pane의 COM 호스팅 컨테이너.
-    /// Connect.CTPFactoryAvailable에서 CreateCTP("TeampptAddin.TaskPaneHost")로 생성됨.
-    ///
-    /// COM 호스팅 요구사항:
-    /// - [ComVisible], [Guid], [ProgId] 어트리뷰트 필수
-    /// - IObjectSafety 구현 (ActiveX 보안 검증용)
-    /// - 레지스트리에 Control 카테고리 {40FC6ED4-...} 수동 등록 필수
-    ///
-    /// 초기화 흐름:
-    /// 1. 생성자: InitUI()로 WinForms 레이아웃 구성 (header, scrollPanel, statusLabel)
-    /// 2. OnSizeChanged(Width > 0): LoadCards()로 에셋 카드 로드
-    ///    → COM 초기화 직후에는 Size가 0x0이므로, Width > 0인 첫 SizeChanged에서만 실행
-    ///    → WPF ElementHost도 이 시점에서 생성하면 COM 충돌 없음 (검증 완료)
-    ///
-    /// 썸네일 로딩 전략 (LoadThumbnail):
-    /// 1순위: 캐시 파일 (pptx 수정일과 비교)
-    /// 2순위: ThumbnailGenerator.Generate (COM Shape-only export)
-    /// 3순위: pptx ZIP 내부의 docProps/thumbnail 이미지
-    /// </summary>
     [ComVisible(true)]
     [Guid("2D4E6F8A-1B3C-5D7E-9F0A-4C6E8D2B1A3F")]
     [ProgId("TeampptAddin.TaskPaneHost")]
@@ -42,10 +24,22 @@ namespace TeampptAddin
         static readonly Color AccentColor = Color.FromArgb(99, 102, 241);
         static readonly Color TextDim = Color.FromArgb(113, 113, 122);
 
+        // WinForms fallback controls
         private Label _statusLabel;
         private Panel _scrollPanel;
-        private bool _loaded;
+        private Panel _headerPanel;
         private int _assetCount;
+
+        // WPF controls
+        private ElementHost _elementHost;
+        private AssetPanel _wpfPanel;
+
+        // WPF drag state
+        private GhostWindow _wpfDragGhost;
+        private AssetCard _wpfDragCard;
+        private bool _wpfDragging;
+
+        private bool _loaded;
 
         public TaskPaneHost()
         {
@@ -64,13 +58,13 @@ namespace TeampptAddin
         {
             BackColor = BgColor;
 
-            var header = new Panel { Dock = DockStyle.Top, Height = 52, BackColor = HeaderBg };
-            header.Paint += (s, e) =>
+            _headerPanel = new Panel { Dock = DockStyle.Top, Height = 52, BackColor = HeaderBg };
+            _headerPanel.Paint += (s, e) =>
             {
                 using (var pen = new Pen(Color.FromArgb(50, 50, 55)))
-                    e.Graphics.DrawLine(pen, 0, 51, header.Width, 51);
+                    e.Graphics.DrawLine(pen, 0, 51, _headerPanel.Width, 51);
             };
-            header.Controls.Add(new Label
+            _headerPanel.Controls.Add(new Label
             {
                 Text = "TEAMPPT",
                 Font = new Font("Segoe UI", 14f, FontStyle.Bold),
@@ -78,7 +72,7 @@ namespace TeampptAddin
                 Location = new Point(16, 6),
                 AutoSize = true
             });
-            header.Controls.Add(new Label
+            _headerPanel.Controls.Add(new Label
             {
                 Text = "헤더 에셋",
                 Font = new Font("Segoe UI", 9f),
@@ -107,7 +101,7 @@ namespace TeampptAddin
 
             Controls.Add(_scrollPanel);
             Controls.Add(_statusLabel);
-            Controls.Add(header);
+            Controls.Add(_headerPanel);
         }
 
         protected override void OnSizeChanged(EventArgs e)
@@ -116,9 +110,196 @@ namespace TeampptAddin
             if (!_loaded && Width > 0 && _scrollPanel != null)
             {
                 _loaded = true;
+                InitWpfUI();
+            }
+        }
+
+        #region WPF Initialization
+
+        private void InitWpfUI()
+        {
+            try
+            {
+                _wpfPanel = new AssetPanel();
+                LoadWpfCards();
+
+                _elementHost = new ElementHost
+                {
+                    Dock = DockStyle.Fill,
+                    Child = _wpfPanel
+                };
+
+                _wpfPanel.CardClickInsert += OnWpfClickInsert;
+                _wpfPanel.CardDragStart += OnWpfDragStart;
+
+                _headerPanel.Visible = false;
+                _statusLabel.Visible = false;
+                _scrollPanel.Visible = false;
+                Controls.Add(_elementHost);
+
+                Logger.Log("WPF UI initialized successfully");
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"WPF init failed, falling back to WinForms: {ex.Message}");
+                if (_elementHost != null)
+                {
+                    Controls.Remove(_elementHost);
+                    _elementHost.Dispose();
+                    _elementHost = null;
+                }
+                _wpfPanel = null;
+
+                _headerPanel.Visible = true;
+                _statusLabel.Visible = true;
+                _scrollPanel.Visible = true;
                 LoadCards();
             }
         }
+
+        private void LoadWpfCards()
+        {
+            var assetsDir = Globals.AssetsDir;
+            var thumbDir = Globals.ThumbnailDir;
+
+            for (int i = 1; i <= 7; i++)
+            {
+                var pptxPath = Path.Combine(assetsDir, $"header_{i}.pptx");
+                if (!File.Exists(pptxPath)) continue;
+
+                var thumbPath = Path.Combine(thumbDir, $"header_{i}.png");
+                var thumb = LoadThumbnail(pptxPath, thumbPath);
+
+                _wpfPanel.AddCard(new AssetCard(thumb, $"Header {i}", pptxPath));
+            }
+
+            _wpfPanel.ResetStatus();
+        }
+
+        #endregion
+
+        #region WPF Drag Handling
+
+        private void OnWpfClickInsert(AssetCard card)
+        {
+            try
+            {
+                ShapeInserter.InsertToActiveSlide(card.PptxPath);
+                _wpfPanel.SetStatus($"✓ {card.Title} 삽입 완료",
+                    System.Windows.Media.Color.FromRgb(134, 239, 172));
+            }
+            catch (Exception ex)
+            {
+                _wpfPanel.SetStatus($"삽입 실패: {ex.Message}",
+                    System.Windows.Media.Color.FromRgb(252, 165, 165));
+                Logger.Log($"WPF ClickInsert fail: {ex}");
+            }
+        }
+
+        private void OnWpfDragStart(AssetCard card)
+        {
+            try
+            {
+                Logger.Log($"WPF BeginDrag: {card.Title}");
+                ShapeInserter.CopyShapesToClipboard(card.PptxPath);
+
+                _wpfDragGhost = new GhostWindow(card.DrawingThumbnail);
+                _wpfDragGhost.MoveTo(Cursor.Position);
+                _wpfDragGhost.Show();
+
+                _wpfDragCard = card;
+                _wpfDragging = true;
+                Capture = true;
+                Cursor.Current = Cursors.Cross;
+
+                _wpfPanel.SetStatus($"{card.Title} → 슬라이드에 놓으세요",
+                    System.Windows.Media.Color.FromRgb(99, 102, 241));
+            }
+            catch (Exception ex)
+            {
+                _wpfDragging = false;
+                DisposeWpfDragGhost();
+                _wpfPanel.SetStatus($"드래그 실패: {ex.Message}",
+                    System.Windows.Media.Color.FromRgb(252, 165, 165));
+                Logger.Log($"WPF BeginDrag fail: {ex}");
+            }
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+            if (_wpfDragging && _wpfDragGhost != null)
+                _wpfDragGhost.MoveTo(PointToScreen(e.Location));
+        }
+
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+            if (!_wpfDragging) return;
+
+            var card = _wpfDragCard;
+            _wpfDragging = false;
+            _wpfDragCard = null;
+            Capture = false;
+            DisposeWpfDragGhost();
+
+            var screenPos = PointToScreen(e.Location);
+            var hostRect = RectangleToScreen(ClientRectangle);
+
+            if (!hostRect.Contains(screenPos))
+            {
+                try
+                {
+                    var app = Globals.Application;
+                    var window = app.ActiveWindow;
+                    var slide = (PowerPoint.Slide)window.View.Slide;
+                    var shapes = slide.Shapes.Paste();
+                    CoordinateConverter.PositionShapesAtCursor(shapes, screenPos, window);
+
+                    _wpfPanel.SetStatus($"✓ {card.Title} 삽입 완료",
+                        System.Windows.Media.Color.FromRgb(134, 239, 172));
+                }
+                catch (Exception ex)
+                {
+                    _wpfPanel.SetStatus($"삽입 실패: {ex.Message}",
+                        System.Windows.Media.Color.FromRgb(252, 165, 165));
+                    Logger.Log($"WPF EndDrag paste fail: {ex}");
+                }
+            }
+            else
+            {
+                _wpfPanel.ResetStatus();
+            }
+
+            Cursor.Current = Cursors.Default;
+        }
+
+        protected override void OnMouseCaptureChanged(EventArgs e)
+        {
+            base.OnMouseCaptureChanged(e);
+            if (_wpfDragging)
+            {
+                _wpfDragging = false;
+                _wpfDragCard = null;
+                DisposeWpfDragGhost();
+                _wpfPanel?.ResetStatus();
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
+        private void DisposeWpfDragGhost()
+        {
+            if (_wpfDragGhost != null)
+            {
+                _wpfDragGhost.Close();
+                _wpfDragGhost.Dispose();
+                _wpfDragGhost = null;
+            }
+        }
+
+        #endregion
+
+        #region WinForms Fallback
 
         private void LoadCards()
         {
@@ -155,10 +336,12 @@ namespace TeampptAddin
         private void ResetStatus()
         {
             _statusLabel.Text = _assetCount > 0
-                ? $"{_assetCount}개 에셋 · 클릭 또는 드래그하여 삽입"
+                ? $"{_assetCount}개 에셋 \xb7 클릭 또는 드래그하여 삽입"
                 : "Assets 폴더에 header_N.pptx 파일을 넣으세요";
             _statusLabel.ForeColor = TextDim;
         }
+
+        #endregion
 
         #region Thumbnail Loading
 
