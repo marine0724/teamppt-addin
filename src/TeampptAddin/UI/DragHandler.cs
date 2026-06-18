@@ -5,6 +5,25 @@ using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 
 namespace TeampptAddin
 {
+    /// <summary>
+    /// 카드의 드래그앤드롭 + 클릭 삽입 로직을 관리.
+    /// OLE DragDrop이 아닌 Win32 마우스 캡처 방식 (PowerMockup 스타일).
+    ///
+    /// 드래그 흐름:
+    /// 1. MouseDown → 드래그 시작 위치 기록
+    /// 2. MouseMove → 임계값(SystemInformation.DragSize) 초과 시 BeginDrag:
+    ///    - ShapeInserter.CopyShapesToClipboard()로 Shape을 클립보드에 복사
+    ///    - GhostWindow 생성 (썸네일 기반 반투명 윈도우)
+    ///    - Capture = true로 Task Pane 밖의 마우스 이벤트도 수신
+    /// 3. MouseMove (드래그 중) → GhostWindow를 커서 중앙에 이동
+    /// 4. MouseUp → EndDrag:
+    ///    - Task Pane 밖이면: slide.Shapes.Paste() + CoordinateConverter로 드롭 위치에 배치
+    ///    - Task Pane 안이면: 취소 (ResetStatus)
+    ///
+    /// 클릭 삽입: 드래그 임계값 미달 시 DoClickInsert → ShapeInserter.InsertToActiveSlide
+    ///
+    /// 상태 업데이트는 setStatus/resetStatus 콜백으로 TaskPaneHost에 전달.
+    /// </summary>
     internal class DragHandler
     {
         static readonly Color Accent = Color.FromArgb(99, 102, 241);

@@ -8,6 +8,26 @@ using System.Windows.Forms;
 
 namespace TeampptAddin
 {
+    /// <summary>
+    /// PowerPoint Task Pane의 COM 호스팅 컨테이너.
+    /// Connect.CTPFactoryAvailable에서 CreateCTP("TeampptAddin.TaskPaneHost")로 생성됨.
+    ///
+    /// COM 호스팅 요구사항:
+    /// - [ComVisible], [Guid], [ProgId] 어트리뷰트 필수
+    /// - IObjectSafety 구현 (ActiveX 보안 검증용)
+    /// - 레지스트리에 Control 카테고리 {40FC6ED4-...} 수동 등록 필수
+    ///
+    /// 초기화 흐름:
+    /// 1. 생성자: InitUI()로 WinForms 레이아웃 구성 (header, scrollPanel, statusLabel)
+    /// 2. OnSizeChanged(Width > 0): LoadCards()로 에셋 카드 로드
+    ///    → COM 초기화 직후에는 Size가 0x0이므로, Width > 0인 첫 SizeChanged에서만 실행
+    ///    → WPF ElementHost도 이 시점에서 생성하면 COM 충돌 없음 (검증 완료)
+    ///
+    /// 썸네일 로딩 전략 (LoadThumbnail):
+    /// 1순위: 캐시 파일 (pptx 수정일과 비교)
+    /// 2순위: ThumbnailGenerator.Generate (COM Shape-only export)
+    /// 3순위: pptx ZIP 내부의 docProps/thumbnail 이미지
+    /// </summary>
     [ComVisible(true)]
     [Guid("2D4E6F8A-1B3C-5D7E-9F0A-4C6E8D2B1A3F")]
     [ProgId("TeampptAddin.TaskPaneHost")]

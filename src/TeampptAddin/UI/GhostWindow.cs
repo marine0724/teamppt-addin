@@ -7,6 +7,23 @@ using System.Windows.Forms;
 
 namespace TeampptAddin
 {
+    /// <summary>
+    /// 드래그 중 커서를 따라다니는 반투명 고스트 윈도우.
+    /// Win32 Layered Window API로 per-pixel alpha 렌더링.
+    ///
+    /// 윈도우 스타일:
+    /// - WS_EX_LAYERED: UpdateLayeredWindow로 알파 블렌딩
+    /// - WS_EX_TRANSPARENT: 마우스 이벤트 통과 (클릭 가로채지 않음)
+    /// - WS_EX_NOACTIVATE: 포커스 빼앗지 않음
+    /// - WS_EX_TOOLWINDOW: 작업 표시줄에 안 나타남
+    /// - WS_EX_TOPMOST: 항상 최상위
+    ///
+    /// 렌더링:
+    /// - 썸네일 이미지를 32bpp ARGB 비트맵으로 변환 (BuildAlphaBitmap)
+    /// - 화면 너비의 85%까지 스케일 (너무 큰 이미지 방지)
+    /// - SourceConstantAlpha = 180 (~70% 불투명도) + 이미지 자체 알파
+    /// - MoveTo()로 커서 중앙에 위치 (offset = -Width/2, -Height/2)
+    /// </summary>
     internal class GhostWindow : Form
     {
         [DllImport("user32.dll", SetLastError = true)]

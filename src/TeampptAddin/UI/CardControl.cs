@@ -5,6 +5,20 @@ using System.Windows.Forms;
 
 namespace TeampptAddin
 {
+    /// <summary>
+    /// 에셋 카드 UI 컨트롤. Task Pane의 스크롤 패널에 하나씩 배치됨.
+    ///
+    /// 구조: 상단 썸네일 영역(120px) + 하단 라벨 영역(30px)
+    /// - 썸네일: Shape-only PNG를 비율 유지하며 중앙 배치, 없으면 타이틀 텍스트 표시
+    /// - 라벨: 타이틀 + "DRAG" 뱃지
+    /// - 호버: 배경색/테두리 변경 (CardBg → CardHover, BorderNormal → Accent)
+    ///
+    /// 마우스 이벤트는 DragHandler에 위임:
+    /// - 클릭: ShapeInserter.InsertToActiveSlide → 슬라이드 중앙에 삽입
+    /// - 드래그: 임계값 초과 시 DragHandler.BeginDrag → 고스트 윈도우 + 클립보드 복사
+    ///
+    /// 커스텀 OnPaint로 전체 카드를 직접 그림 (더블 버퍼링, 라운드 코너).
+    /// </summary>
     internal class CardControl : Control
     {
         private const int ThumbH = 120;
