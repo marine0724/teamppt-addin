@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -580,6 +581,7 @@ namespace TeampptAddin
                 ClipToBounds = true,
                 Margin = new Thickness(0, 0, 10, 0)
             };
+            ThemeResources.ApplyRoundedClip(thumbBorder, 8);
             if (realCard?.DrawingThumbnail != null)
             {
                 thumbBorder.Child = new Image
@@ -646,10 +648,12 @@ namespace TeampptAddin
                 BorderBrush = ThemeResources.BorderCard,
                 BorderThickness = new Thickness(1),
                 CornerRadius = new CornerRadius(11),
+                ClipToBounds = true,
                 Padding = new Thickness(8),
                 Margin = new Thickness(12, 3, 12, 3),
                 Cursor = realCard != null ? Cursors.Hand : Cursors.Arrow
             };
+            ThemeResources.ApplyRoundedClip(card, 11);
 
             if (realCard != null)
             {
@@ -804,39 +808,6 @@ namespace TeampptAddin
 
         private FrameworkElement BuildStyleTab()
         {
-            var dock = new DockPanel { LastChildFill = true };
-
-            var applyArea = new Border
-            {
-                Background = ThemeResources.BgSurface,
-                BorderBrush = ThemeResources.BorderBase,
-                BorderThickness = new Thickness(0, 1, 0, 0),
-                Padding = new Thickness(12)
-            };
-            var applyBtn = new Border
-            {
-                Background = ThemeResources.Accent,
-                CornerRadius = new CornerRadius(10),
-                Padding = new Thickness(0, 11, 0, 11),
-                Cursor = Cursors.Hand,
-                Child = new TextBlock
-                {
-                    Text = "현재 슬라이드에 적용",
-                    FontSize = 13,
-                    FontWeight = FontWeights.SemiBold,
-                    FontFamily = ThemeResources.FontBase,
-                    Foreground = Brushes.White,
-                    HorizontalAlignment = HorizontalAlignment.Center
-                }
-            };
-            applyBtn.MouseEnter += (s, e) => applyBtn.Background = new SolidColorBrush(Color.FromRgb(0x3D, 0x49, 0xD4));
-            applyBtn.MouseLeave += (s, e) => applyBtn.Background = ThemeResources.Accent;
-            applyBtn.MouseLeftButtonUp += (s, e) =>
-                StyleApplyRequested?.Invoke(_selectedPalette, _selectedFont);
-            applyArea.Child = applyBtn;
-            DockPanel.SetDock(applyArea, Dock.Bottom);
-            dock.Children.Add(applyArea);
-
             _styleStack = new StackPanel { Margin = new Thickness(0, 4, 0, 12) };
             var scroll = new ScrollViewer
             {
@@ -845,9 +816,8 @@ namespace TeampptAddin
                 Content = _styleStack,
                 Background = ThemeResources.BgBase
             };
-            dock.Children.Add(scroll);
 
-            return new Border { Background = ThemeResources.BgBase, Child = dock };
+            return new Border { Background = ThemeResources.BgBase, Child = scroll };
         }
 
         private void PopulateStylePanel()
@@ -863,42 +833,46 @@ namespace TeampptAddin
 
             _styleStack.Children.Add(BuildSectionLabel("컬러 팔레트"));
 
-            _paletteBtns = new Border[palettes.Count];
-            for (int i = 0; i < palettes.Count; i++)
-            {
-                var idx  = i;
-                var card = BuildPaletteCard(palettes[i]);
-                card.MouseLeftButtonUp += (s, e) =>
-                {
-                    _selectedPalette = palettes[idx];
-                    RefreshPaletteSelection(idx);
-                };
-                _paletteBtns[i] = card;
-                _styleStack.Children.Add(card);
-            }
-            if (palettes.Count > 0) RefreshPaletteSelection(0);
-
-            _styleStack.Children.Add(BuildSectionLabel("폰트"));
-
-            var fontWrap = new WrapPanel
+            var paletteWrap = new WrapPanel
             {
                 Orientation = Orientation.Horizontal,
                 Margin = new Thickness(12, 0, 12, 0)
             };
+            _paletteBtns = new Border[palettes.Count];
+            for (int i = 0; i < palettes.Count; i++)
+            {
+                var idx = i;
+                var swatch = BuildPaletteSwatch(palettes[i]);
+                swatch.MouseLeftButtonUp += (s, e) =>
+                {
+                    _selectedPalette = palettes[idx];
+                    RefreshPaletteSelection(idx);
+                    StyleApplyRequested?.Invoke(_selectedPalette, _selectedFont);
+                };
+                _paletteBtns[i] = swatch;
+                paletteWrap.Children.Add(swatch);
+            }
+            _styleStack.Children.Add(paletteWrap);
+            if (palettes.Count > 0) RefreshPaletteSelection(0);
+
+            _styleStack.Children.Add(BuildSectionLabel("폰트"));
+
+            var fontPanel = new StackPanel { Margin = new Thickness(12, 0, 12, 0) };
             _fontBtns = new Border[fonts.Count];
             for (int i = 0; i < fonts.Count; i++)
             {
-                var idx  = i;
-                var chip = BuildFontChip(fonts[i]);
-                chip.MouseLeftButtonUp += (s, e) =>
+                var idx = i;
+                var row = BuildFontRow(fonts[i]);
+                row.MouseLeftButtonUp += (s, e) =>
                 {
                     _selectedFont = fonts[idx];
                     RefreshFontSelection(idx);
+                    StyleApplyRequested?.Invoke(_selectedPalette, _selectedFont);
                 };
-                _fontBtns[i] = chip;
-                fontWrap.Children.Add(chip);
+                _fontBtns[i] = row;
+                fontPanel.Children.Add(row);
             }
-            _styleStack.Children.Add(fontWrap);
+            _styleStack.Children.Add(fontPanel);
             if (fonts.Count > 0) RefreshFontSelection(0);
         }
 
@@ -915,105 +889,76 @@ namespace TeampptAddin
             };
         }
 
-        private static Border BuildPaletteCard(StylePalette p)
+        private static Border BuildPaletteSwatch(StylePalette p)
         {
-            var colorGrid = new Grid { Height = 44 };
-            colorGrid.ColumnDefinitions.Add(new ColumnDefinition());
-            colorGrid.ColumnDefinitions.Add(new ColumnDefinition());
-            colorGrid.ColumnDefinitions.Add(new ColumnDefinition());
-            colorGrid.ColumnDefinitions.Add(new ColumnDefinition());
-
+            var colorGrid = new UniformGrid { Rows = 2, Columns = 2, Height = 56 };
             var hexColors = new[] { p.Colors?.Main, p.Colors?.Sub1, p.Colors?.Sub2, p.Colors?.Text };
-            for (int i = 0; i < 4; i++)
+            foreach (var hex in hexColors)
             {
-                var rect = new System.Windows.Shapes.Rectangle
+                colorGrid.Children.Add(new System.Windows.Shapes.Rectangle
                 {
-                    Fill = BrushFromHex(hexColors[i] ?? "#CCCCCC")
-                };
-                Grid.SetColumn(rect, i);
-                colorGrid.Children.Add(rect);
+                    Fill = BrushFromHex(hex ?? "#CCCCCC")
+                });
             }
 
             var colorStrip = new Border
             {
-                CornerRadius = new CornerRadius(10, 10, 0, 0),
                 ClipToBounds = true,
                 Child = colorGrid
             };
 
-            var nameGrid = new Grid();
-            nameGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-            nameGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-
             var nameText = new TextBlock
             {
                 Text = p.Name,
-                FontSize = 12,
-                FontWeight = FontWeights.SemiBold,
-                Foreground = ThemeResources.TextMain,
+                FontSize = 9,
+                Foreground = ThemeResources.TextSub,
                 FontFamily = ThemeResources.FontBase,
-                VerticalAlignment = VerticalAlignment.Center
+                HorizontalAlignment = HorizontalAlignment.Center,
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                Padding = new Thickness(4, 3, 4, 5)
             };
-            Grid.SetColumn(nameText, 0);
-            nameGrid.Children.Add(nameText);
+
+            var content = new StackPanel();
+            content.Children.Add(colorStrip);
+            content.Children.Add(nameText);
 
             var check = new Border
             {
                 Background = ThemeResources.Accent,
                 CornerRadius = new CornerRadius(99),
-                Width = 18, Height = 18,
-                Visibility = Visibility.Hidden,
-                VerticalAlignment = VerticalAlignment.Center,
+                Width = 16, Height = 16,
+                Visibility = Visibility.Collapsed,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(0, 4, 4, 0),
                 Child = new TextBlock
                 {
                     Text = "✓",
-                    FontSize = 10,
+                    FontSize = 9,
                     FontWeight = FontWeights.Bold,
                     Foreground = Brushes.White,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center
                 }
             };
-            check.Tag = "check";
-            Grid.SetColumn(check, 1);
-            nameGrid.Children.Add(check);
 
-            var moodText = new TextBlock
-            {
-                Text = p.Mood != null ? string.Join(" · ", p.Mood) : "",
-                FontSize = 10,
-                Foreground = ThemeResources.TextSub,
-                FontFamily = ThemeResources.FontBase,
-                Margin = new Thickness(0, 3, 0, 0)
-            };
-
-            var infoStack = new StackPanel();
-            infoStack.Children.Add(nameGrid);
-            infoStack.Children.Add(moodText);
-
-            var infoArea = new Border
-            {
-                Padding = new Thickness(10, 8, 10, 10),
-                Background = ThemeResources.BgCard,
-                CornerRadius = new CornerRadius(0, 0, 10, 10),
-                Child = infoStack
-            };
-
-            var cardStack = new StackPanel();
-            cardStack.Children.Add(colorStrip);
-            cardStack.Children.Add(infoArea);
+            var overlay = new Grid();
+            overlay.Children.Add(content);
+            overlay.Children.Add(check);
 
             var card = new Border
             {
+                Width = 80,
                 CornerRadius = new CornerRadius(12),
                 BorderBrush = ThemeResources.BorderCard,
                 BorderThickness = new Thickness(1.5),
-                Margin = new Thickness(12, 4, 12, 4),
+                Margin = new Thickness(4),
                 Cursor = Cursors.Hand,
                 ClipToBounds = true,
-                Child = cardStack
+                Child = overlay
             };
             card.Tag = check;
+            ThemeResources.ApplyRoundedClip(card, 12);
 
             card.MouseEnter += (s, e) =>
             {
@@ -1029,38 +974,89 @@ namespace TeampptAddin
             return card;
         }
 
-        private static Border BuildFontChip(StyleFont f)
+        private static Border BuildFontRow(StyleFont f)
         {
-            var chip = new Border
+            var nameText = new TextBlock
             {
+                Text = f.Name,
+                FontSize = 13,
+                FontWeight = FontWeights.SemiBold,
+                Foreground = ThemeResources.TextMain,
+                FontFamily = ThemeResources.FontBase,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            var sampleText = new TextBlock
+            {
+                Text = "가나다라",
+                FontSize = 12,
+                Foreground = ThemeResources.TextSub,
+                FontFamily = ThemeResources.FontBase,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(8, 0, 0, 0)
+            };
+
+            var leftPanel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            leftPanel.Children.Add(nameText);
+            leftPanel.Children.Add(sampleText);
+
+            var check = new Border
+            {
+                Background = ThemeResources.Accent,
                 CornerRadius = new CornerRadius(99),
-                BorderBrush = ThemeResources.BorderCard,
-                BorderThickness = new Thickness(1.5),
-                Padding = new Thickness(14, 7, 14, 7),
-                Margin = new Thickness(3, 3, 3, 3),
-                Cursor = Cursors.Hand,
-                Background = Brushes.Transparent,
+                Width = 18, Height = 18,
+                Visibility = Visibility.Collapsed,
+                VerticalAlignment = VerticalAlignment.Center,
                 Child = new TextBlock
                 {
-                    Text = f.Name,
-                    FontSize = 12,
-                    FontFamily = ThemeResources.FontBase,
-                    Foreground = ThemeResources.TextSub
+                    Text = "✓",
+                    FontSize = 10,
+                    FontWeight = FontWeights.Bold,
+                    Foreground = Brushes.White,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
                 }
             };
 
-            chip.MouseEnter += (s, e) =>
+            var grid = new Grid();
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            Grid.SetColumn(leftPanel, 0);
+            Grid.SetColumn(check, 1);
+            grid.Children.Add(leftPanel);
+            grid.Children.Add(check);
+
+            var row = new Border
             {
-                if (chip.Background != ThemeResources.BgCategoryActive)
-                    chip.Background = ThemeResources.BgChip;
+                CornerRadius = new CornerRadius(12),
+                ClipToBounds = true,
+                BorderBrush = ThemeResources.BorderCard,
+                BorderThickness = new Thickness(1.5),
+                Padding = new Thickness(14, 11, 14, 11),
+                Margin = new Thickness(0, 0, 0, 5),
+                Cursor = Cursors.Hand,
+                Background = Brushes.Transparent,
+                Child = grid
             };
-            chip.MouseLeave += (s, e) =>
+            row.Tag = check;
+            ThemeResources.ApplyRoundedClip(row, 12);
+
+            row.MouseEnter += (s, e) =>
             {
-                if (chip.Background != ThemeResources.BgCategoryActive)
-                    chip.Background = Brushes.Transparent;
+                if (row.Background != ThemeResources.BgCategoryActive)
+                    row.Background = ThemeResources.BgChip;
+            };
+            row.MouseLeave += (s, e) =>
+            {
+                if (row.Background != ThemeResources.BgCategoryActive)
+                    row.Background = Brushes.Transparent;
             };
 
-            return chip;
+            return row;
         }
 
         private void RefreshPaletteSelection(int selectedIdx)
@@ -1072,7 +1068,7 @@ namespace TeampptAddin
                 bool active = i == selectedIdx;
                 btn.BorderBrush = active ? ThemeResources.Accent : ThemeResources.BorderCard;
                 if (check != null)
-                    check.Visibility = active ? Visibility.Visible : Visibility.Hidden;
+                    check.Visibility = active ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
@@ -1080,13 +1076,13 @@ namespace TeampptAddin
         {
             for (int i = 0; i < _fontBtns.Length; i++)
             {
-                var chip = _fontBtns[i];
-                var lbl  = (TextBlock)chip.Child;
+                var row   = _fontBtns[i];
+                var check = (Border)row.Tag;
                 bool active = i == selectedIdx;
-                chip.Background   = active ? ThemeResources.BgCategoryActive : Brushes.Transparent;
-                chip.BorderBrush  = active ? ThemeResources.AccentBorder : ThemeResources.BorderCard;
-                lbl.Foreground    = active ? ThemeResources.TextAccent : ThemeResources.TextSub;
-                lbl.FontWeight    = active ? FontWeights.SemiBold : FontWeights.Normal;
+                row.Background  = active ? ThemeResources.BgCategoryActive : Brushes.Transparent;
+                row.BorderBrush = active ? ThemeResources.Accent : ThemeResources.BorderCard;
+                if (check != null)
+                    check.Visibility = active ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 

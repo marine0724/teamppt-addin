@@ -53,6 +53,53 @@ namespace TeampptAddin
         public static readonly CornerRadius RadiusChip    = new CornerRadius(99);
         public static readonly CornerRadius RadiusBubble  = new CornerRadius(14);
 
+        public static void ApplyRoundedClip(FrameworkElement element, double radius)
+        {
+            ApplyRoundedClip(element, new CornerRadius(radius));
+        }
+
+        public static void ApplyRoundedClip(FrameworkElement element, CornerRadius radius)
+        {
+            element.SizeChanged += (s, e) =>
+            {
+                element.Clip = BuildRoundedGeometry(
+                    element.ActualWidth, element.ActualHeight, radius);
+            };
+        }
+
+        private static Geometry BuildRoundedGeometry(double w, double h, CornerRadius r)
+        {
+            if (r.TopLeft == r.TopRight && r.TopRight == r.BottomRight && r.BottomRight == r.BottomLeft)
+            {
+                var rg = new RectangleGeometry(new Rect(0, 0, w, h), r.TopLeft, r.TopLeft);
+                rg.Freeze();
+                return rg;
+            }
+
+            double tl = r.TopLeft, tr = r.TopRight;
+            double br = r.BottomRight, bl = r.BottomLeft;
+
+            var geo = new StreamGeometry();
+            using (var ctx = geo.Open())
+            {
+                ctx.BeginFigure(new Point(tl, 0), true, true);
+                ctx.LineTo(new Point(w - tr, 0), true, false);
+                if (tr > 0)
+                    ctx.ArcTo(new Point(w, tr), new Size(tr, tr), 0, false, SweepDirection.Clockwise, true, false);
+                ctx.LineTo(new Point(w, h - br), true, false);
+                if (br > 0)
+                    ctx.ArcTo(new Point(w - br, h), new Size(br, br), 0, false, SweepDirection.Clockwise, true, false);
+                ctx.LineTo(new Point(bl, h), true, false);
+                if (bl > 0)
+                    ctx.ArcTo(new Point(0, h - bl), new Size(bl, bl), 0, false, SweepDirection.Clockwise, true, false);
+                ctx.LineTo(new Point(0, tl), true, false);
+                if (tl > 0)
+                    ctx.ArcTo(new Point(tl, 0), new Size(tl, tl), 0, false, SweepDirection.Clockwise, true, false);
+            }
+            geo.Freeze();
+            return geo;
+        }
+
         private static SolidColorBrush F(byte r, byte g, byte b)
         {
             var brush = new SolidColorBrush(Color.FromRgb(r, g, b));

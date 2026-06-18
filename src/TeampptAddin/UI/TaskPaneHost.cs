@@ -1,7 +1,6 @@
 using System;
 using System.Drawing;
 using System.IO;
-using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -176,7 +175,7 @@ namespace TeampptAddin
                 var pptxPath  = Path.Combine(assetsDir, asset.File);
                 var thumbPath = Path.Combine(Globals.ThumbnailDir,
                     Path.GetFileNameWithoutExtension(asset.File) + ".png");
-                var thumb = LoadThumbnail(pptxPath, thumbPath);
+                var thumb = ThumbnailService.LoadThumbnail(pptxPath, thumbPath);
                 _wpfPanel.AddAssetCard(
                     new AssetCard(thumb, asset.Name, pptxPath, asset.Category, asset.UseWhen),
                     asset);
@@ -369,7 +368,7 @@ namespace TeampptAddin
                 if (!File.Exists(pptxPath)) continue;
 
                 var thumbPath = Path.Combine(thumbDir, $"header_{i}.png");
-                var thumb = LoadThumbnail(pptxPath, thumbPath);
+                var thumb = ThumbnailService.LoadThumbnail(pptxPath, thumbPath);
 
                 var card = new CardControl(
                     thumb, $"Header {i}", pptxPath,
@@ -395,64 +394,6 @@ namespace TeampptAddin
                 ? $"{_assetCount}개 에셋 \xb7 클릭 또는 드래그하여 삽입"
                 : "Assets 폴더에 header_N.pptx 파일을 넣으세요";
             _statusLabel.ForeColor = TextDim;
-        }
-
-        #endregion
-
-        #region Thumbnail Loading
-
-        private Image LoadThumbnail(string pptxPath, string cachePath)
-        {
-            if (File.Exists(cachePath))
-            {
-                try
-                {
-                    if (File.GetLastWriteTime(cachePath) >= File.GetLastWriteTime(pptxPath))
-                        return LoadImageNoLock(cachePath);
-                    File.Delete(cachePath);
-                }
-                catch { }
-            }
-
-            try
-            {
-                ThumbnailGenerator.Generate(pptxPath, cachePath);
-                if (File.Exists(cachePath))
-                    return LoadImageNoLock(cachePath);
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"COM thumb fail [{Path.GetFileName(pptxPath)}]: {ex.Message}");
-            }
-
-            try
-            {
-                using (var zip = ZipFile.OpenRead(pptxPath))
-                {
-                    foreach (var entry in zip.Entries)
-                    {
-                        if (!entry.FullName.StartsWith("docProps/thumbnail", StringComparison.OrdinalIgnoreCase))
-                            continue;
-                        using (var stream = entry.Open())
-                        using (var ms = new MemoryStream())
-                        {
-                            stream.CopyTo(ms);
-                            return Image.FromStream(new MemoryStream(ms.ToArray()));
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"ZIP thumb fail [{Path.GetFileName(pptxPath)}]: {ex.Message}");
-            }
-
-            return null;
-        }
-
-        private static Image LoadImageNoLock(string path)
-        {
-            return Image.FromStream(new MemoryStream(File.ReadAllBytes(path)));
         }
 
         #endregion

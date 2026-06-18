@@ -62,6 +62,7 @@
     <Compile Include="Services\AssetLoader.cs" />
     <Compile Include="Services\IAiService.cs" />
     <Compile Include="Services\StyleLoader.cs" />
+    <Compile Include="Services\ThumbnailService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

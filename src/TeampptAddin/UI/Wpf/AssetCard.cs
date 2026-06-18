@@ -68,6 +68,8 @@ namespace TeampptAddin
             ClipToBounds = true;
             SnapsToDevicePixels = true;
 
+            ThemeResources.ApplyRoundedClip(this, 13);
+
             RenderTransform = new ScaleTransform(1, 1);
             RenderTransformOrigin = new Point(0.5, 0.5);
 
@@ -282,6 +284,7 @@ namespace TeampptAddin
             {
                 Width = 320,
                 CornerRadius = new CornerRadius(16),
+                ClipToBounds = true,
                 Background = ThemeResources.BgBase,
                 BorderBrush = ThemeResources.BorderCard,
                 BorderThickness = new Thickness(1),
@@ -306,6 +309,7 @@ namespace TeampptAddin
                 CornerRadius = new CornerRadius(16, 16, 0, 0),
                 Background = ThemeResources.BgThumb
             };
+            ThemeResources.ApplyRoundedClip(thumbArea, new CornerRadius(16, 16, 0, 0));
             if (_bitmapThumb != null)
             {
                 thumbArea.Child = new Image
@@ -430,6 +434,7 @@ namespace TeampptAddin
             });
 
             outer.Child = stack;
+            ThemeResources.ApplyRoundedClip(outer, 16);
             return outer;
         }
 
