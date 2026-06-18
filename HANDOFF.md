@@ -10,7 +10,7 @@
 PowerPoint COM Add-in (.NET Framework 4.8). 오른쪽 Task Pane에 헤더 에셋 카드 목록을 표시하고, 클릭 또는 드래그앤드롭으로 현재 슬라이드에 Shape을 삽입하는 도구.
 
 ### 핵심 기능
-- **카드 리스트**: `Assets/header_1.pptx` ~ `header_7.pptx`를 읽어서 카드로 표시
+- **카드 리스트**: `assets/headers/header_1.pptx` ~ `header_7.pptx`를 읽어서 카드로 표시
 - **썸네일**: Shape-only PNG export (투명 배경) → 캐시 → 카드/고스트에 사용
 - **클릭 삽입**: 카드 클릭 → `ShapeInserter.InsertToActiveSlide` → 슬라이드 중앙에 삽입
 - **드래그앤드롭**: 마우스 캡처 방식 (OLE DragDrop 아님) → 고스트 윈도우 → 드롭 위치에 삽입
@@ -251,7 +251,8 @@ Start-Sleep 2
 |------|------|
 | 소스 코드 | `C:\Projects\teamppt-addin\src\TeampptAddin\` |
 | 빌드 출력 | `bin\Debug\TeampptAddin.dll` |
-| Assets (pptx) | `bin\Debug\Assets\header_N.pptx` |
+| Assets 원본 (pptx) | `assets\headers\header_N.pptx` |
+| Assets 빌드 복사본 | `bin\Debug\Assets\header_N.pptx` |
 | 썸네일 캐시 | `%LocalAppData%\TeampptAddin\thumbnails\` |
 | 디버그 로그 | `%LocalAppData%\TeampptAddin\debug.log` |
 | 인계문서 | `C:\Projects\teamppt-addin\HANDOFF.md` |
