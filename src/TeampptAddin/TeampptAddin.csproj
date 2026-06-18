@@ -29,25 +29,26 @@
     <Reference Include="office">
       <HintPath>C:\Windows\assembly\GAC_MSIL\office\15.0.0.0__71e9bce111e9429c\OFFICE.DLL</HintPath>
     </Reference>
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Connect.cs" />
     <Compile Include="Globals.cs" />
-    <Compile Include="HeaderAsset.cs" />
-    <Compile Include="ShapeInserter.cs" />
-    <Compile Include="TaskPaneControl.cs" />
-    <Compile Include="TaskPaneHost.cs" />
+    <Compile Include="Core\Logger.cs" />
+    <Compile Include="Core\ShapeInserter.cs" />
+    <Compile Include="Core\ThumbnailGenerator.cs" />
+    <Compile Include="Core\CoordinateConverter.cs" />
+    <Compile Include="UI\TaskPaneHost.cs" />
+    <Compile Include="UI\CardControl.cs" />
+    <Compile Include="UI\DragHandler.cs" />
+    <Compile Include="UI\GhostWindow.cs" />
+    <Compile Include="Models\HeaderAsset.cs" />
+    <Compile Include="Interop\IObjectSafety.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

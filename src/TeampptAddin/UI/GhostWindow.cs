@@ -1,0 +1,162 @@
+using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+
+namespace TeampptAddin
+{
+    internal class GhostWindow : Form
+    {
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern bool UpdateLayeredWindow(
+            IntPtr hwnd, IntPtr hdcDst,
+            ref POINT pptDst, ref SIZE psize,
+            IntPtr hdcSrc, ref POINT pptSrc,
+            int crKey, ref BLENDFUNCTION pblend, int dwFlags);
+
+        [DllImport("user32.dll")]
+        static extern IntPtr GetDC(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
+
+        [DllImport("gdi32.dll")]
+        static extern IntPtr CreateCompatibleDC(IntPtr hDC);
+
+        [DllImport("gdi32.dll")]
+        static extern bool DeleteDC(IntPtr hDC);
+
+        [DllImport("gdi32.dll")]
+        static extern IntPtr SelectObject(IntPtr hDC, IntPtr hObj);
+
+        [DllImport("gdi32.dll")]
+        static extern bool DeleteObject(IntPtr hObj);
+
+        [StructLayout(LayoutKind.Sequential)]
+        struct POINT { public int X, Y; }
+
+        [StructLayout(LayoutKind.Sequential)]
+        struct SIZE { public int cx, cy; }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        struct BLENDFUNCTION
+        {
+            public byte BlendOp, BlendFlags, SourceConstantAlpha, AlphaFormat;
+        }
+
+        const int ULW_ALPHA = 2;
+        const int WS_EX_LAYERED = 0x00080000;
+        const int WS_EX_TOOLWINDOW = 0x00000080;
+        const int WS_EX_TRANSPARENT = 0x00000020;
+        const int WS_EX_NOACTIVATE = 0x08000000;
+        const int WS_EX_TOPMOST = 0x00000008;
+
+        private Bitmap _alphaBmp;
+
+        public GhostWindow(Image thumb)
+        {
+            FormBorderStyle = FormBorderStyle.None;
+            ShowInTaskbar = false;
+            TopMost = true;
+            StartPosition = FormStartPosition.Manual;
+
+            _alphaBmp = BuildAlphaBitmap(thumb);
+            Size = _alphaBmp.Size;
+        }
+
+        protected override bool ShowWithoutActivation => true;
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var cp = base.CreateParams;
+                cp.ExStyle |= WS_EX_LAYERED | WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT
+                            | WS_EX_NOACTIVATE | WS_EX_TOPMOST;
+                return cp;
+            }
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            ApplyAlpha();
+        }
+
+        public void MoveTo(Point screenPos)
+        {
+            Location = new Point(
+                screenPos.X - Width / 2,
+                screenPos.Y - Height / 2);
+        }
+
+        private void ApplyAlpha()
+        {
+            if (_alphaBmp == null || !IsHandleCreated) return;
+
+            var screenDC = GetDC(IntPtr.Zero);
+            var memDC = CreateCompatibleDC(screenDC);
+            var hBmp = _alphaBmp.GetHbitmap(Color.FromArgb(0, 0, 0, 0));
+            var prev = SelectObject(memDC, hBmp);
+
+            var ptDst = new POINT { X = Left, Y = Top };
+            var ptSrc = new POINT { X = 0, Y = 0 };
+            var sz = new SIZE { cx = _alphaBmp.Width, cy = _alphaBmp.Height };
+            var blend = new BLENDFUNCTION
+            {
+                BlendOp = 0,
+                BlendFlags = 0,
+                SourceConstantAlpha = 180,
+                AlphaFormat = 1
+            };
+
+            UpdateLayeredWindow(Handle, screenDC, ref ptDst, ref sz,
+                memDC, ref ptSrc, 0, ref blend, ULW_ALPHA);
+
+            SelectObject(memDC, prev);
+            DeleteObject(hBmp);
+            DeleteDC(memDC);
+            ReleaseDC(IntPtr.Zero, screenDC);
+        }
+
+        private static Bitmap BuildAlphaBitmap(Image src)
+        {
+            if (src == null)
+            {
+                var fb = new Bitmap(200, 30, PixelFormat.Format32bppArgb);
+                using (var g = Graphics.FromImage(fb))
+                    g.Clear(Color.FromArgb(200, 39, 39, 42));
+                return fb;
+            }
+
+            int w = src.Width;
+            int h = src.Height;
+
+            var screenW = Screen.PrimaryScreen.WorkingArea.Width;
+            if (w > screenW * 0.85)
+            {
+                float s = (screenW * 0.85f) / w;
+                w = (int)(w * s);
+                h = Math.Max(20, (int)(h * s));
+            }
+
+            var bmp = new Bitmap(w, h, PixelFormat.Format32bppArgb);
+            using (var g = Graphics.FromImage(bmp))
+            {
+                g.CompositingMode = CompositingMode.SourceOver;
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.Clear(Color.Transparent);
+                g.DrawImage(src, 0, 0, w, h);
+            }
+            return bmp;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) { _alphaBmp?.Dispose(); _alphaBmp = null; }
+            base.Dispose(disposing);
+        }
+    }
+}
