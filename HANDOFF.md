@@ -19,15 +19,45 @@ PowerPoint COM Add-in (.NET Framework 4.8). 오른쪽 Task Pane에 헤더 에셋
 
 ## 2. 파일 구조 및 역할
 
+> 2026-06-18 모듈화 완료. Core/UI/Models/Interop 분리.
+
+### 루트
+
 | 파일 | 역할 | 상태 |
 |------|------|------|
-| `Connect.cs` | COM 진입점, `IDTExtensibility2` + `ICustomTaskPaneConsumer`. `CreateCTP`로 TaskPaneHost 생성 | 완성 |
-| `TaskPaneHost.cs` | **메인 UI**. WinForms UserControl (COM 호스팅). 카드 리스트 + 드래그앤드롭 + 고스트 윈도우 전부 여기 | 활발히 수정 중 |
-| `ShapeInserter.cs` | PowerPoint COM으로 Shape 복사/붙여넣기/썸네일 생성 | 완성 |
+| `Connect.cs` | COM 진입점, `IDTExtensibility2` + `ICustomTaskPaneConsumer` | 완성 |
 | `Globals.cs` | 전역 `Application` 참조, `AssetsDir`, `ThumbnailDir` 경로 | 완성 |
-| `HeaderAsset.cs` | 에셋 데이터 모델 (현재 TaskPaneHost에서 직접 관리하므로 미사용) | 미사용 |
-| `TaskPaneControl.cs` | **이전 WPF UI** — COM 호스팅 문제로 폐기됨. WinForms로 전환함 | 미사용 |
 | `install.bat` / `uninstall.bat` | 수동 설치/제거 스크립트 | 완성 |
+
+### Core/ — UI 무관, WinForms 참조 없음 (VSTO 전환 시 그대로 재사용)
+
+| 파일 | 역할 |
+|------|------|
+| `Logger.cs` | 디버그 로깅 (`%LocalAppData%\TeampptAddin\debug.log`) |
+| `ShapeInserter.cs` | Shape 복사/붙여넣기 (CopyShapesToClipboard, InsertToActiveSlide) |
+| `ThumbnailGenerator.cs` | COM 기반 shape-only PNG export + slide export 폴백 |
+| `CoordinateConverter.cs` | PointsToScreenPixels 역변환, 슬라이드 좌표 계산, ShapeRange 위치 지정 |
+
+### UI/ — WinForms 전용 (Phase 3에서 WPF XAML로 교체 예정)
+
+| 파일 | 역할 |
+|------|------|
+| `TaskPaneHost.cs` | COM 호스팅 껍데기 (InitUI, LoadCards, 썸네일 캐시, IObjectSafety) |
+| `CardControl.cs` | 카드 렌더링 (OnPaint, 호버) |
+| `DragHandler.cs` | 드래그 상태 관리 (BeginDrag/EndDrag, GhostWindow, 클릭 삽입) |
+| `GhostWindow.cs` | WS_EX_LAYERED 투명 윈도우 (UpdateLayeredWindow P/Invoke) |
+
+### Models/
+
+| 파일 | 역할 |
+|------|------|
+| `HeaderAsset.cs` | 에셋 데이터 모델 (System.Drawing.Image 기반, WPF 의존성 제거) |
+
+### Interop/
+
+| 파일 | 역할 |
+|------|------|
+| `IObjectSafety.cs` | COM IObjectSafety 인터페이스 정의 |
 
 ---
 
@@ -141,7 +171,7 @@ Start-Sleep 2
 
 ---
 
-## 6. 현재 동작 상태 (2026-06-17)
+## 6. 현재 동작 상태 (2026-06-18 모듈화 후)
 
 | 기능 | 상태 | 비고 |
 |------|------|------|
@@ -158,20 +188,33 @@ Start-Sleep 2
 
 ## 7. 다음 실행사항 (TODO)
 
-### 7.1 높은 우선순위
-1. **UI 최종 확인**: 썸네일 캐시 클리어 후 shape-only PNG가 투명 배경으로 정확히 나오는지 확인. 만약 흰 배경이면 PowerPoint 버전 이슈 → 카드 ThumbBg를 흰색 계열로 변경하거나 별도 처리 필요
+### Phase 1 완료: 모듈화 (2026-06-18)
+- Core/UI/Models/Interop 분리 완료
+- 미사용 파일 제거 (TaskPaneControl.cs)
+- WPF 참조 제거 (PresentationCore, PresentationFramework 등)
+- HeaderAsset WPF→System.Drawing 전환 완료
+- 빌드 검증 완료 (에러/경고 0)
+
+### Phase 2: VS 2022 + VSTO 전환
+1. VSTO 프로젝트 생성 (PowerPoint Add-in)
+2. Core/ 파일 그대로 복사
+3. COM 수동 등록 → VSTO 자동 배포로 전환
+
+### Phase 3: WPF XAML UI 재작성
+1. UI/ 폴더를 WPF XAML로 교체 (Core/는 그대로 유지)
+2. VSTO의 WPF 공식 지원으로 ElementHost 문제 없음
+
+### Phase 4: AI 채팅 기능 추가
+1. Claude API 연동
+
+### 기존 TODO (우선순위 순)
+1. **UI 최종 확인**: 썸네일 캐시 클리어 후 shape-only PNG가 투명 배경으로 정확히 나오는지 확인
 2. **드롭 위치 정확도 테스트**: 여러 줌 레벨/슬라이드 크기에서 좌표 변환 정확도 검증
-3. **다중 모니터 / DPI 스케일링**: `PointsToScreenPixelsX/Y` 좌표 변환이 다중 모니터나 고DPI 환경에서 정확한지 테스트
-
-### 7.2 중간 우선순위
-4. **Assets 폴더 자동 포함**: 현재 `bin\Debug\Assets\`에 수동으로 pptx를 넣어야 함. csproj에 빌드 시 Assets 복사 설정 추가
-5. **에셋 동적 로딩**: 하드코딩된 `header_1~7` 대신 Assets 폴더의 모든 pptx를 자동 스캔
-6. **TaskPaneControl.cs / HeaderAsset.cs 정리**: 미사용 파일 제거 또는 csproj에서 Compile 제외
-7. **Strong Name 서명**: RegAsm 경고 해결, 프로덕션 배포 시 필요
-
-### 7.3 낮은 우선순위
-8. **호버 스케일 애니메이션**: WinForms Timer로 카드 확대/축소 애니메이션 구현
-9. **WPF UI 복원 검토**: COM 초기화가 안정화되면 WPF ElementHost를 `OnHandleCreated`나 `OnSizeChanged`에서 지연 초기화하는 방식으로 재시도 가능
+3. **다중 모니터 / DPI 스케일링**: `PointsToScreenPixelsX/Y` 좌표 변환 테스트
+4. **Assets 폴더 자동 포함**: csproj에 빌드 시 Assets 복사 설정 추가
+5. **에셋 동적 로딩**: 하드코딩된 `header_1~7` 대신 Assets 폴더 자동 스캔
+6. **Strong Name 서명**: RegAsm 경고 해결
+7. **호버 스케일 애니메이션**: WinForms Timer로 카드 확대/축소
 10. **인스톨러 제작**: MSI 또는 ClickOnce로 원클릭 설치
 
 ---
