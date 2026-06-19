@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace TeampptAddin
 {
@@ -71,6 +72,58 @@ namespace TeampptAddin
         public static string BuildUserPrompt(string userIntent)
         {
             return userIntent;
+        }
+
+        /// <summary>
+        /// Gemini generationConfig.responseSchema에 넣을 응답 스키마.
+        /// 모델이 이 구조를 벗어날 수 없게 강제하므로, 프롬프트에 형식을 설명할 필요가 없다.
+        /// palette/font는 질문/부적합 케이스에서 null이 될 수 있어 nullable.
+        /// </summary>
+        public static JObject BuildResponseSchema()
+        {
+            return new JObject
+            {
+                ["type"] = "object",
+                ["properties"] = new JObject
+                {
+                    ["message"] = new JObject { ["type"] = "string" },
+                    ["assets"] = new JObject
+                    {
+                        ["type"] = "array",
+                        ["items"] = new JObject
+                        {
+                            ["type"] = "object",
+                            ["properties"] = new JObject
+                            {
+                                ["file"] = new JObject { ["type"] = "string" },
+                                ["reason"] = new JObject { ["type"] = "string" }
+                            },
+                            ["required"] = new JArray { "file", "reason" }
+                        }
+                    },
+                    ["palette"] = new JObject
+                    {
+                        ["type"] = "object",
+                        ["nullable"] = true,
+                        ["properties"] = new JObject
+                        {
+                            ["id"] = new JObject { ["type"] = "string" },
+                            ["reason"] = new JObject { ["type"] = "string" }
+                        }
+                    },
+                    ["font"] = new JObject
+                    {
+                        ["type"] = "object",
+                        ["nullable"] = true,
+                        ["properties"] = new JObject
+                        {
+                            ["name"] = new JObject { ["type"] = "string" },
+                            ["reason"] = new JObject { ["type"] = "string" }
+                        }
+                    }
+                },
+                ["required"] = new JArray { "message", "assets" }
+            };
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace TeampptAddin.Tests
@@ -98,6 +99,40 @@ namespace TeampptAddin.Tests
         {
             var result = GeminiPromptBuilder.BuildUserPrompt("깔끔한 발표");
             Assert.Contains("깔끔한 발표", result);
+        }
+
+        [Fact]
+        public void ResponseSchema_Has_Expected_Top_Level_Properties()
+        {
+            var schema = GeminiPromptBuilder.BuildResponseSchema();
+
+            Assert.Equal("object", schema["type"]?.ToString());
+            var props = schema["properties"];
+            Assert.NotNull(props["message"]);
+            Assert.NotNull(props["assets"]);
+            Assert.NotNull(props["palette"]);
+            Assert.NotNull(props["font"]);
+        }
+
+        [Fact]
+        public void ResponseSchema_Assets_Is_Array_Of_File_Reason()
+        {
+            var schema = GeminiPromptBuilder.BuildResponseSchema();
+            var assets = schema["properties"]["assets"];
+
+            Assert.Equal("array", assets["type"]?.ToString());
+            var itemProps = assets["items"]["properties"];
+            Assert.NotNull(itemProps["file"]);
+            Assert.NotNull(itemProps["reason"]);
+        }
+
+        [Fact]
+        public void ResponseSchema_Palette_And_Font_Are_Nullable()
+        {
+            var schema = GeminiPromptBuilder.BuildResponseSchema();
+
+            Assert.True(schema["properties"]["palette"]["nullable"].Value<bool>());
+            Assert.True(schema["properties"]["font"]["nullable"].Value<bool>());
         }
     }
 }
