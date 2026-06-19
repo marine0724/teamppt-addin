@@ -1,107 +1,186 @@
 [
   {
+    "schemaVersion": 2,
     "file": "header_1.pptx",
     "name": "타이틀 히어로",
+    "kind": "component",
     "category": "헤더",
+    "scope": "deck",
     "content_fit": ["제목 강조", "프로젝트 소개", "브랜드 첫인상"],
     "use_when": "프레젠테이션 첫 슬라이드에 임팩트 있는 타이틀이 필요할 때",
     "grid_columns": 1,
     "tags": ["타이틀", "임팩트", "풀블리드", "첫슬라이드"],
-    "colors": {
-      "main": "#2563EB",
-      "sub1": "#3B82F6",
-      "sub2": "#93C5FD",
-      "text": "#FFFFFF"
-    }
+    "colors": [
+      { "role": "main", "value": "#2563EB", "locked": false },
+      { "role": "sub1", "value": "#3B82F6", "locked": false },
+      { "role": "sub2", "value": "#93C5FD", "locked": false },
+      { "role": "text", "value": "#FFFFFF", "locked": false }
+    ],
+    "fonts": [
+      { "role": "heading", "family": "Pretendard", "fallback": "맑은 고딕", "weight": "Bold", "source": "bundled" },
+      { "role": "body",    "family": "Pretendard", "fallback": "맑은 고딕", "weight": "Regular", "source": "bundled" }
+    ],
+    "slots": [
+      { "name": "title",    "type": "text", "perSlide": true },
+      { "name": "subtitle", "type": "text", "perSlide": true }
+    ]
   },
   {
+    "schemaVersion": 2,
     "file": "header_2.pptx",
     "name": "서비스 개요",
+    "kind": "component",
     "category": "헤더",
+    "scope": "slide",
     "content_fit": ["서비스 소개", "제품 설명", "핵심 메시지"],
     "use_when": "서비스나 제품의 핵심 가치를 한눈에 보여줄 때",
     "grid_columns": 1,
     "tags": ["서비스", "제품", "소개"],
-    "colors": {
-      "main": "#2563EB",
-      "sub1": "#3B82F6",
-      "sub2": "#93C5FD",
-      "text": "#1E293B"
-    }
+    "colors": [
+      { "role": "main", "value": "#2563EB", "locked": false },
+      { "role": "sub1", "value": "#3B82F6", "locked": false },
+      { "role": "sub2", "value": "#93C5FD", "locked": false },
+      { "role": "text", "value": "#1E293B", "locked": false }
+    ],
+    "fonts": [
+      { "role": "heading", "family": "Pretendard", "fallback": "맑은 고딕", "weight": "Bold", "source": "bundled" },
+      { "role": "body",    "family": "Pretendard", "fallback": "맑은 고딕", "weight": "Regular", "source": "bundled" }
+    ],
+    "slots": [
+      { "name": "title", "type": "text", "perSlide": true },
+      { "name": "body",  "type": "text", "perSlide": true }
+    ]
   },
   {
+    "schemaVersion": 2,
     "file": "header_3.pptx",
     "name": "장점 나열",
+    "kind": "component",
     "category": "헤더",
+    "scope": "slide",
     "content_fit": ["장점 나열", "특징 비교", "기능 소개"],
     "use_when": "3~4가지 핵심 장점을 아이콘과 함께 나열할 때",
     "grid_columns": 1,
     "tags": ["장점", "나열", "아이콘", "비교"],
-    "colors": {
-      "main": "#2563EB",
-      "sub1": "#3B82F6",
-      "sub2": "#93C5FD",
-      "text": "#1E293B"
-    }
+    "colors": [
+      { "role": "main", "value": "#2563EB", "locked": false },
+      { "role": "sub1", "value": "#3B82F6", "locked": false },
+      { "role": "sub2", "value": "#93C5FD", "locked": false },
+      { "role": "text", "value": "#1E293B", "locked": false }
+    ],
+    "fonts": [
+      { "role": "heading", "family": "Pretendard", "fallback": "맑은 고딕", "weight": "Bold", "source": "bundled" },
+      { "role": "body",    "family": "Pretendard", "fallback": "맑은 고딕", "weight": "Regular", "source": "bundled" }
+    ],
+    "slots": [
+      { "name": "title", "type": "text", "perSlide": true },
+      { "name": "body",  "type": "text", "perSlide": true }
+    ]
   },
   {
+    "schemaVersion": 2,
     "file": "header_4.pptx",
     "name": "팀 소개",
+    "kind": "component",
     "category": "헤더",
+    "scope": "slide",
     "content_fit": ["팀 소개", "조직 구성", "멤버 프로필"],
     "use_when": "팀원이나 조직 구성을 시각적으로 보여줄 때",
     "grid_columns": 1,
     "tags": ["팀", "조직", "멤버"],
-    "colors": {
-      "main": "#2563EB",
-      "sub1": "#3B82F6",
-      "sub2": "#93C5FD",
-      "text": "#1E293B"
-    }
+    "colors": [
+      { "role": "main", "value": "#2563EB", "locked": false },
+      { "role": "sub1", "value": "#3B82F6", "locked": false },
+      { "role": "sub2", "value": "#93C5FD", "locked": false },
+      { "role": "text", "value": "#1E293B", "locked": false }
+    ],
+    "fonts": [
+      { "role": "heading", "family": "Pretendard", "fallback": "맑은 고딕", "weight": "Bold", "source": "bundled" },
+      { "role": "body",    "family": "Pretendard", "fallback": "맑은 고딕", "weight": "Regular", "source": "bundled" }
+    ],
+    "slots": [
+      { "name": "title",  "type": "text",  "perSlide": true },
+      { "name": "body",   "type": "text",  "perSlide": true },
+      { "name": "image1", "type": "image", "perSlide": true }
+    ]
   },
   {
+    "schemaVersion": 2,
     "file": "header_5.pptx",
     "name": "타임라인",
+    "kind": "component",
     "category": "헤더",
+    "scope": "slide",
     "content_fit": ["일정 안내", "프로세스 흐름", "로드맵"],
     "use_when": "프로젝트 일정이나 단계별 진행 과정을 보여줄 때",
     "grid_columns": 1,
     "tags": ["타임라인", "일정", "프로세스", "로드맵"],
-    "colors": {
-      "main": "#2563EB",
-      "sub1": "#3B82F6",
-      "sub2": "#93C5FD",
-      "text": "#1E293B"
-    }
+    "colors": [
+      { "role": "main", "value": "#2563EB", "locked": false },
+      { "role": "sub1", "value": "#3B82F6", "locked": false },
+      { "role": "sub2", "value": "#93C5FD", "locked": false },
+      { "role": "text", "value": "#1E293B", "locked": false }
+    ],
+    "fonts": [
+      { "role": "heading", "family": "Pretendard", "fallback": "맑은 고딕", "weight": "Bold", "source": "bundled" },
+      { "role": "body",    "family": "Pretendard", "fallback": "맑은 고딕", "weight": "Regular", "source": "bundled" }
+    ],
+    "slots": [
+      { "name": "title", "type": "text", "perSlide": true },
+      { "name": "body",  "type": "text", "perSlide": true }
+    ]
   },
   {
+    "schemaVersion": 2,
     "file": "header_6.pptx",
     "name": "데이터 하이라이트",
+    "kind": "component",
     "category": "헤더",
+    "scope": "slide",
     "content_fit": ["수치 강조", "성과 요약", "KPI 대시보드"],
     "use_when": "핵심 숫자나 성과 지표를 크게 강조할 때",
     "grid_columns": 1,
     "tags": ["데이터", "수치", "KPI", "대시보드"],
-    "colors": {
-      "main": "#2563EB",
-      "sub1": "#3B82F6",
-      "sub2": "#93C5FD",
-      "text": "#1E293B"
-    }
+    "colors": [
+      { "role": "main", "value": "#2563EB", "locked": false },
+      { "role": "sub1", "value": "#3B82F6", "locked": false },
+      { "role": "sub2", "value": "#93C5FD", "locked": false },
+      { "role": "text", "value": "#1E293B", "locked": false }
+    ],
+    "fonts": [
+      { "role": "heading", "family": "Pretendard", "fallback": "맑은 고딕", "weight": "Bold", "source": "bundled" },
+      { "role": "body",    "family": "Pretendard", "fallback": "맑은 고딕", "weight": "Regular", "source": "bundled" }
+    ],
+    "slots": [
+      { "name": "title",  "type": "text",  "perSlide": true },
+      { "name": "body",   "type": "text",  "perSlide": true },
+      { "name": "chart1", "type": "chart", "perSlide": true }
+    ]
   },
   {
+    "schemaVersion": 2,
     "file": "header_7.pptx",
     "name": "마무리 CTA",
+    "kind": "component",
     "category": "헤더",
+    "scope": "deck",
     "content_fit": ["마무리 인사", "연락처 안내", "다음 단계"],
     "use_when": "프레젠테이션 마지막에 감사 인사와 연락처를 남길 때",
     "grid_columns": 1,
     "tags": ["마무리", "CTA", "연락처"],
-    "colors": {
-      "main": "#2563EB",
-      "sub1": "#3B82F6",
-      "sub2": "#93C5FD",
-      "text": "#1E293B"
-    }
+    "colors": [
+      { "role": "main", "value": "#2563EB", "locked": false },
+      { "role": "sub1", "value": "#3B82F6", "locked": false },
+      { "role": "sub2", "value": "#93C5FD", "locked": false },
+      { "role": "text", "value": "#1E293B", "locked": false }
+    ],
+    "fonts": [
+      { "role": "heading", "family": "Pretendard", "fallback": "맑은 고딕", "weight": "Bold", "source": "bundled" },
+      { "role": "body",    "family": "Pretendard", "fallback": "맑은 고딕", "weight": "Regular", "source": "bundled" }
+    ],
+    "slots": [
+      { "name": "title",    "type": "text", "perSlide": true },
+      { "name": "subtitle", "type": "text", "perSlide": true }
+    ]
   }
 ]

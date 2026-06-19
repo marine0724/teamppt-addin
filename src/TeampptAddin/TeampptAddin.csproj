@@ -56,9 +56,15 @@
     <Compile Include="UI\Wpf\AssetPanel.cs" />
     <Compile Include="UI\Wpf\ThemeResources.cs" />
     <Compile Include="Models\HeaderAsset.cs" />
+    <Compile Include="Models\AssetSchema.cs" />
+    <Compile Include="Models\DesignConcept.cs" />
+    <Compile Include="Models\CatalogEntry.cs" />
     <Compile Include="Interop\IObjectSafety.cs" />
     <Compile Include="Models\AiRecommendation.cs" />
     <Compile Include="Models\StylePalette.cs" />
+    <Compile Include="Services\AssetSchemaMigrator.cs" />
+    <Compile Include="Services\CatalogBuilder.cs" />
+    <Compile Include="Services\ConceptResolver.cs" />
     <Compile Include="Services\AssetLoader.cs" />
     <Compile Include="Services\IAiService.cs" />
     <Compile Include="Services\StyleLoader.cs" />
