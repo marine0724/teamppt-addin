@@ -164,7 +164,16 @@ namespace TeampptAddin
             // Load metadata + styles
             var assets = AssetLoader.Load(assetsDir);
             var styles = StyleLoader.Load(assetsDir);
-            var ai     = new MockAiService();
+            IAiService ai;
+            try
+            {
+                ai = GeminiAiService.FromAssetsDir(assetsDir);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"[Gemini] API 키 로드 실패, MockAiService 사용: {ex.Message}");
+                ai = new MockAiService();
+            }
 
             _wpfPanel.SetAssets(assets);
             _wpfPanel.InitAi(ai, styles);
