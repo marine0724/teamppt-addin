@@ -585,6 +585,7 @@ namespace TeampptAddin
 
             for (int i = 0; i < 3; i++)
             {
+                var idx = i;
                 var dot = new Ellipse
                 {
                     Width = 6,
@@ -594,21 +595,24 @@ namespace TeampptAddin
                     RenderTransform = new TranslateTransform(0, 0)
                 };
 
-                try
+                dot.Loaded += (s, e) =>
                 {
-                    var bounce = new DoubleAnimation
+                    try
                     {
-                        From = 0,
-                        To = -5,
-                        Duration = TimeSpan.FromSeconds(0.6),
-                        AutoReverse = true,
-                        RepeatBehavior = RepeatBehavior.Forever,
-                        EasingFunction = new SineEase(),
-                        BeginTime = TimeSpan.FromMilliseconds(i * 200)
-                    };
-                    ((TranslateTransform)dot.RenderTransform).BeginAnimation(TranslateTransform.YProperty, bounce);
-                }
-                catch { }
+                        var bounce = new DoubleAnimation
+                        {
+                            From = 0,
+                            To = -5,
+                            Duration = TimeSpan.FromSeconds(0.6),
+                            AutoReverse = true,
+                            RepeatBehavior = RepeatBehavior.Forever,
+                            EasingFunction = new SineEase(),
+                            BeginTime = TimeSpan.FromMilliseconds(idx * 200)
+                        };
+                        ((TranslateTransform)((Ellipse)s).RenderTransform).BeginAnimation(TranslateTransform.YProperty, bounce);
+                    }
+                    catch { }
+                };
 
                 dotsPanel.Children.Add(dot);
             }

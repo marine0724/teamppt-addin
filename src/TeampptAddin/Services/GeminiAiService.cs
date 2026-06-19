@@ -63,7 +63,8 @@ namespace TeampptAddin
                 generationConfig = new
                 {
                     temperature = 0.7,
-                    responseMimeType = "application/json"
+                    responseMimeType = "application/json",
+                    thinkingConfig = new { thinkingBudget = 1024 }
                 }
             };
 
@@ -130,7 +131,7 @@ namespace TeampptAddin
             StylePalette matchedPalette = null;
             string paletteReason = "";
             var paletteObj = obj["palette"];
-            if (paletteObj != null)
+            if (paletteObj != null && paletteObj.Type != JTokenType.Null)
             {
                 var pid = paletteObj["id"]?.ToString();
                 paletteReason = paletteObj["reason"]?.ToString() ?? "";
@@ -141,7 +142,7 @@ namespace TeampptAddin
             StyleFont matchedFont = null;
             string fontReason = "";
             var fontObj = obj["font"];
-            if (fontObj != null)
+            if (fontObj != null && fontObj.Type != JTokenType.Null)
             {
                 var fname = fontObj["name"]?.ToString();
                 fontReason = fontObj["reason"]?.ToString() ?? "";
