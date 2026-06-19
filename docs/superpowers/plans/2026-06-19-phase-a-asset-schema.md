@@ -24,7 +24,8 @@
 ### Test Runner Notes (Task 1에서 확정)
 
 - 1순위: `dotnet test`. 메인 프로젝트가 COM 등록(`RegisterForComInterop=true`)을 트리거하므로 **항상 `-p:RegisterForComInterop=false`** 를 붙여 관리자 권한 없이 빌드한다. PowerPoint가 열려 있으면 DLL 잠금으로 빌드 실패 → **빌드/테스트 전 PowerPoint 종료**.
-- `dotnet` SDK가 legacy COM 메인 프로젝트 빌드에서 실패하면 폴백: VS의 `MSBuild.exe`로 솔루션 빌드(`/p:RegisterForComInterop=false`) 후 `vstest.console.exe`로 테스트 DLL 실행. Task 1에서 어느 경로가 동작하는지 확정하고, 이후 태스크는 그 경로의 명령을 사용한다.
+- `dotnet` SDK가 legacy COM 메인 프로젝트 빌드에서 실패하면 폴백: VS의 `MSBuild.exe`로 **먼저 복원**(`MSBuild TeampptAddin.sln /t:Restore`) 후 솔루션 빌드(`/p:RegisterForComInterop=false`), 그다음 `vstest.console.exe`로 테스트 DLL 실행. Task 1에서 어느 경로가 동작하는지 확정하고, 이후 태스크는 그 경로의 명령을 사용한다.
+- 테스트 프로젝트를 솔루션에 추가하려면 `dotnet sln src/TeampptAddin/TeampptAddin.sln add src/TeampptAddin.Tests/TeampptAddin.Tests.csproj` (또는 VS에서 추가). `dotnet test`로 csproj를 직접 지정하면 솔루션 추가 없이도 동작한다.
 
 ---
 
@@ -917,6 +918,7 @@ Expected: FAIL (현재 파일엔 `scope`/`slots` 없음 → `Scope`는 마이그
   "schemaVersion": 2,
   "file": "header_1.pptx",
   "name": "타이틀 히어로",
+  "kind": "component",
   "category": "헤더",
   "scope": "deck",
   "content_fit": ["제목 강조", "프로젝트 소개", "브랜드 첫인상"],
