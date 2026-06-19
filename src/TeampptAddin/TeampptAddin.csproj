@@ -56,6 +56,7 @@
     <Compile Include="UI\Wpf\AssetPanel.cs" />
     <Compile Include="UI\Wpf\ThemeResources.cs" />
     <Compile Include="Models\HeaderAsset.cs" />
+    <Compile Include="Models\AssetSchema.cs" />
     <Compile Include="Interop\IObjectSafety.cs" />
     <Compile Include="Models\AiRecommendation.cs" />
     <Compile Include="Models\StylePalette.cs" />
