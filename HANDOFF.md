@@ -216,6 +216,32 @@ Start-Sleep 2
 
 ## 7. 다음 실행사항 (TODO)
 
+### 🎯 2026-06-19 방향 재정립 — AI 리디자인 제품 설계 확정
+
+> 전체 설계: [docs/superpowers/specs/2026-06-19-teamppt-ai-redesign-design.md](docs/superpowers/specs/2026-06-19-teamppt-ai-redesign-design.md)
+> 첫 실행계획(착수 대기): [docs/superpowers/plans/2026-06-19-phase-a-asset-schema.md](docs/superpowers/plans/2026-06-19-phase-a-asset-schema.md)
+
+**제품 핵심:** 사용자가 만든 초안 슬라이드를 AI가 **한방에 리디자인**(비파괴 — `Slide.Duplicate()` 복제본에 적용, 비포애프터는 썸네일 레일로 공짜). 품질의 레버리지는 **데이터 스키마**.
+
+**확정된 5대 결정:**
+1. **두 토큰 예산** — 이해는 인제스트 타임(에셋당 1회, 펑펑)에, 매칭은 런타임(매 요청, 저렴)에.
+2. **역할 기반 색/폰트** — `{role,value,locked}`. 원본 보존 + 선택적 재테마 → 적은 에셋이 많게 느껴짐.
+3. **슬롯(slot)** — 에셋이 `title/subtitle/body` 자리 선언. 스키마·리더·리디자인을 잇는 다리.
+4. **컨셉 레이어** — 덱 단위로 {팔레트+폰트+스타일태그} 1회 락. 헤더는 **덱 레벨 상수**(소제목만 슬라이드별 슬롯).
+5. **비파괴 리디자인** — 복제 후 복제본만 수정.
+
+**세 루트(스테이징):** A 조립(현재) → B 리디자인(킬러, 다음) → C 기획+시안(추후).
+
+**개발 순서:** **Phase A(데이터 스키마, 지금)** → E(Claude API 가볍게) → C(슬라이드 리더) → B(인제스트 자동화) → D(Route B 리디자인).
+
+**폰트 전략:** 캡처(COM, 토큰0) + 큐레이션·번들(오픈소스 폰트) + 런타임 사용자권한 자동설치 + fallback 체인.
+
+**보류:** "캔버스 위 카드 클릭(웹UI)" 아이디어 — 편집모드 클릭=선택이라 폴리싱 비용 큼. **모든 진행은 우측 패널에서 상세히 처리.**
+
+**Phase A 범위(순수 C#/JSON, COM·LLM 불필요, 단위테스트 가능):** 스키마 v2(역할 색/폰트·슬롯·scope) + `AssetSchemaMigrator`(v1→v2) + `CatalogBuilder`(컴팩트 런타임 투영) + `ConceptResolver`(역할 치환 키스톤) + 신규 xUnit 테스트 프로젝트 `src/TeampptAddin.Tests`.
+
+---
+
 ### Phase 1 완료: 모듈화 (2026-06-18)
 - Core/UI/Models/Interop 분리 완료
 - 미사용 파일 제거 (TaskPaneControl.cs)
@@ -246,14 +272,54 @@ Start-Sleep 2
 - Claude API 연동
 
 ### 잔여 TODO (우선순위 순)
-1. **Step 7 스타일 적용 검증**: 사용자가 현재 테스트 중
-2. **WinForms 폴백 코드 정리**: WPF 안정화 확인 후 CardControl/DragHandler 제거 검토
-3. **드롭 위치 정확도 테스트**: 여러 줌 레벨/슬라이드 크기에서 좌표 변환 정확도 검증
-4. **다중 모니터 / DPI 스케일링**: `PointsToScreenPixelsX/Y` 좌표 변환 테스트
-5. **Assets 폴더 자동 포함**: csproj에 빌드 시 Assets 복사 설정 추가
-6. **에셋 동적 로딩**: 하드코딩된 `header_1~7` 대신 Assets 폴더 자동 스캔
-7. **Strong Name 서명**: RegAsm 경고 해결
-8. **인스톨러 제작**: MSI 또는 ClickOnce로 원클릭 설치
+
+#### Step 10: Claude API 연동
+- `MockAiService` → `ClaudeAiService` 교체 (IAiService 인터페이스 그대로 유지)
+- API 키 관리 (환경변수 또는 `%AppData%\TEAMPPT\settings.json`)
+- 사용자 입력 + assets.json 전체 컨텍스트 → Claude API 호출
+- 응답을 `AiRecommendation` JSON으로 파싱 (에셋 파일명 3개 + 메시지)
+- UI 변경 없음
+
+#### Step 11: 드래그 UX 개선
+- 드래그 중 커서가 PowerPoint 슬라이드 위에 있을 때 투명 오버레이 창 표시
+  - Win32 `WindowFromPoint`로 슬라이드 캔버스 감지
+  - `WS_EX_TRANSPARENT + WS_EX_LAYERED` 오버레이로 삽입 위치 미리보기
+- 드롭 시 커서 위치 대신 템플릿 원래 포지션으로 삽입
+  - `CoordinateConverter.PositionShapesAtCursor` 대신 원본 좌표 유지
+
+#### Step 12: 색상 일괄 변경 완성
+- 현재: 텍스트 색만 변경
+- 추가: shape fill 색도 팔레트에 따라 치환
+  - `asset.colors.main` → `palette.colors.main` 1:1 매핑
+  - COM API로 슬라이드 내 해당 fill 색 일괄 교체
+
+#### Step 13: 데이터 저장
+- 마지막 선택 팔레트/폰트 저장 → 앱 재시작 후 복원
+- 저장 위치: `%AppData%\TEAMPPT\settings.json`
+
+#### Step 14: 에셋 자동 감지 + LLM 메타데이터 생성
+- `FileSystemWatcher`로 Assets 폴더 감시
+- 신규 .pptx 감지 → 썸네일 추출 → Claude API로 name/category/use_when/tags/colors 자동 생성
+- `assets.json` 자동 업데이트 → 앱 핫 리로드
+
+#### Step 15: 초안 기반 추천 (킬러 피처)
+- AI탭에 "초안 입력" 모드 추가
+- 사용자가 발표 개요/목차 입력
+- Claude가 슬라이드 구성 제안 + 각 슬라이드에 맞는 에셋 매핑
+- 슬라이드별 카드 그룹으로 표시
+
+#### Step 16: 키워드 검색
+- 에셋 탭 상단 검색 인풋
+- name, tags, use_when 필드 대상 필터링
+
+#### Step 17: 인스톨러
+- InnoSetup으로 `TEAMPPT_Setup.exe` 생성
+- DLL + Assets + RegAsm 등록 + 레지스트리 키 자동 설정
+
+#### 기술 부채
+- WinForms 폴백 코드 정리 (WPF 안정화 확인 후 CardControl/DragHandler 제거 검토)
+- Strong Name 서명 (RegAsm 경고 해결)
+- 다중 모니터 / DPI 스케일링 테스트
 
 ---
 
