@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace TeampptAddin
 {
@@ -23,8 +24,15 @@ namespace TeampptAddin
         private static List<HeaderAsset> LoadFromJson(string jsonPath)
         {
             var json = File.ReadAllText(jsonPath);
-            return JsonConvert.DeserializeObject<List<HeaderAsset>>(json)
-                   ?? new List<HeaderAsset>();
+            var arr = JArray.Parse(json);
+            var result = new List<HeaderAsset>();
+            foreach (var token in arr)
+            {
+                if (!(token is JObject obj)) continue;
+                var migrated = AssetSchemaMigrator.Migrate(obj);
+                result.Add(migrated.ToObject<HeaderAsset>());
+            }
+            return result;
         }
 
         private static List<HeaderAsset> ScanFolder(string assetsDir)
@@ -36,9 +44,12 @@ namespace TeampptAddin
                 .OrderBy(f => f)
                 .Select(f => new HeaderAsset
                 {
+                    SchemaVersion = 2,
                     File = Path.GetFileName(f),
                     Name = Path.GetFileNameWithoutExtension(f),
+                    Kind = "component",
                     Category = "헤더",
+                    Scope = "slide",
                     ContentFit = new List<string>(),
                     UseWhen = "",
                     GridColumns = 1
