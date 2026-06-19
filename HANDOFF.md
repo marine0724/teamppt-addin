@@ -236,6 +236,13 @@ Start-Sleep 2
 
 **폰트 전략:** 캡처(COM, 토큰0) + 큐레이션·번들(오픈소스 폰트) + 런타임 사용자권한 자동설치 + fallback 체인.
 
+**에셋 2-tier (대표 동기화 2026-06-19):**
+- **layout** = 슬라이드 전체 틀 (표지/목차/간지/연혁/3단가로/4단가로/5분할/6분할/좌텍스트우이미지/좌이미지우텍스트/마무리)
+- **component** = 레이아웃 위에 붙이는 부품 (그래프/다이어그램/표). 기존 header_N은 component.
+- 스키마에 `kind: layout | component` 필드 추가.
+- **슬롯 식별: 텍스트 박스 + shape 이름 규약** (`slot.title`/`slot.image1` 등). Placeholder 아님(썸네일에 샘플텍스트 보여야 하므로). autofit/shrink 켜기.
+- R&D 제작 규약: slot 접두사 네이밍 + 색 역할/locked 지정 + 오픈소스 폰트 사용 + layout/component 폴더 분리.
+
 **보류:** "캔버스 위 카드 클릭(웹UI)" 아이디어 — 편집모드 클릭=선택이라 폴리싱 비용 큼. **모든 진행은 우측 패널에서 상세히 처리.**
 
 **Phase A 범위(순수 C#/JSON, COM·LLM 불필요, 단위테스트 가능):** 스키마 v2(역할 색/폰트·슬롯·scope) + `AssetSchemaMigrator`(v1→v2) + `CatalogBuilder`(컴팩트 런타임 투영) + `ConceptResolver`(역할 치환 키스톤) + 신규 xUnit 테스트 프로젝트 `src/TeampptAddin.Tests`.

@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** PowerPoint/COM/LLM 없이 순수 C#/JSON 로직만으로, 역할 기반 색·폰트 + 슬롯 + scope를 담는 에셋 스키마 v2와 그 위의 마이그레이터·카탈로그 빌더·컨셉 리졸버를 단위테스트와 함께 구축한다.
+**Goal:** PowerPoint/COM/LLM 없이 순수 C#/JSON 로직만으로, 역할 기반 색·폰트 + 슬롯 + scope + kind(layout/component)를 담는 에셋 스키마 v2와 그 위의 마이그레이터·카탈로그 빌더·컨셉 리졸버를 단위테스트와 함께 구축한다.
 
 **Architecture:** 기존 `Models/`·`Services/`를 확장한다. 저장 모델(`HeaderAsset`, 풍부·버전 있음)과 런타임 카탈로그(`CatalogEntry`, 컴팩트)를 분리하고, 둘 사이를 `CatalogBuilder`가 잇는다. 구버전 JSON은 `AssetSchemaMigrator`가 v1→v2로 흡수한다. 컨셉 적용(역할 치환)은 순수 함수 `ConceptResolver`로 분리해 단위테스트한다.
 
@@ -15,6 +15,8 @@
 - 네임스페이스는 모두 `TeampptAddin` (기존 모델·서비스 동일).
 - 메인 csproj는 old-style(non-SDK) + 명시적 `<Compile Include>`. **새 .cs 파일은 반드시 `<Compile Include>` 항목을 추가**해야 빌드에 포함된다.
 - 색/폰트는 절대값이 아니라 **역할(role)** 단위로 저장한다: 색 `{role, value, locked}`, 폰트 `{role, family, fallback, weight, source}`.
+- 에셋은 **`kind: layout | component`** 를 갖는다. `layout`=슬라이드 전체 틀(표지/목차/간지 등), `component`=레이아웃 위에 붙이는 부품(그래프/다이어그램/표). 기존 header_N은 `component` 기본값. v1 마이그레이션 시 kind 누락 → `"component"`.
+- 슬롯 식별은 **텍스트 박스 + shape 이름 규약** (`slot.title`, `slot.image1` 등). Placeholder가 아님. 슬롯 type: `text | image | chart | table`.
 - `HeaderAsset.Colors`(기존 `AssetColors` 객체형)는 **소비처가 전혀 없음**(확인 완료: UI의 `.Colors`는 전부 `StylePalette.PaletteColors`). 따라서 타입을 `List<AssetColor>`로 바꿔도 다른 코드가 깨지지 않는다. `AssetColors` 클래스는 삭제한다.
 - `Core/` 폴더, `Connect.cs`, `Globals.cs` 는 **수정 금지**.
 - COM 영역(`Slides`, `Application`, Vision, LLM)은 Phase A 범위 **밖**. 이 Phase의 모든 코드는 PowerPoint 없이 동작·테스트되어야 한다.
@@ -125,7 +127,7 @@ git commit -m "test: add xUnit harness for asset schema (Phase A)"
   - `class AssetColor { string Role; string Value; bool Locked; }`
   - `class AssetFont { string Role; string Family; string Fallback; string Weight; string Source; }`
   - `class AssetSlot { string Name; string Type; bool PerSlide; }`
-  - `HeaderAsset` 추가 필드: `int SchemaVersion`, `string Scope`, `string Provenance`, `List<AssetColor> Colors`, `List<AssetFont> Fonts`, `List<AssetSlot> Slots`.
+  - `HeaderAsset` 추가 필드: `int SchemaVersion`, `string Kind` (기본 `"component"`), `string Scope`, `string Provenance`, `List<AssetColor> Colors`, `List<AssetFont> Fonts`, `List<AssetSlot> Slots`.
 
 - [ ] **Step 1: 실패 테스트 작성**
 
@@ -145,6 +147,7 @@ namespace TeampptAddin.Tests
               ""schemaVersion"": 2,
               ""file"": ""header_3.pptx"",
               ""name"": ""장점 나열"",
+              ""kind"": ""layout"",
               ""category"": ""헤더"",
               ""scope"": ""deck"",
               ""provenance"": ""IR 덱"",
@@ -156,6 +159,7 @@ namespace TeampptAddin.Tests
             var a = JsonConvert.DeserializeObject<HeaderAsset>(json);
 
             Assert.Equal(2, a.SchemaVersion);
+            Assert.Equal("layout", a.Kind);
             Assert.Equal("deck", a.Scope);
             Assert.Equal("IR 덱", a.Provenance);
             Assert.Single(a.Colors);
@@ -224,6 +228,7 @@ namespace TeampptAddin
         [JsonProperty("schemaVersion")] public int SchemaVersion { get; set; } = 1;
         [JsonProperty("file")] public string File { get; set; }
         [JsonProperty("name")] public string Name { get; set; }
+        [JsonProperty("kind")] public string Kind { get; set; } = "component";
         [JsonProperty("category")] public string Category { get; set; }
         [JsonProperty("scope")] public string Scope { get; set; } = "slide";
         [JsonProperty("content_fit")] public List<string> ContentFit { get; set; }
@@ -343,6 +348,9 @@ namespace TeampptAddin
         public static JObject Migrate(JObject raw)
         {
             var obj = (JObject)raw.DeepClone();
+
+            if (obj["kind"] == null)
+                obj["kind"] = "component";
 
             if (obj["scope"] == null)
                 obj["scope"] = "slide";
@@ -498,6 +506,7 @@ namespace TeampptAddin
                     SchemaVersion = 2,
                     File = Path.GetFileName(f),
                     Name = Path.GetFileNameWithoutExtension(f),
+                    Kind = "component",
                     Category = "헤더",
                     Scope = "slide",
                     ContentFit = new List<string>(),
@@ -535,7 +544,7 @@ git commit -m "feat: AssetLoader migrates assets through AssetSchemaMigrator"
 **Interfaces:**
 - Produces:
   - `class DesignConcept { string Id; string Name; List<string> StyleTags; Dictionary<string,string> Colors; Dictionary<string,string> Fonts; }` (Colors: 역할→hex, Fonts: 역할→family)
-  - `class CatalogEntry { string File; string Name; string Category; string Scope; List<string> Tags; string UseWhen; List<string> SlotNames; List<string> ColorRoles; List<string> FontRoles; }`
+  - `class CatalogEntry { string File; string Name; string Kind; string Category; string Scope; List<string> Tags; string UseWhen; List<string> SlotNames; List<string> ColorRoles; List<string> FontRoles; }`
   - `static class CatalogBuilder { static List<CatalogEntry> Build(IEnumerable<HeaderAsset> assets); }`
   - 빌더는 **hex 값·폰트 family 등 무거운 값을 제외**하고 역할 이름·슬롯 이름만 투영(런타임 토큰 절감).
 
@@ -615,6 +624,7 @@ namespace TeampptAddin
     {
         public string File { get; set; }
         public string Name { get; set; }
+        public string Kind { get; set; }
         public string Category { get; set; }
         public string Scope { get; set; }
         public List<string> Tags { get; set; }
@@ -643,6 +653,7 @@ namespace TeampptAddin
             {
                 File = a.File,
                 Name = a.Name,
+                Kind = a.Kind,
                 Category = a.Category,
                 Scope = a.Scope,
                 Tags = a.Tags ?? new List<string>(),

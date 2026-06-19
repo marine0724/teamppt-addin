@@ -54,6 +54,19 @@
 
 ### 3.3 슬롯
 - 에셋은 `slots: [{name, type, perSlide}]`를 선언. `perSlide: true`인 슬롯(예: `subtitle`)은 슬라이드마다 텍스트가 바뀌고, 나머지는 고정.
+- **슬롯 식별 방식: 텍스트 박스 + shape 이름 규약 (placeholder 아님).**
+  - Placeholder는 사용자 직접 입력엔 편하지만 썸네일에 샘플 텍스트가 안 보여 R&D·사용자 모두 불편. 우리 서비스는 AI가 슬롯을 채우므로 placeholder의 장점이 거의 안 쓰임.
+  - 텍스트 박스에 shape 이름을 `slot.title` / `slot.subtitle` / `slot.body` / `slot.image1` 식으로 지정 → COM `shape.Name`으로 인식, 화면·썸네일에 영향 0.
+  - 이미지 자리(점선 박스)도 `slot.image1` (type=`image`)로 동일 규약.
+  - 슬롯 텍스트 박스는 **autofit/shrink 켜기** — 초안 텍스트가 샘플보다 길 때 깨지지 않게.
+- 슬롯 type 어휘: `text | image | chart | table`.
+
+### 3.3.1 에셋 2-tier 구조 (kind)
+- **`kind: layout`** — 슬라이드 페이지 전체를 감싸는 템플릿. 슬롯이 박혀 있고, Route B에서 복제해서 채우는 대상.
+  - 카테고리: 표지/목차/간지/연혁/3단가로/4단가로/5분할/6분할/좌텍스트우이미지/좌이미지우텍스트/마무리
+- **`kind: component`** — 레이아웃 위에 붙이는 부품(그래프/다이어그램/표 등). Route A(조립)에서 하나씩 추천·삽입.
+  - 기존 header_N.pptx는 전부 `component`.
+- 대표 R&D 산출물이 이 2-tier를 이미 자연스럽게 따르고 있음(2026-06-19 확인).
 
 ### 3.4 컨셉 레이어 + 덱 레벨 vs 슬라이드 레벨
 - **컨셉** = {팔레트(역할→hex) + 폰트 페어링(역할→family) + 스타일태그}. 기존 `StylePalette`/`StyleConfig`의 확장.
@@ -98,6 +111,7 @@ F 기획 모드(Route C) ──> (미래) C·D의 슬롯 재사용
   "schemaVersion": 2,
   "file": "header_3.pptx",
   "name": "장점 나열",
+  "kind": "component",                   // layout=전체 슬라이드 틀 | component=레이아웃 위 부품
   "category": "헤더",
   "scope": "deck",                       // deck=반복요소(헤더/푸터) | slide=본문
   "content_fit": ["장점 나열", "특징 비교"],
@@ -115,10 +129,11 @@ F 기획 모드(Route C) ──> (미래) C·D의 슬롯 재사용
     { "role": "heading", "family": "Pretendard", "fallback": "맑은 고딕", "weight": "Bold", "source": "bundled" },
     { "role": "body",    "family": "Pretendard", "fallback": "맑은 고딕", "weight": "Regular", "source": "bundled" }
   ],
-  "slots": [
-    { "name": "title",    "type": "text", "perSlide": true },
-    { "name": "subtitle", "type": "text", "perSlide": true },
-    { "name": "body",     "type": "text", "perSlide": true }
+  "slots": [                            // shape 이름(slot.xxx) 기반 식별, placeholder 아님
+    { "name": "title",    "type": "text",  "perSlide": true },
+    { "name": "subtitle", "type": "text",  "perSlide": true },
+    { "name": "body",     "type": "text",  "perSlide": true },
+    { "name": "image1",   "type": "image", "perSlide": true }  // 이미지 슬롯 예시
   ]
 }
 ```
@@ -127,7 +142,14 @@ F 기획 모드(Route C) ──> (미래) C·D의 슬롯 재사용
 
 **역할 치환 (ConceptResolver, 순수 함수, Phase A의 키스톤):** `Resolve(AssetRecord, DesignConcept)` → 각 색/폰트 역할에 대해 `locked==false`면 컨셉 값으로 치환, `locked==true`거나 컨셉에 해당 역할이 없으면 원본 유지. 이 함수가 D(리디자인)·E(스타일적용)의 심장이며 COM 없이 단위 테스트 가능.
 
-**런타임 카탈로그 (CatalogEntry, CatalogBuilder):** 저장 레코드 → LLM 매칭용 컴팩트 투영. 필드 = `file, name, category, scope, tags, useWhen, slotNames[], colorRoles[], fontRoles[]`. *색 hex·폰트 family 같은 무거운 값은 제외*(토큰 절감).
+**런타임 카탈로그 (CatalogEntry, CatalogBuilder):** 저장 레코드 → LLM 매칭용 컴팩트 투영. 필드 = `file, name, kind, category, scope, tags, useWhen, slotNames[], colorRoles[], fontRoles[]`. *색 hex·폰트 family 같은 무거운 값은 제외*(토큰 절감).
+
+### R&D 제작 규약 (대표 동기화 사항, 2026-06-19)
+1. **슬롯 도형 이름**: `slot.title` / `slot.subtitle` / `slot.body` / `slot.image1` 등 `slot.` 접두사 + 역할명.
+2. **autofit/shrink**: 슬롯 텍스트 박스에 "넘치면 텍스트 줄이기" 켜기.
+3. **색 역할 + locked**: 팔레트(main/sub/accent/text)와 브랜드/로고 색(locked) 구분 지정.
+4. **폰트**: 재배포 가능(오픈소스) 폰트 사용 권장.
+5. **종류 구분**: 레이아웃(.pptx)과 컴포넌트(.pptx)를 폴더 또는 파일명 규약으로 분리.
 
 ## 6. 보류 항목 (Deferred)
 
