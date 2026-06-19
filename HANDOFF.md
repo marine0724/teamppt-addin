@@ -1,7 +1,28 @@
 # TEAMPPT Add-in 개발 인계문서
 
-> 최종 업데이트: 2026-06-19 (Phase A 완료, Phase E 착수 대기)  
+> 최종 업데이트: 2026-06-19 (Phase E 완료, 구조화 출력 완료, **Phase F 설계 확정·API키 블로커**)  
 > 프로젝트 경로: `C:\Projects\teamppt-addin\src\TeampptAddin`
+
+---
+
+## ⚡ 재개 지점 (READ FIRST — 새 세션은 여기부터)
+
+**브랜치:** `phase-e-gemini-flash`
+
+**최근 완료:**
+- 구조화 출력(Gemini `responseSchema`): `BuildResponseSchema()` 추가, 프롬프트 형식블록 제거, 요청에 연결. 단위테스트 19개 PASS. → [plans/2026-06-19-structured-output-responseschema.md](docs/superpowers/plans/2026-06-19-structured-output-responseschema.md)
+- 503/429/500 일시오류 지수백오프 재시도 추가 ([GeminiAiService.cs](src/TeampptAddin/Services/GeminiAiService.cs)).
+- 유출된 평문 API 키를 계획문서에서 제거(키는 Google이 비활성화됨).
+
+**🚫 현재 블로커 — Gemini API 키:**
+AI Studio에서 받은 키가 `AQ.`로 시작하는 53자(임시/OAuth 토큰, 곧 만료 → 400 `API_KEY_INVALID`). **정상 Gemini API 키는 `AIza`로 시작 ~39자.** 올바른 "API key"를 받아 `src/TeampptAddin/Assets/api-keys.json`에 넣고 **관리자 재빌드**(아래 4.2/Start-Process RunAs) 필요. ⚠️ repo가 **공개**라 키를 문서/커밋에 절대 넣지 말 것.
+
+**빌드 메모(이 PC):** MSBuild = `C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe`. 단위테스트는 관리자 불필요: 본프로젝트 `/p:RegisterForComInterop=false` 빌드 → 테스트프로젝트 `/p:BuildProjectReferences=false` 빌드 → `dotnet test --no-build --no-restore`. (`dotnet test` 직접 실행은 레거시 csproj 복원 깨짐.)
+
+**다음 작업 — Phase F (Supabase 벡터 + 대화 메모리):** 설계 확정, 미결 7개. → [specs/2026-06-19-phase-f-supabase-vector-design.md](docs/superpowers/specs/2026-06-19-phase-f-supabase-vector-design.md)
+순서: ① (사용자) AIza 키 확보 → 구조화 출력 PowerPoint 검증 → ② 미결 7개 결정 → ③ Phase F 코드 계획 작성·실행.
+
+---
 
 ---
 
