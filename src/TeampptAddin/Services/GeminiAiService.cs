@@ -80,12 +80,21 @@ namespace TeampptAddin
             HttpResponseMessage response = null;
             string body = null;
 
+            Logger.Log($"[Gemini] API Key prefix: {_apiKey.Substring(0, Math.Min(6, _apiKey.Length))}..., length={_apiKey.Length}");
+            Logger.Log($"[Gemini] URL host: generativelanguage.googleapis.com, model: gemini-2.5-flash");
+
             for (int attempt = 1; attempt <= maxAttempts; attempt++)
             {
                 // StringContent는 전송 후 재사용 불가하므로 시도마다 새로 만든다
                 var content = new StringContent(bodyString, Encoding.UTF8, "application/json");
+
+                // 기존 인증 헤더가 있으면 제거 (프록시 등에 의한 오염 방지)
+                Http.DefaultRequestHeaders.Authorization = null;
+
                 response = await Http.PostAsync(url, content).ConfigureAwait(false);
                 body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                Logger.Log($"[Gemini] Attempt {attempt}: HTTP {(int)response.StatusCode}");
 
                 if (response.IsSuccessStatusCode)
                     break;
