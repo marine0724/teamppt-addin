@@ -11,21 +11,23 @@
 
 **브랜치:** `panel-button-per-window` (main 미머지 — 패널 작업 진행 중. 완료 후 통합)
 
-**현황 (2026-06-21):** 패널 버튼화 [구현계획](docs/superpowers/plans/2026-06-21-panel-button-per-window.md) 실행 중 — **Task 0~3 코드 완료, Task 3 수동검증 + Task 4~5 남음.**
+**현황 (2026-06-21):** 패널 버튼화 [구현계획](docs/superpowers/plans/2026-06-21-panel-button-per-window.md) 실행 중 — **Task 0~3 완료(사용자 확인), Task 4~5 남음.**
 - ✅ Task 0: 실측으로 spec §2 진단 확정(파일 연속 열기 → `CTPFactoryAvailable` 4회·CTP 4개 = 누적 중복. spec §2.1 기록). 커밋 `7942efe`.
 - ✅ Task 1: `Core/WindowSweep.cs` 회수판단 순수함수 + 단위테스트 4 GREEN. 커밋 `4840459`.
-- ✅ Task 2: `UI/TaskPaneManager.cs` 신규(창별 CTP 추적·해제 3종 세트). 컴파일 OK. 커밋 `0a0fb32`.
-- 🔄 Task 3: `Connect.cs` 전면 교체(리본 토글 버튼 + 위임, 자동 생성 제거). **빌드 0에러·DLL 갱신 완료. 커밋 `48e1df8`.** ← **수동검증 1~4 미실행.**
+- ✅ Task 2: `UI/TaskPaneManager.cs` 신규(창별 CTP 추적·해제 3종 세트). 커밋 `0a0fb32`.
+- ✅ Task 3: `Connect.cs` 리본 버튼화 + 위임. **사용자 실기 확인 완료** — 토글 작동·홈탭(TabHome) 배치·브랜드 아이콘 표시. 커밋 `48e1df8`·`4bf741b`·`944f397`.
+  - ⚙️ 버그수정: `ClassInterfaceType.None`→**`AutoDual`** (리본 콜백 IDispatch 미발화 → 발화). 전용 탭 → **홈 탭 끝 그룹**(Plus AI 스타일, 사용자 요청).
+  - 🎨 브랜드 아이콘: `Assets/teamppt-icon.png`(make-icon.ps1 생성) + `getImage` 콜백(`AxHost.GetIPictureDispFromPicture`, stdole PIA 참조).
 
-### 🔴 다음 세션 첫 할 일 — Task 3 수동검증 → Task 4
-> [PROGRESS-BOARD.md](PROGRESS-BOARD.md) 잎 표가 정확한 현재 위치. [plan](docs/superpowers/plans/2026-06-21-panel-button-per-window.md) Task 3 Step 3부터.
+### 🔴 다음 세션 첫 할 일 — Task 4(수동검증 5~10)
+> [PROGRESS-BOARD.md](PROGRESS-BOARD.md) 잎 표가 현재 위치. [plan](docs/superpowers/plans/2026-06-21-panel-button-per-window.md) Task 4부터. **executing-plans로 이어서.**
 
-1. **빌드 확인:** DLL은 이미 새 코드(20:04 빌드). 재빌드 필요시 `MSBuild TeampptAddin.csproj /t:Build /p:Configuration=Debug /p:Platform=AnyCPU /p:RegisterForComInterop=false`(비관리자 직접). **COM 재등록 불필요**(새 coclass/GUID 없음, 이미 등록됨). ⚠️ CLAUDE.md의 elevated `Start-Process RunAs cmd` 빌드 래퍼는 이 환경서 **무력**(build.log 갱신 안 됨)이니 쓰지 말 것.
-2. **Task 3 수동검증(체크리스트 1~4):** PowerPoint 완전히 닫고 시작 → 패널 자동 안 뜸+리본 TEAMPPT 탭/토글 버튼 / 버튼 토글 / 둘째 파일 열어도 자동 안 뜸 / 둘째 창 버튼 독립 패널. `debug.log`에 `Manager.Toggle created` 창마다 1회. 결과는 사용자가 붙여줌.
-3. **Task 4(수동검증 5~10):** 창 전환 버튼 동기화 / X로 닫기 동기화 / 한 창 닫기→그 패널만 회수 / 여러 번 껐다켜기 누적 0 / ActiveX 충돌 없음 / 종료 ReleaseAll. 어긋나면 systematic-debugging.
-4. **Task 5:** 보드/인계 갱신 + finishing-a-development-branch로 main 통합.
+1. **빌드:** 새 코드 이미 빌드·등록됨(8:17 DLL). 재빌드시 `MSBuild TeampptAddin.csproj /t:Build /p:Configuration=Debug /p:Platform=AnyCPU /p:RegisterForComInterop=false`(비관리자 직접). **COM 재등록 불필요**. ⚠️ CLAUDE.md elevated `Start-Process RunAs cmd` 빌드 래퍼는 이 환경서 **무력**(build.log 갱신 안 됨) — 쓰지 말 것. 단위테스트(WindowSweep) 회귀 확인은 `dotnet test ... --filter WindowSweepTest`.
+2. **Task 4 수동검증 5~10:** 창 전환 버튼 동기화 / 패널 X로 닫기→버튼 동기화 / 한 창 닫기→그 패널만 회수 / 여러 번 껐다켜기 누적 0 / 패널 열때 ActiveX 충돌 없음 / PPT 종료 ReleaseAll. `debug.log`로 `Manager.Sweep reclaimed`·`InvalidateButton`·`ReleaseAll done` 교차확인. 어긋나면 systematic-debugging. 결과는 사용자가 붙여줌.
+3. **Task 5 마무리:** 보드/인계 갱신 + finishing-a-development-branch로 main 통합.
+4. **⚠️ 그 다음:** 패널 task 끝나면 **자동으로 다음 로드맵 진행 금지 — 사용자에게 먼저 질문**. 사용자가 큰 기획(제품 방향) 수정·보완 예정(이미 결정, 계획 수립은 Opus로).
 
-**핵심 결정(spec 요약):** Connect 얇게 + **TaskPaneManager 신규**(모듈화, 완료). `TaskPaneHost` **무변경**(지연 초기화 유지). `LoadBehavior=3` 유지, 자동 *생성*만 제거. 딕셔너리 키=HWND(실측 검증됨).
+**핵심 결정(spec 요약):** Connect 얇게 + **TaskPaneManager 신규**(완료). `TaskPaneHost` **무변경**. `LoadBehavior=3` 유지, 자동 *생성*만 제거. 딕셔너리 키=HWND(실측 검증). 리본 콜백 위해 Connect=`AutoDual` 필수.
 
 ### 메모
 - **검증 시 PowerPoint 완전히 닫을 것** — 켜진(애드인 로드) 인스턴스에 붙으면 패널 중복 + COM 충돌.

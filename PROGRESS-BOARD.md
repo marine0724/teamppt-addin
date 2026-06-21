@@ -44,10 +44,11 @@
 | — | 설계·spec·계획 | brainstorming 접근법 A → [spec](docs/superpowers/specs/2026-06-21-panel-button-per-window-design.md) → [plan](docs/superpowers/plans/2026-06-21-panel-button-per-window.md) | ✅ |
 | 0 | systematic-debugging | 실측 확정: 파일 연속 열기→`CTPFactoryAvailable` 4회·CTP 4개 = 누적중복 (spec §2.1) | ✅ |
 | 1 | WindowSweep (TDD) | 회수판단 순수함수 + 단위테스트 4 GREEN | ✅ |
-| 2 | TaskPaneManager | 창별 CTP 추적·해제 3종 세트 (신규 모듈, 컴파일 OK) | ✅ |
-| 3 | Connect 버튼화 | 리본 토글 버튼 + 위임, 자동 생성 제거. **코드 완료, 빌드+수동검증 1~4 대기** | 🔄 |
-| 4 | 동기화 견고화 | 창 전환/닫기/종료 회수 검증 (수동검증 5~10) | ⬜ 새 세션 |
+| 2 | TaskPaneManager | 창별 CTP 추적·해제 3종 세트 (신규 모듈) | ✅ |
+| 3 | Connect 버튼화 | 리본 버튼+위임+자동생성제거. **사용자 확인: 토글 작동·홈탭 배치·브랜드 아이콘 OK** (수동검증 1~4 통과) | ✅ |
+| 4 | 동기화 견고화 | 창 전환/닫기/종료 회수 검증 (수동검증 5~10) | ⬜ **다음 (새 세션)** |
 | 5 | 마무리 | 보드/인계 갱신 + main 통합 | ⬜ |
 
-> **현재 위치:** Task 3 코드 작성 완료(Connect.cs 전면 교체). 다음 = 빌드 → PowerPoint 수동검증 체크리스트 1~4.
-> **새 세션 인계:** 사용자 부재로 Task 4부터 새 창에서 진행. 빌드=직접 recompile(`/p:Platform=AnyCPU /p:RegisterForComInterop=false`, elevated 래퍼 무력 — plan Global Constraints 참조). COM 등록은 이미 완료(재등록 불필요).
+> **현재 위치:** Task 3 완료(기능·UX·아이콘 사용자 확인). 다음 = **Task 4 수동검증 5~10**.
+> **⚠️ 중요:** 이 패널 task(4·5) 끝나면 **다음 로드맵으로 자동 진행 금지 — 사용자에게 먼저 질문**. 사용자가 큰 기획 수정·보완 예정(이미 결정됨, 계획은 Opus로 수립). [[project_teamppt]]
+> **빌드:** 직접 recompile `MSBuild TeampptAddin.csproj /t:Build /p:Configuration=Debug /p:Platform=AnyCPU /p:RegisterForComInterop=false`. COM 재등록 불필요(이미 등록). CLAUDE.md elevated 래퍼는 이 환경서 무력(쓰지 말 것).
