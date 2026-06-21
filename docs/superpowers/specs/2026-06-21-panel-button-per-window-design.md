@@ -19,6 +19,21 @@
 
 이 셋이 겹쳐 누적 중복. = **자동·무통제·무정리** 생성.
 
+### 2.1 실측 확정 (Task 0, debug.log 증거 — 2026-06-21)
+
+계측 빌드로 실측해 위 진단을 **확정**했다. 시나리오 = 에셋 .pptx 파일 4개를 연속으로 열기:
+
+```
+CTPFactoryAvailable Count=0 → Constructor(파일1) → WindowActivate HWND=1640220
+CTPFactoryAvailable Count=1 → Constructor(파일2) → WindowActivate HWND=2359364
+CTPFactoryAvailable Count=2 → Constructor(파일3) → WindowActivate HWND=395176
+CTPFactoryAvailable Count=3 → Constructor(파일4) → WindowActivate HWND=460716
+```
+
+- **확정①:** 프레젠테이션 파일을 열 때마다 `CTPFactoryAvailable`이 다시 호출되고 매번 새 CTP(Constructor) 생성 → 필드 덮어쓰기로 이전 패널 잔존 = 누적 중복.
+- **확정②:** 각 창 HWND가 고유·안정적 → 딕셔너리 키=HWND 타당. WindowActivate가 전환마다 정확히 발화 → 활성창 식별·빗질 신뢰 가능.
+- **참고:** 단순 `Ctrl+N` 새 창 시나리오에선 1회만 호출됐다(트리거는 프레젠테이션 *파일 열기* 경로에서 확실히 재현). 해법(접근 A)은 호출 빈도와 무관하게 견고(생성을 버튼으로만 수행).
+
 ## 3. 채택 접근 (A): 리본 토글 버튼 + 창별 CTP 추적
 
 버튼은 **무분별한 자동 생성을 막는 게이트**, 딕셔너리는 **창마다 1개 보장·해제**의 본질 해결. 둘을 함께 쓴다.

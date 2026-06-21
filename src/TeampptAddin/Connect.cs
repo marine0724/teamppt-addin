@@ -37,6 +37,13 @@ namespace TeampptAddin
         {
             _app = (PowerPoint.Application)Application;
             Globals.Application = _app;
+
+            _app.WindowActivate += (pres, win) =>
+            {
+                int hwnd = 0;
+                try { hwnd = win.HWND; } catch { }
+                Logger.Log($"DIAG WindowActivate. HWND={hwnd}");
+            };
         }
 
         public void OnDisconnection(ext_DisconnectMode RemoveMode, ref Array custom)
@@ -63,6 +70,10 @@ namespace TeampptAddin
         {
             try
             {
+                int wins = 0;
+                try { wins = Globals.Application?.Windows?.Count ?? -1; } catch { wins = -2; }
+                Logger.Log($"DIAG CTPFactoryAvailable called. Windows.Count={wins}");
+
                 _taskPane = CTPFactoryInst.CreateCTP(
                     "TeampptAddin.TaskPaneHost",
                     "TEAMPPT");

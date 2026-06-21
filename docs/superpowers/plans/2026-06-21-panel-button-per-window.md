@@ -16,6 +16,7 @@
 - **딕셔너리 키 = `DocumentWindow.HWND`(int)** — 창마다 고유·안정, COM 객체 직접 키 금지.
 - **해제 3종 세트** — CTP 회수 시 항상 `ctp.Delete()` + `Marshal.ReleaseComObject(ctp)` + `dict.Remove(hwnd)` 세 가지 모두.
 - **COM 등록 빌드는 관리자 권한 필수** — `Start-Process -Verb RunAs` (`RegisterForComInterop=true`). 단위테스트 빌드는 관리자 불필요(아래 명령 참조).
+- **⚠️ 빌드 메커니즘 실측(Task 0):** CLAUDE.md의 `Start-Process -Verb RunAs cmd /c "MSBuild ... > build.log"` elevated 래퍼는 **이 세션에서 실제로 안 돌았다**(build.log 갱신 안 됨 → 스테일 로그 오판). **검증된 작동 명령:** `MSBuild TeampptAddin.csproj /t:Rebuild /p:Configuration=Debug /p:Platform=AnyCPU /p:RegisterForComInterop=false /v:minimal` (비관리자, 이 셸 직접 실행 → DLL 갱신). 이번 작업은 **새 COM coclass/GUID가 없음**(Connect에 `IRibbonExtensibility` 구현 추가 = 런타임 QI로 발견, 재등록 불필요; `TaskPaneManager`는 COM-invisible). → **초기 1회 등록(이미 완료)** 후엔 직접 recompile만으로 새 코드가 로드됨. 빌드 후 DLL `LastWriteTime`이 갱신됐는지 반드시 확인.
 - **검증 시 PowerPoint 완전히 닫고 시작** — 기존 로드 인스턴스에 붙으면 패널 중복 + COM 충돌.
 - **신규 `.cs`는 `TeampptAddin.csproj`의 `<ItemGroup>`에 `<Compile Include>`로 등록**해야 빌드에 포함됨(SDK 스타일 아님 — 자동 포함 안 됨).
 - 노출 API 4종(타입 고정): `void Toggle(int hwnd, bool pressed)`, `bool IsVisible(int hwnd)`, `void SweepClosedWindows()`, `void ReleaseAll()`. 추가로 `void SetFactory(ICTPFactory)`, `void SetRibbon(IRibbonUI)`.
@@ -190,7 +191,7 @@ namespace TeampptAddin.Tests
 Run (단위테스트 — 관리자 불필요):
 
 ```powershell
-& "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" "c:\Projects\teamppt-addin\src\TeampptAddin\TeampptAddin.csproj" /t:Build /p:Configuration=Debug "/p:Platform=Any CPU" /p:RegisterForComInterop=false /v:minimal
+& "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" "c:\Projects\teamppt-addin\src\TeampptAddin\TeampptAddin.csproj" /t:Build /p:Configuration=Debug /p:Platform=AnyCPU /p:RegisterForComInterop=false /v:minimal
 & "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" "c:\Projects\teamppt-addin\src\TeampptAddin.Tests\TeampptAddin.Tests.csproj" /t:Build /p:Configuration=Debug /p:BuildProjectReferences=false /v:minimal
 dotnet test "c:\Projects\teamppt-addin\src\TeampptAddin.Tests\TeampptAddin.Tests.csproj" --no-build --no-restore --filter "FullyQualifiedName~WindowSweepTest"
 ```
@@ -240,7 +241,7 @@ namespace TeampptAddin
 Run (Step 2와 동일 3줄):
 
 ```powershell
-& "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" "c:\Projects\teamppt-addin\src\TeampptAddin\TeampptAddin.csproj" /t:Build /p:Configuration=Debug "/p:Platform=Any CPU" /p:RegisterForComInterop=false /v:minimal
+& "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" "c:\Projects\teamppt-addin\src\TeampptAddin\TeampptAddin.csproj" /t:Build /p:Configuration=Debug /p:Platform=AnyCPU /p:RegisterForComInterop=false /v:minimal
 & "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" "c:\Projects\teamppt-addin\src\TeampptAddin.Tests\TeampptAddin.Tests.csproj" /t:Build /p:Configuration=Debug /p:BuildProjectReferences=false /v:minimal
 dotnet test "c:\Projects\teamppt-addin\src\TeampptAddin.Tests\TeampptAddin.Tests.csproj" --no-build --no-restore --filter "FullyQualifiedName~WindowSweepTest"
 ```
@@ -434,7 +435,7 @@ using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 Run:
 
 ```powershell
-& "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" "c:\Projects\teamppt-addin\src\TeampptAddin\TeampptAddin.csproj" /t:Build /p:Configuration=Debug "/p:Platform=Any CPU" /p:RegisterForComInterop=false /v:minimal
+& "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" "c:\Projects\teamppt-addin\src\TeampptAddin\TeampptAddin.csproj" /t:Build /p:Configuration=Debug /p:Platform=AnyCPU /p:RegisterForComInterop=false /v:minimal
 ```
 
 Expected: `Build succeeded. 0 Error(s)`.
