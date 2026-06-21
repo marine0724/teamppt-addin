@@ -50,6 +50,7 @@
     <Compile Include="Core\ThumbnailGenerator.cs" />
     <Compile Include="Core\CoordinateConverter.cs" />
     <Compile Include="Core\SectionReader.cs" />
+    <Compile Include="Core\SlideSplitter.cs" />
     <Compile Include="UI\TaskPaneHost.cs" />
     <Compile Include="UI\CardControl.cs" />
     <Compile Include="UI\DragHandler.cs" />
