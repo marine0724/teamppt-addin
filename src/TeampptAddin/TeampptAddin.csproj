@@ -78,6 +78,7 @@
     <Compile Include="Services\ThumbnailService.cs" />
     <Compile Include="Services\AssetIdGenerator.cs" />
     <Compile Include="Services\IngestPlanner.cs" />
+    <Compile Include="Services\IngestRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

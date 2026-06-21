@@ -9,12 +9,26 @@
 
 **브랜치:** `phase-e-gemini-flash`
 
-**바로 할 일:** 아래 계획을 **서브에이전트 방식(superpowers:subagent-driven-development)**으로 Task 1→7 순서대로 실행.
-→ **계획: [plans/2026-06-20-local-ingest-core.md](docs/superpowers/plans/2026-06-20-local-ingest-core.md)** (Phase B plan 1, 로컬 인제스트 코어)
+**현황 (2026-06-21):** 로컬 인제스트 코어(plan: [local-ingest-core](docs/superpowers/plans/2026-06-20-local-ingest-core.md)) **Task 1~7 구현·코드리뷰·단위테스트 전부 완료, 커밋됨.** 단위테스트 24/24 GREEN. 진행 보드: [PROGRESS-BOARD.md](PROGRESS-BOARD.md).
 
-- 외부 의존성 0 (Supabase/LLM 없음). 섹션 분류된 묶음 pptx → 슬라이드 1장=에셋 1개 split + 768px 썸네일.
-- 순수 로직(AssetIdGenerator/IngestPlanner)은 xUnit TDD, COM 어댑터(SectionReader/SlideSplitter/SlideImageRenderer)는 PowerPoint 수동 검증.
-- 계획서대로 정확히 진행 — 임의로 범위 늘리지 말 것. 각 Task 끝 커밋.
+**제품 코드는 동작 확인됨:** 애드인 미로드 상태의 깨끗한 PowerPoint에서 `IngestRunner.Run`으로 돌린 실행이 **23슬라이드까지 정상 분할**(debug.log 증거). 분할 파이프라인 자체는 OK. 남은 건 **Task 7 전체 수동검증**뿐.
+
+### 🔴 다음 세션 첫 할 일 (블로커)
+1. **검증 하니스 스크립트 수정** — `scripts/manual-verify-task7.ps1`이 진행률 표시하려고 COM 어댑터를 쪼개 호출 → PowerShell이 `New-Object -ComObject`의 `__ComObject`를 강타입 `PowerPoint.Presentation` 인자로 **변환 못 해 실패**(`Read`/`SplitSlide` 등).
+   **해결책(중요):** 어댑터 직접 호출 대신 **`[TeampptAddin.IngestRunner]::Run($Bundle, $OutDir)` 호출** — 인자가 문자열 2개뿐이라 COM 변환 문제 없음(17:28 성공 실행이 바로 이 경로). 진행률은 IngestRunner가 항목마다 `debug.log`에 남기므로: Run 호출 + 전후로 plan/결과 출력 + `debug.log` tail(또는 Run을 백그라운드 잡으로 돌리며 tail)로 충분.
+2. **전체 묶음 검증** — `assets/layout_test_aseet.pptx`(15섹션) 전부 PASS: `{섹션명}_NN.pptx`(각 **1슬라이드**) + `{섹션명}_NN.png`(**긴변 768**) 짝 생성. 출력 폴더 = `C:\Projects\teamppt-addin\test`.
+3. PASS 후 **plan 마무리** — superpowers:finishing-a-development-branch (전체 브랜치 최종 리뷰 → main 머지 검토).
+
+### 🟡 별도 task (인제스트와 무관, 나중에) — 패널 중복 버그
+- **증상:** PowerPoint 창을 새로 열거나 껐다 켜면 우측 TEAMPPT 패널이 **누적 중복**.
+- **원인(`Connect.cs`):** `_taskPane` 필드 1개를 덮어쓰기만 함(dedup 없음) + `OnBeginShutdown`은 `Visible=false`만(Delete/ReleaseComObject 없음) + `OnDisconnection`은 패널 정리 안 함 → 누적. 로그의 반복 `Constructor STA`가 창마다 CTP 생성 증거.
+- **해결:** (0) systematic-debugging으로 생성 트리거 확정 → (1) 단일 인스턴스 가드 + `OnDisconnection`/`OnBeginShutdown`에서 `Delete()`+`ReleaseComObject` → (2) 창마다 생성이면 `Dictionary<window,CTP>`로 창당 1개·창 닫힐 때 해제.
+- **주의:** `Connect.cs`/`TaskPaneHost` 수정 필요 → 인제스트 plan(이 두 파일 수정 금지)과 **분리, 별도 브랜치**.
+
+### 메모
+- **검증 스크립트 인코딩:** Windows PowerShell 5.1은 BOM 없는 .ps1의 한글을 깨뜨림 → 스크립트 **문자열 리터럴은 ASCII**로 유지(런타임 데이터의 한글은 무방).
+- **검증 시 PowerPoint 완전히 닫을 것** — 켜진(애드인 로드) 인스턴스에 붙으면 패널 중복 + 인제스트 충돌(slide 5에서 크래시 사례). 스크립트가 POWERPNT 실행 중이면 막도록 되어 있음.
+- 더블 언더스코어 파일명(`레이아웃_목차__01`)은 정상 — 섹션명 `레이아웃(목차)`의 괄호가 `_`로 치환된 것(AssetIdGenerator 명세).
 
 **확정 사항(이번 세션):**
 - **DB = Supabase 확정** (Firebase 탈락). 이유: 제품 심장=pgvector 벡터검색이 Postgres 네이티브, net48/COM은 HttpClient REST만 쓰므로 Firebase SDK 장점 못 씀, jsonb로 유동성 확보. [[design-ai-redesign]]
