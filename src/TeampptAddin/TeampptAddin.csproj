@@ -95,6 +95,7 @@
     <Compile Include="Services\AssetRowBuilder.cs" />
     <Compile Include="Services\EmbeddingService.cs" />
     <Compile Include="Services\SupabaseClient.cs" />
+    <Compile Include="Services\AssetIngestUploader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
