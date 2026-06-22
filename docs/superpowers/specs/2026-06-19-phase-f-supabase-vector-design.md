@@ -70,7 +70,11 @@ create table assets (
 ```
 원칙: **임베딩 텍스트(`embed_text`, 검색용)와 구조 메타데이터(`metadata`, 삽입용)를 분리.**
 
-## 4. 미결 결정 7개 (다음 세션에서 각 추천안+이유 제시 → 사용자 확인)
+## 4. 미결 결정 7개 — ✅ **해소됨 (2026-06-22)**
+
+> 7개 전부 확정: [vibe-designing-a-first §11](2026-06-22-vibe-designing-a-first-design.md). 요약: ①anon+RLS/admin.json ②캐시+번들 폴백 ③애드인 관리자 버튼 ④인제스트 경로 재사용+LLM 재생성 ⑤embedding-004(768)+hnsw ⑥top8·하드컷없음 ⑦세션 메모리. + 유료화 진화경로(Auth/role/Edge Function) & `IAccessPolicy` seam.
+
+(원문 — 결정 근거 기록용)
 1. **인증** — anon 키를 api-keys.json에 + RLS 읽기전용 정책? (권장: 예)
 2. **오프라인/네트워크 실패** — Supabase 불통 시 번들 로컬 JSON 폴백 / 마지막 카탈로그 캐시?
 3. **임베딩 생성 파이프라인** — 에셋 추가 시 누가 임베딩 생성·업로드? 별도 관리자 스크립트? (사실상 별도 워크플로우)
