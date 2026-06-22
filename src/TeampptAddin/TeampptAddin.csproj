@@ -73,6 +73,7 @@
     <Compile Include="Models\AiRecommendation.cs" />
     <Compile Include="Models\StylePalette.cs" />
     <Compile Include="Models\IngestModels.cs" />
+    <Compile Include="Models\AssetUnderstanding.cs" />
     <Compile Include="Services\AssetSchemaMigrator.cs" />
     <Compile Include="Services\CatalogBuilder.cs" />
     <Compile Include="Services\ConceptResolver.cs" />
