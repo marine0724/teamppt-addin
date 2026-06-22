@@ -23,6 +23,17 @@ namespace TeampptAddin
                     SlideCount = props.SlidesCount(i),
                 });
             }
+
+            if (result.Count == 0 && pres.Slides.Count > 0)
+            {
+                result.Add(new SectionInfo
+                {
+                    Name = "에셋",
+                    FirstSlideIndex = 1,
+                    SlideCount = pres.Slides.Count,
+                });
+            }
+
             return result;
         }
     }

@@ -33,7 +33,7 @@ namespace TeampptAddin
 
         public async Task InsertAssetAsync(JObject row)
         {
-            var req = new HttpRequestMessage(HttpMethod.Post, $"{_baseUrl}/rest/v1/assets");
+            var req = new HttpRequestMessage(HttpMethod.Post, $"{_baseUrl}/rest/v1/assets?on_conflict=file");
             ApplyHeaders(req);
             req.Headers.TryAddWithoutValidation("Prefer", "return=minimal,resolution=merge-duplicates");
             req.Content = new StringContent(row.ToString(Formatting.None), Encoding.UTF8, "application/json");

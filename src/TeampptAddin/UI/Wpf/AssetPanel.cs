@@ -58,9 +58,17 @@ namespace TeampptAddin
         private Grid _ingestCurrentContainer;
         private TextBlock _ingestStageText;
         private StackPanel _ingestCompletedStack;
+        private Border _completedCollapsedBox;
+        private TextBlock _completedCountText;
+        private TextBlock _completedChevron;
+        private Image _completedLatestThumb;
+        private TextBlock _completedLatestName;
+        private bool _completedExpanded;
+        private int _completedCount;
         private DispatcherTimer _ingestDotsTimer;
         private string _ingestStageBase;
         private Border _ingestScanLine;
+        private TextBlock _ingestNameText;
         private int _ingestLastIndex;
         private string _retryOutputDir;
         private string _retryBundleName;
@@ -1502,13 +1510,96 @@ namespace TeampptAddin
             _ingestCurrentContainer = new Grid { MinHeight = 10 };
             inner.Children.Add(_ingestCurrentContainer);
 
-            _ingestCompletedStack = new StackPanel();
-            inner.Children.Add(_ingestCompletedStack);
-
             card.Child = inner;
             panel.Children.Add(card);
 
             _chatStack.Children.Add(panel);
+
+            _completedCount = 0;
+            _completedExpanded = false;
+            _ingestCompletedStack = new StackPanel { Visibility = Visibility.Collapsed, Margin = new Thickness(0, 8, 0, 0) };
+
+            var latestThumbBorder = new Border
+            {
+                Width = 36,
+                Height = 26,
+                CornerRadius = new CornerRadius(6),
+                ClipToBounds = true,
+                Background = ThemeResources.BgChip,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 10, 0)
+            };
+            _completedLatestThumb = new Image { Stretch = Stretch.UniformToFill };
+            latestThumbBorder.Child = _completedLatestThumb;
+            ThemeResources.ApplyRoundedClip(latestThumbBorder, 6);
+
+            _completedLatestName = new TextBlock
+            {
+                Text = "",
+                FontSize = 11,
+                FontWeight = FontWeights.SemiBold,
+                Foreground = ThemeResources.TextMain,
+                FontFamily = ThemeResources.FontBase,
+                VerticalAlignment = VerticalAlignment.Center,
+                TextTrimming = TextTrimming.CharacterEllipsis
+            };
+
+            _completedCountText = new TextBlock
+            {
+                Text = "",
+                FontSize = 10,
+                Foreground = ThemeResources.TextDim,
+                FontFamily = ThemeResources.FontBase,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(6, 0, 0, 0)
+            };
+
+            _completedChevron = new TextBlock
+            {
+                Text = "▾",
+                FontSize = 12,
+                Foreground = ThemeResources.TextDim,
+                FontFamily = ThemeResources.FontBase,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            var previewRow = new Grid();
+            previewRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            previewRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            previewRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            previewRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            Grid.SetColumn(latestThumbBorder, 0);
+            Grid.SetColumn(_completedLatestName, 1);
+            Grid.SetColumn(_completedCountText, 2);
+            Grid.SetColumn(_completedChevron, 3);
+            previewRow.Children.Add(latestThumbBorder);
+            previewRow.Children.Add(_completedLatestName);
+            previewRow.Children.Add(_completedCountText);
+            previewRow.Children.Add(_completedChevron);
+
+            _completedCollapsedBox = new Border
+            {
+                Background = ThemeResources.BgAiResponse,
+                CornerRadius = new CornerRadius(14),
+                Padding = new Thickness(12, 10, 14, 10),
+                Margin = new Thickness(8, 6, 8, 4),
+                Cursor = Cursors.Hand,
+                Visibility = Visibility.Collapsed
+            };
+
+            var collapsedContent = new StackPanel();
+            collapsedContent.Children.Add(previewRow);
+            collapsedContent.Children.Add(_ingestCompletedStack);
+            _completedCollapsedBox.Child = collapsedContent;
+
+            _completedCollapsedBox.MouseLeftButtonUp += (s, e) =>
+            {
+                _completedExpanded = !_completedExpanded;
+                _completedChevron.Text = _completedExpanded ? "▴" : "▾";
+                _ingestCompletedStack.Visibility = _completedExpanded ? Visibility.Visible : Visibility.Collapsed;
+            };
+
+            _chatStack.Children.Add(_completedCollapsedBox);
             _chatScroll.ScrollToBottom();
         }
 
@@ -1529,6 +1620,8 @@ namespace TeampptAddin
                     SetIngestStage("이해 중");
                     break;
                 case IngestStage.Embedding:
+                    if (!string.IsNullOrEmpty(p.Name) && _ingestNameText != null)
+                        _ingestNameText.Text = p.Name;
                     SetIngestStage("임베딩 중");
                     break;
                 case IngestStage.Uploading:
@@ -1543,22 +1636,21 @@ namespace TeampptAddin
             _chatScroll.ScrollToBottom();
         }
 
+        private BitmapImage _currentThumbBmp;
+
         private void ShowCurrentCard(IngestProgress p)
         {
             _ingestCurrentContainer.Children.Clear();
+            _currentThumbBmp = null;
 
-            var cardGrid = new Grid { Margin = new Thickness(0, 0, 0, 8) };
-            cardGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(72) });
-            cardGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            var cardStack = new StackPanel();
 
             var thumbClip = new Border
             {
-                Width = 64,
-                Height = 48,
                 CornerRadius = new CornerRadius(10),
                 ClipToBounds = true,
                 Background = ThemeResources.BgChip,
-                Margin = new Thickness(0, 0, 8, 0)
+                Margin = new Thickness(0, 0, 0, 10)
             };
 
             var thumbGrid = new Grid();
@@ -1568,38 +1660,39 @@ namespace TeampptAddin
                 bmp.BeginInit();
                 bmp.CacheOption = BitmapCacheOption.OnLoad;
                 bmp.UriSource = new Uri(p.PngPath);
-                bmp.DecodePixelHeight = 96;
+                bmp.DecodePixelWidth = 400;
                 bmp.EndInit();
                 bmp.Freeze();
+                _currentThumbBmp = bmp;
                 thumbGrid.Children.Add(new Image
                 {
                     Source = bmp,
-                    Stretch = Stretch.UniformToFill
+                    Stretch = Stretch.Uniform
                 });
             }
             catch { }
 
             _ingestScanLine = new Border
             {
-                Height = 24,
+                Height = 32,
                 VerticalAlignment = VerticalAlignment.Top,
                 IsHitTestVisible = false,
                 Background = new LinearGradientBrush(
                     Color.FromArgb(0, 249, 115, 22),
-                    Color.FromArgb(50, 249, 115, 22),
+                    Color.FromArgb(60, 249, 115, 22),
                     new Point(0, 0), new Point(0, 1))
             };
             thumbGrid.Children.Add(_ingestScanLine);
 
             try
             {
-                var scanTransform = new TranslateTransform(0, -24);
+                var scanTransform = new TranslateTransform(0, -32);
                 _ingestScanLine.RenderTransform = scanTransform;
                 var scanAnim = new DoubleAnimation
                 {
-                    From = -24,
-                    To = 48,
-                    Duration = TimeSpan.FromSeconds(1.2),
+                    From = -32,
+                    To = 160,
+                    Duration = TimeSpan.FromSeconds(1.4),
                     RepeatBehavior = RepeatBehavior.Forever,
                     EasingFunction = new SineEase()
                 };
@@ -1609,48 +1702,46 @@ namespace TeampptAddin
 
             thumbClip.Child = thumbGrid;
             ThemeResources.ApplyRoundedClip(thumbClip, 10);
-            Grid.SetColumn(thumbClip, 0);
-            cardGrid.Children.Add(thumbClip);
+            cardStack.Children.Add(thumbClip);
 
-            var info = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
-            info.Children.Add(new TextBlock
+            _ingestNameText = new TextBlock
             {
                 Text = p.AssetId.Replace("_", " "),
-                FontSize = 12,
+                FontSize = 13,
                 FontWeight = FontWeights.SemiBold,
                 Foreground = ThemeResources.TextMain,
                 FontFamily = ThemeResources.FontBase,
-                TextTrimming = TextTrimming.CharacterEllipsis
-            });
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                Margin = new Thickness(2, 0, 0, 2)
+            };
+            cardStack.Children.Add(_ingestNameText);
 
             _ingestStageText = new TextBlock
             {
                 FontSize = 11,
                 Foreground = IngestAccent,
                 FontFamily = ThemeResources.FontBase,
-                Margin = new Thickness(0, 3, 0, 0)
+                Margin = new Thickness(2, 0, 0, 0)
             };
-            info.Children.Add(_ingestStageText);
-
-            Grid.SetColumn(info, 1);
-            cardGrid.Children.Add(info);
+            cardStack.Children.Add(_ingestStageText);
 
             var wrapper = new Border
             {
-                Child = cardGrid,
+                Child = cardStack,
                 Background = IngestAccentDim,
-                CornerRadius = new CornerRadius(12),
-                Padding = new Thickness(10, 8, 10, 8),
+                CornerRadius = new CornerRadius(14),
+                Padding = new Thickness(12, 12, 12, 12),
+                Margin = new Thickness(0, 0, 0, 8),
                 Opacity = 0,
-                RenderTransform = new TranslateTransform(0, 8)
+                RenderTransform = new TranslateTransform(0, 10)
             };
 
             _ingestCurrentContainer.Children.Add(wrapper);
 
             try
             {
-                var fadeIn = new DoubleAnimation { To = 1, Duration = TimeSpan.FromMilliseconds(250), EasingFunction = new QuadraticEase() };
-                var slideUp = new DoubleAnimation { To = 0, Duration = TimeSpan.FromMilliseconds(250), EasingFunction = new QuadraticEase() };
+                var fadeIn = new DoubleAnimation { To = 1, Duration = TimeSpan.FromMilliseconds(300), EasingFunction = new QuadraticEase() };
+                var slideUp = new DoubleAnimation { To = 0, Duration = TimeSpan.FromMilliseconds(300), EasingFunction = new QuadraticEase() };
                 wrapper.BeginAnimation(OpacityProperty, fadeIn);
                 ((TranslateTransform)wrapper.RenderTransform).BeginAnimation(TranslateTransform.YProperty, slideUp);
             }
@@ -1689,51 +1780,73 @@ namespace TeampptAddin
             var current = _ingestCurrentContainer.Children[0] as Border;
             if (current == null) return;
 
-            var cardGrid = current.Child as Grid;
-            if (cardGrid == null) return;
+            var cardStack = current.Child as StackPanel;
+            if (cardStack == null) return;
 
             string name = "";
             string kind = "";
-            foreach (var child in cardGrid.Children)
+            BitmapImage thumbBmp = _currentThumbBmp;
+            foreach (var child in cardStack.Children)
             {
-                if (child is StackPanel sp && Grid.GetColumn((UIElement)child) == 1)
-                {
-                    foreach (var spChild in sp.Children)
-                    {
-                        var tb = spChild as TextBlock;
-                        if (tb == null) continue;
-                        if (tb.FontWeight == FontWeights.SemiBold) name = tb.Text;
-                        else kind = tb.Text;
-                    }
-                }
+                var tb = child as TextBlock;
+                if (tb == null) continue;
+                if (tb.FontWeight == FontWeights.SemiBold) name = tb.Text;
+                else if (tb.Foreground == IngestAccent || tb.Foreground == ThemeResources.StatusSuccess) kind = tb.Text;
             }
 
             _ingestCurrentContainer.Children.Clear();
+            _currentThumbBmp = null;
 
-            var row = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 3) };
+            var row = new Grid { Margin = new Thickness(0, 0, 0, 4) };
+            row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(40) });
+            row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
-            row.Children.Add(new TextBlock
+            var miniThumb = new Border
+            {
+                Width = 34,
+                Height = 24,
+                CornerRadius = new CornerRadius(5),
+                ClipToBounds = true,
+                Background = ThemeResources.BgChip,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            if (thumbBmp != null)
+            {
+                miniThumb.Child = new Image
+                {
+                    Source = thumbBmp,
+                    Stretch = Stretch.UniformToFill
+                };
+            }
+            ThemeResources.ApplyRoundedClip(miniThumb, 5);
+            Grid.SetColumn(miniThumb, 0);
+            row.Children.Add(miniThumb);
+
+            var textStack = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
+
+            textStack.Children.Add(new TextBlock
             {
                 Text = "✓",
                 FontSize = 11,
                 FontWeight = FontWeights.Bold,
                 Foreground = ThemeResources.StatusSuccess,
-                Margin = new Thickness(0, 0, 6, 0),
+                Margin = new Thickness(0, 0, 5, 0),
                 VerticalAlignment = VerticalAlignment.Center
             });
 
-            row.Children.Add(new TextBlock
+            textStack.Children.Add(new TextBlock
             {
                 Text = name,
                 FontSize = 11,
                 Foreground = ThemeResources.TextSub,
                 FontFamily = ThemeResources.FontBase,
-                VerticalAlignment = VerticalAlignment.Center
+                VerticalAlignment = VerticalAlignment.Center,
+                TextTrimming = TextTrimming.CharacterEllipsis
             });
 
             if (!string.IsNullOrEmpty(kind))
             {
-                row.Children.Add(new TextBlock
+                textStack.Children.Add(new TextBlock
                 {
                     Text = $" · {kind.Replace("완료 · ", "")}",
                     FontSize = 10,
@@ -1742,6 +1855,9 @@ namespace TeampptAddin
                     VerticalAlignment = VerticalAlignment.Center
                 });
             }
+
+            Grid.SetColumn(textStack, 1);
+            row.Children.Add(textStack);
 
             row.Opacity = 0;
             _ingestCompletedStack.Children.Insert(0, row);
@@ -1752,6 +1868,14 @@ namespace TeampptAddin
                 row.BeginAnimation(OpacityProperty, fadeIn);
             }
             catch { row.Opacity = 1; }
+
+            _completedCount++;
+            _completedCountText.Text = $"· {_completedCount}개";
+            _completedLatestName.Text = "✓ " + name;
+            if (thumbBmp != null)
+                _completedLatestThumb.Source = thumbBmp;
+            if (_completedCollapsedBox.Visibility == Visibility.Collapsed)
+                _completedCollapsedBox.Visibility = Visibility.Visible;
         }
 
         private void UpdateProgressBar(int index, int total, IngestStage stage)

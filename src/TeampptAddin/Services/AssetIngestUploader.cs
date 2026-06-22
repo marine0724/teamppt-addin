@@ -54,6 +54,7 @@ namespace TeampptAddin
                 onProgress?.Invoke(prog);
                 var u = await understand.UnderstandAsync(pngPath, category, "pptx/" + id + ".pptx").ConfigureAwait(false);
 
+                prog.Name = u.Asset?.Name;
                 prog.Stage = IngestStage.Embedding;
                 onProgress?.Invoke(prog);
                 var embedText = EmbedTextBuilder.Build(u);

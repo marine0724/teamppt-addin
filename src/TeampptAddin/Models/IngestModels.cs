@@ -10,6 +10,7 @@ namespace TeampptAddin
         public IngestStage Stage { get; set; }
         public string PngPath { get; set; }
         public string Kind { get; set; }
+        public string Name { get; set; }
     }
 
     /// <summary>PowerPoint 섹션 1개 = 카테고리 1개. Interop SectionProperties에서 읽음.</summary>

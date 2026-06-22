@@ -3,7 +3,7 @@
 > 이 파일 하나만 열어두면 "지금 어디서 뭘 하는지" 보입니다. Claude가 매 세션 함께 유지.
 > **기록용 아카이브가 아니라 "지금 여기" 작업 보드.** 끝난 잎(Task)은 지우고 교체, 숲·나무 단위는 끝날 때까지 유지. (규칙: CLAUDE.md)
 > 계층: **나라 > 대지 > 숲 > 나무 > 잎** (2026-06-22 재정립)
-> 최종 갱신: 2026-06-22 · 현재 작업: **A-1b/c 수동 검증 중 (임시 인제스트 UI 구현 완료, Supabase 업로드 실험 진행 중).**
+> 최종 갱신: 2026-06-22 · 현재 작업: **A-1b/c 수동 검증 완료 → A-1d 착수 대기.**
 
 ---
 
@@ -46,17 +46,14 @@
 | plan | 무엇 | 상태 |
 |---|---|---|
 | [A-1a LLM 이해 어댑터](docs/superpowers/plans/2026-06-22-a1a-llm-understanding-adapter.md) | PNG+섹션명 → Gemini 멀티모달 이해 → 구조화 레코드 | ✅ 완료 |
-| [A-1b/c Supabase 적재경로](docs/superpowers/plans/2026-06-22-a1bc-supabase-ingest-upload.md) | 인프라+임베딩+업로드+관리자 게이트 | 🔶 수동 검증 중 |
+| [A-1b/c Supabase 적재경로](docs/superpowers/plans/2026-06-22-a1bc-supabase-ingest-upload.md) | 인프라+임베딩+업로드+관리자 게이트 | ✅ 완료 |
 | [A-1d 벡터검색 읽기경로](docs/superpowers/plans/2026-06-22-a1d-vector-read-path.md) | 질의→임베딩→match_assets→AI탭 추천 | ⬜ 대기 |
 
 ---
 
 ## 🍃 잎 — 현재 Task
 
-> **A-1b/c 수동 검증 진행 중** (2026-06-22):
-> - 임시 인제스트 UI 구현 완료 (파일선택→split→이해→임베딩→Supabase 업로드)
-> - AI탭에 토스 스타일 진행 패널 (썸네일 미리보기, 스캔 애니메이션, 프로그레스 바, 완료 스택)
-> - 503 과부하 리트라이 버튼 (실패 지점부터 재개)
-> - 해결된 이슈: 임베딩 모델 text-embedding-004→gemini-embedding-001, TLS 1.2, Storage 한글 파일명→해시, 중복 방지(UNIQUE+upsert)
-> - **실험 진행 중:** layout_test_asset.pptx 35개 에셋 Supabase 적재 테스트 (503 리트라이 확인 필요)
-> **다음:** 검증 성공 확인 → A-1d 착수 여부 사용자에게 확인.
+> **A-1d 벡터검색 읽기경로 착수 대기** (2026-06-22):
+> - A-1b/c 검증 완료: layout_test_asset 35개 + header family 7개 = 42행 Supabase 적재 확인
+> - 중복 upsert 정상 동작 (여러 번 실험해도 행 수 동일)
+> **다음:** A-1d 착수 여부 사용자 확인.
