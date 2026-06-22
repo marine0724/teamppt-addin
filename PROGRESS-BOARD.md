@@ -44,15 +44,22 @@
 
 ---
 
-## 🌳 나무 — 지금 plan
+## 🌳 나무 — 지금 plan: **A-1 데이터 토대** (3개 plan, 순차)
 
-> **(작성 대기)** A-1 데이터 토대 plan. writing-plans로 spec → plan 전환 예정.
+> 결정 7개 확정 + 유료화 진화경로 spec §11. 실행계획 작성 완료(아래 3개), **착수 대기**.
+
+| plan | 무엇 | 선행 | 핵심 깃발 |
+|---|---|---|---|
+| [A-1a LLM 이해 어댑터](docs/superpowers/plans/2026-06-22-a1a-llm-understanding-adapter.md) | PNG+섹션명 → Gemini 멀티모달 이해 → 구조화 레코드(kind 분류)+embed_text | 로컬 인제스트 코어 ✅ | 자립적, 바로 착수 가능 |
+| [A-1b/c Supabase 적재경로](docs/superpowers/plans/2026-06-22-a1bc-supabase-ingest-upload.md) | 인프라(테이블/RPC/RLS/버킷)+임베딩+업로드+`IAccessPolicy` 게이트 | A-1a + Supabase 프로젝트 | 7+35 에셋 Supabase 적재(마이그레이션) |
+| [A-1d 벡터검색 읽기경로](docs/superpowers/plans/2026-06-22-a1d-vector-read-path.md) | 질의→임베딩→match_assets(top8)→Gemini 선택→AI탭 추천 + 오프라인 폴백 | A-1b/c | 텍스트 질의 추천 동작(A 첫 시연) |
 
 ---
 
 ## 🍃 잎 — Task 현황
 
-> 직전 plan(패널 버튼화)은 완료·main 머지(`7a0ace0`). 큰 기획 재정립 brainstorming 완료 → spec 확정([2026-06-22](docs/superpowers/specs/2026-06-22-vibe-designing-a-first-design.md)).
+> 직전 plan(패널 버튼화)은 완료·main 머지(`7a0ace0`). 큰 기획 재정립 brainstorming→spec→plan 완료.
 
-> **현재 위치:** 큰 기획 재정립 spec 확정 → 사용자 spec 리뷰 후 **A-1 plan 작성(writing-plans)**.
-> **빌드:** 직접 recompile `MSBuild TeampptAddin.csproj /t:Build /p:Configuration=Debug /p:Platform=AnyCPU /p:RegisterForComInterop=false`. COM 재등록 불필요(이미 등록). CLAUDE.md elevated 래퍼는 이 환경서 무력(쓰지 말 것).
+> **현재 위치:** A-1 실행계획 3개 작성·커밋 완료. **다음 = A-1a 착수**(subagent-driven 권장) — 사용자 지시 후 시작.
+> ⚠️ A-1b/c·d는 **Supabase 프로젝트 생성 + SQL 셋업(A-1b/c Task 0)**이 사람 선행작업. A-1a는 그것 없이 착수 가능(키만 필요).
+> **빌드:** 직접 recompile `MSBuild TeampptAddin.csproj /t:Build /p:Configuration=Debug /p:Platform=AnyCPU /p:RegisterForComInterop=false`. COM 재등록 불필요(이미 등록). 단, UI 구동 검증(A-1d Task 6)은 관리자 빌드. CLAUDE.md elevated 래퍼는 이 환경서 무력(쓰지 말 것).
