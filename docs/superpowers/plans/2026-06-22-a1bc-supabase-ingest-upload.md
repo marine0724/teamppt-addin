@@ -126,10 +126,10 @@ Expected: 경로가 출력됨(=무시됨). 안 되면 `.gitignore`에 `api-keys.
 
 - [ ] **Step 2: api-keys.json에 supabase 필드 추가**
 
-`src/TeampptAddin/Assets/api-keys.json`을 열어 기존 `gemini`는 두고 추가(실제 값은 본인 것으로):
+`src/TeampptAddin/Assets/api-keys.json`을 열어 **기존 `gemini` 값은 그대로 두고**(이미 작동 확인된 키 — 절대 교체/수정 금지) 두 필드만 추가:
 ```json
 {
-  "gemini": "AIza...",
+  "gemini": "<기존 값 유지>",
   "supabaseUrl": "https://<project>.supabase.co",
   "supabaseAnonKey": "<anon public key>"
 }
@@ -141,7 +141,7 @@ Expected: 경로가 출력됨(=무시됨). 안 되면 `.gitignore`에 `api-keys.
 ```json
 {
   "supabaseServiceKey": "<service_role key>",
-  "geminiKey": "AIza..."
+  "geminiKey": "<api-keys.json의 gemini와 동일 값>"
 }
 ```
 (커밋 안 함. 일반 사용자 PC엔 이 파일이 없음 → 인제스트 버튼 숨김.)

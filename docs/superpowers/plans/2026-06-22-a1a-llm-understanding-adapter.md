@@ -650,7 +650,7 @@ Run: Task 1 Step 2의 MSBuild 명령. Expected: Build succeeded.
 
 - [ ] **Step 4: 수동/통합 검증 (실제 PNG + 키 필요)**
 
-전제: 유효한 `AIza...` Gemini 키가 `Assets/api-keys.json`의 `gemini`에 있음. 로컬 인제스트 코어로 생성된 PNG 하나(예: `%LOCALAPPDATA%\TeampptAddin\ingest-test\표지_01.png`)를 대상으로, 임시 실행 지점(즉시 창/디버그 버튼)에서:
+전제: 유효한 Gemini 키가 `Assets/api-keys.json`의 `gemini`에 있음(현재 키 작동 확인됨 — **키 형식이 `AIza`가 아니어도 손대지 말 것**. 신형식 키가 PPT 내 대화에서 정상 작동 검증됨). 로컬 인제스트 코어로 생성된 PNG 하나(예: `%LOCALAPPDATA%\TeampptAddin\ingest-test\표지_01.png`)를 대상으로, 임시 실행 지점(즉시 창/디버그 버튼)에서:
 ```csharp
 var svc = AssetUnderstandingService.FromAssetsDir(Globals.AssetsDir);
 var u = svc.UnderstandAsync(@"%LOCALAPPDATA%\TeampptAddin\ingest-test\표지_01.png", "표지", "표지_01.pptx").GetAwaiter().GetResult();
