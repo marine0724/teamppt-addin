@@ -3,7 +3,7 @@
 > 이 파일 하나만 열어두면 "지금 어디서 뭘 하는지" 보입니다. Claude가 매 세션 함께 유지.
 > **기록용 아카이브가 아니라 "지금 여기" 작업 보드.** 끝난 잎(Task)은 지우고 교체, 숲·나무 단위는 끝날 때까지 유지. (규칙: CLAUDE.md)
 > 계층: **나라 > 대지 > 숲 > 나무 > 잎** (2026-06-22 재정립)
-> 최종 갱신: 2026-06-22 · 현재 작업: **A-1b/c Supabase 적재경로 ✅ 코드 완료(42테스트 GREEN) → 수동 검증(마이그레이션) 대기.**
+> 최종 갱신: 2026-06-22 · 현재 작업: **A-1b/c 수동 검증 중 (임시 인제스트 UI 구현 완료, Supabase 업로드 실험 진행 중).**
 
 ---
 
@@ -35,31 +35,28 @@
   벡터추천 (해자)        [슬라이드 N 공유중]
 ```
 
-목표: **A만 써도 감동**. "수작업 json"이 아니라 "LLM 인제스트→Supabase 벡터추천"이 도는 토대 = 투자자 비전이 하늘과 땅.
-
-- **A-1(다음 깃발):** 인제스트 LLM 이해 어댑터(**타입별 판단·분류**) → 임베딩 → Supabase 업로드 + LLM이 Supabase에서 불러와 추천(벡터검색 읽기경로). **대상 = 로컬 7개(헤더) + 인제스트 실험 35개(15섹션, 레이아웃~그래프).** R&D가 에셋 계속 붓는 레일. (기존 B 인제스트 나머지 + F 벡터 흡수)
-- **A-2:** 슬라이드 리더(현재/전체 온디맨드) + `[슬라이드 N 공유중]` indicator. (기존 C 확장)
-- **A-3:** ② 텍스트 질의 추천("장점 3가지 추천")=벡터DB만, *먼저·완성도 우선* → ① 현재슬라이드 추천(2~3개)=공유엔진+벡터 + 전체덱 *일관성* 진단(헤더·색 컨셉·구성). 넓은 진단은 C로 미룸.
-- 5대 결정·세 루트 전부 유지. 인제스트 로컬코어 ✅·Phase A/E ✅.
+- **A-1(다음 깃발):** 인제스트 LLM 이해 어댑터 → 임베딩 → Supabase 업로드 + LLM이 Supabase에서 불러와 추천(벡터검색 읽기경로).
+- **A-2:** 슬라이드 리더(현재/전체 온디맨드) + `[슬라이드 N 공유중]` indicator.
+- **A-3:** 텍스트 질의 추천 → 현재슬라이드 추천 + 전체덱 일관성 진단.
 
 ---
 
 ## 🌳 나무 — 지금 plan: **A-1 데이터 토대** (3개 plan, 순차)
 
-> 결정 7개 확정 + 유료화 진화경로 spec §11. 실행계획 작성 완료(아래 3개), **착수 대기**.
-
-| plan | 무엇 | 선행 | 핵심 깃발 |
-|---|---|---|---|
-| [A-1a LLM 이해 어댑터](docs/superpowers/plans/2026-06-22-a1a-llm-understanding-adapter.md) ✅ | PNG+섹션명 → Gemini 멀티모달 이해 → 구조화 레코드(kind 분류)+embed_text | 로컬 인제스트 코어 ✅ | **완료** (5커밋, 37테스트 GREEN) |
-| [A-1b/c Supabase 적재경로](docs/superpowers/plans/2026-06-22-a1bc-supabase-ingest-upload.md) ✅ 코드 | 인프라(테이블/RPC/RLS/버킷)+임베딩+업로드+`IAccessPolicy` 게이트 | A-1a + Supabase 프로젝트 | 코드 완료(7커밋, 42테스트 GREEN), 수동 검증(마이그레이션) 대기 |
-| [A-1d 벡터검색 읽기경로](docs/superpowers/plans/2026-06-22-a1d-vector-read-path.md) | 질의→임베딩→match_assets(top8)→Gemini 선택→AI탭 추천 + 오프라인 폴백 | A-1b/c | 텍스트 질의 추천 동작(A 첫 시연) |
+| plan | 무엇 | 상태 |
+|---|---|---|
+| [A-1a LLM 이해 어댑터](docs/superpowers/plans/2026-06-22-a1a-llm-understanding-adapter.md) | PNG+섹션명 → Gemini 멀티모달 이해 → 구조화 레코드 | ✅ 완료 |
+| [A-1b/c Supabase 적재경로](docs/superpowers/plans/2026-06-22-a1bc-supabase-ingest-upload.md) | 인프라+임베딩+업로드+관리자 게이트 | 🔶 수동 검증 중 |
+| [A-1d 벡터검색 읽기경로](docs/superpowers/plans/2026-06-22-a1d-vector-read-path.md) | 질의→임베딩→match_assets→AI탭 추천 | ⬜ 대기 |
 
 ---
 
-## 🍃 잎 — Task 현황
+## 🍃 잎 — 현재 Task
 
-> **A-1b/c ✅ 코드 완료** (2026-06-22): AdminCredentials(admin.json 로더) · IAccessPolicy(관리자 게이트 seam) · AssetRowBuilder(Postgres row+pgvector 문자열) · EmbeddingService(text-embedding-004 768) · SupabaseClient(REST insert/RPC/Storage) · AssetIngestUploader(오케스트레이터). 신규 5 단위테스트, 전체 42개 GREEN.
-> **현재 위치:** A-1b/c 코드 완료. **수동 검증(마이그레이션) 대기** — admin.json+split 산출물 준비 후 AssetIngestUploader로 7+35 에셋 Supabase 적재 필요.
-> ⚠️ **수동 검증 미완:** EmbeddingService·SupabaseClient·AssetIngestUploader의 실제 API 호출 + Supabase 적재 검증은 admin.json 존재 환경에서 수동 확인 필요.
-> **다음 = A-1d 벡터검색 읽기경로** (사용자 승인 후 착수).
-> **빌드:** `MSBuild TeampptAddin.csproj /t:Build /p:Configuration=Debug /p:Platform=AnyCPU /p:RegisterForComInterop=false`. COM 재등록 불필요.
+> **A-1b/c 수동 검증 진행 중** (2026-06-22):
+> - 임시 인제스트 UI 구현 완료 (파일선택→split→이해→임베딩→Supabase 업로드)
+> - AI탭에 토스 스타일 진행 패널 (썸네일 미리보기, 스캔 애니메이션, 프로그레스 바, 완료 스택)
+> - 503 과부하 리트라이 버튼 (실패 지점부터 재개)
+> - 해결된 이슈: 임베딩 모델 text-embedding-004→gemini-embedding-001, TLS 1.2, Storage 한글 파일명→해시, 중복 방지(UNIQUE+upsert)
+> - **실험 진행 중:** layout_test_asset.pptx 35개 에셋 Supabase 적재 테스트 (503 리트라이 확인 필요)
+> **다음:** 검증 성공 확인 → A-1d 착수 여부 사용자에게 확인.

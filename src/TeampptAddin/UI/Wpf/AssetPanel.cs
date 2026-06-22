@@ -50,6 +50,21 @@ namespace TeampptAddin
         private Border[] _fontBtns;
 
         private TextBlock _statusText;
+        private Border _ingestButton;
+
+        private Border _ingestProgressTrack;
+        private Border _ingestProgressFill;
+        private TextBlock _ingestProgressText;
+        private Grid _ingestCurrentContainer;
+        private TextBlock _ingestStageText;
+        private StackPanel _ingestCompletedStack;
+        private DispatcherTimer _ingestDotsTimer;
+        private string _ingestStageBase;
+        private Border _ingestScanLine;
+        private int _ingestLastIndex;
+        private string _retryOutputDir;
+        private string _retryBundleName;
+        private int _retryStartFrom;
 
         public AssetPanel()
         {
@@ -87,7 +102,11 @@ namespace TeampptAddin
         {
             var header = new StackPanel { Background = ThemeResources.BgSurface };
 
-            header.Children.Add(new TextBlock
+            var titleRow = new Grid();
+            titleRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            titleRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+            titleRow.Children.Add(new TextBlock
             {
                 Text = "TEAMPPT",
                 FontSize = 15,
@@ -96,6 +115,28 @@ namespace TeampptAddin
                 FontFamily = ThemeResources.FontBase,
                 Margin = new Thickness(16, 12, 0, 8)
             });
+
+            _ingestButton = new Border
+            {
+                Background = new SolidColorBrush(Color.FromRgb(234, 88, 12)),
+                CornerRadius = new CornerRadius(6),
+                Padding = new Thickness(10, 4, 10, 4),
+                Margin = new Thickness(0, 10, 12, 6),
+                Cursor = Cursors.Hand,
+                Visibility = Visibility.Collapsed,
+                Child = new TextBlock
+                {
+                    Text = "인제스트",
+                    FontSize = 11,
+                    FontWeight = FontWeights.SemiBold,
+                    Foreground = Brushes.White,
+                    FontFamily = ThemeResources.FontBase
+                }
+            };
+            _ingestButton.MouseLeftButtonUp += async (s, e) => await RunIngestAsync();
+            Grid.SetColumn(_ingestButton, 1);
+            titleRow.Children.Add(_ingestButton);
+            header.Children.Add(titleRow);
 
             var tabGrid = new Grid { Height = 36 };
             for (int i = 0; i < 3; i++)
@@ -1276,6 +1317,617 @@ namespace TeampptAddin
             _aiService = aiService;
             _styleConfig = styles;
             PopulateStylePanel();
+        }
+
+        public void ShowIngestButton()
+        {
+            if (_ingestButton != null)
+                _ingestButton.Visibility = Visibility.Visible;
+        }
+
+        private static readonly SolidColorBrush IngestAccent = Freeze(new SolidColorBrush(Color.FromRgb(249, 115, 22)));
+        private static readonly SolidColorBrush IngestAccentDim = Freeze(new SolidColorBrush(Color.FromArgb(30, 249, 115, 22)));
+        private static readonly SolidColorBrush IngestTrack = Freeze(new SolidColorBrush(Color.FromRgb(63, 63, 70)));
+        private static SolidColorBrush Freeze(SolidColorBrush b) { b.Freeze(); return b; }
+
+        private async Task RunIngestAsync()
+        {
+            var dlg = new System.Windows.Forms.OpenFileDialog
+            {
+                Title = "인제스트할 에셋 번들 선택",
+                Filter = "PowerPoint 파일 (*.pptx)|*.pptx",
+                Multiselect = false
+            };
+            if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+
+            var bundlePath = dlg.FileName;
+            var bundleName = System.IO.Path.GetFileName(bundlePath);
+
+            SwitchTab(0);
+            if (_emptyState != null) _emptyState.Visibility = Visibility.Collapsed;
+
+            _ingestButton.IsEnabled = false;
+            ((TextBlock)_ingestButton.Child).Text = "실행 중...";
+            _ingestLastIndex = 0;
+
+            BuildIngestPanel(bundleName);
+
+            try
+            {
+                var outputDir = System.IO.Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    "TeampptAddin", "ingest-output");
+
+                if (Directory.Exists(outputDir))
+                {
+                    foreach (var f in Directory.GetFiles(outputDir))
+                        System.IO.File.Delete(f);
+                }
+
+                SetIngestStage("슬라이드 분해 중");
+                var items = IngestRunner.Run(bundlePath, outputDir);
+                _ingestProgressText.Text = $"0/{items.Count} · 분해 완료";
+
+                _retryOutputDir = outputDir;
+                _retryBundleName = bundleName;
+                _retryStartFrom = 0;
+
+                var count = await RunUploadAsync(outputDir, bundleName, 0);
+
+                StopIngestAnimations();
+                ShowIngestComplete(count, items.Count);
+                SetStatus($"인제스트 완료: {count}개", ThemeResources.StatusSuccess.Color);
+                Logger.Log($"[IngestButton] 완료: split={items.Count}, uploaded={count}");
+            }
+            catch (Exception ex)
+            {
+                StopIngestAnimations();
+                _retryStartFrom = Math.Max(0, _ingestLastIndex - 1);
+                ShowIngestError(ex.Message);
+                SetStatus("인제스트 실패", ThemeResources.StatusError.Color);
+                Logger.Log($"[IngestButton] 실패: {ex}");
+            }
+            finally
+            {
+                _ingestButton.IsEnabled = true;
+                ((TextBlock)_ingestButton.Child).Text = "인제스트";
+            }
+        }
+
+        private async Task<int> RunUploadAsync(string outputDir, string bundleName, int startFrom)
+        {
+            var uploader = new AssetIngestUploader();
+            var dispatcher = Dispatcher;
+            return await uploader.UploadDirectoryAsync(outputDir, bundleName, p =>
+            {
+                dispatcher.Invoke(() => HandleIngestProgress(p));
+            }, startFrom);
+        }
+
+        private async Task ResumeIngestAsync()
+        {
+            _ingestButton.IsEnabled = false;
+            ((TextBlock)_ingestButton.Child).Text = "실행 중...";
+
+            _ingestCurrentContainer.Children.Clear();
+            SetIngestStage("재시도 중");
+            _ingestProgressText.Foreground = ThemeResources.TextSub;
+
+            try
+            {
+                var count = await RunUploadAsync(_retryOutputDir, _retryBundleName, _retryStartFrom);
+
+                StopIngestAnimations();
+                var totalFiles = Directory.GetFiles(_retryOutputDir, "*.png").Length;
+                ShowIngestComplete(count + _retryStartFrom, totalFiles);
+                SetStatus($"인제스트 완료: {count + _retryStartFrom}개", ThemeResources.StatusSuccess.Color);
+            }
+            catch (Exception ex)
+            {
+                StopIngestAnimations();
+                _retryStartFrom = Math.Max(0, _ingestLastIndex - 1);
+                ShowIngestError(ex.Message);
+                SetStatus("인제스트 실패", ThemeResources.StatusError.Color);
+                Logger.Log($"[IngestRetry] 실패: {ex}");
+            }
+            finally
+            {
+                _ingestButton.IsEnabled = true;
+                ((TextBlock)_ingestButton.Child).Text = "인제스트";
+            }
+        }
+
+        // ── Ingest Panel ─────────────────────────────────────────────
+
+        private void BuildIngestPanel(string bundleName)
+        {
+            var panel = new StackPanel { Margin = new Thickness(8, 8, 8, 4) };
+
+            var card = new Border
+            {
+                Background = ThemeResources.BgAiResponse,
+                CornerRadius = new CornerRadius(16),
+                Padding = new Thickness(16, 14, 16, 14)
+            };
+
+            var inner = new StackPanel();
+
+            inner.Children.Add(new TextBlock
+            {
+                Text = "INGEST",
+                FontSize = 10,
+                FontWeight = FontWeights.Bold,
+                Foreground = IngestAccent,
+                FontFamily = ThemeResources.FontBase,
+                Margin = new Thickness(0, 0, 0, 2)
+            });
+
+            inner.Children.Add(new TextBlock
+            {
+                Text = bundleName,
+                FontSize = 13,
+                FontWeight = FontWeights.SemiBold,
+                Foreground = ThemeResources.TextMain,
+                FontFamily = ThemeResources.FontBase,
+                Margin = new Thickness(0, 0, 0, 10)
+            });
+
+            var progressGrid = new Grid { Height = 4, Margin = new Thickness(0, 0, 0, 6) };
+            _ingestProgressTrack = new Border
+            {
+                CornerRadius = new CornerRadius(2),
+                Background = IngestTrack
+            };
+            _ingestProgressFill = new Border
+            {
+                CornerRadius = new CornerRadius(2),
+                Background = IngestAccent,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Width = 0
+            };
+            progressGrid.Children.Add(_ingestProgressTrack);
+            progressGrid.Children.Add(_ingestProgressFill);
+            inner.Children.Add(progressGrid);
+
+            _ingestProgressText = new TextBlock
+            {
+                Text = "준비 중...",
+                FontSize = 10,
+                Foreground = ThemeResources.TextSub,
+                FontFamily = ThemeResources.FontBase,
+                Margin = new Thickness(0, 0, 0, 12)
+            };
+            inner.Children.Add(_ingestProgressText);
+
+            _ingestCurrentContainer = new Grid { MinHeight = 10 };
+            inner.Children.Add(_ingestCurrentContainer);
+
+            _ingestCompletedStack = new StackPanel();
+            inner.Children.Add(_ingestCompletedStack);
+
+            card.Child = inner;
+            panel.Children.Add(card);
+
+            _chatStack.Children.Add(panel);
+            _chatScroll.ScrollToBottom();
+        }
+
+        private void HandleIngestProgress(IngestProgress p)
+        {
+            if (p.Stage == IngestStage.Understanding && p.Index != _ingestLastIndex)
+            {
+                MoveCurrentToCompleted();
+                ShowCurrentCard(p);
+                _ingestLastIndex = p.Index;
+            }
+
+            UpdateProgressBar(p.Index, p.Total, p.Stage);
+
+            switch (p.Stage)
+            {
+                case IngestStage.Understanding:
+                    SetIngestStage("이해 중");
+                    break;
+                case IngestStage.Embedding:
+                    SetIngestStage("임베딩 중");
+                    break;
+                case IngestStage.Uploading:
+                    SetIngestStage("업로드 중");
+                    break;
+                case IngestStage.AssetDone:
+                    StopIngestAnimations();
+                    ShowAssetDone(p.Kind);
+                    break;
+            }
+
+            _chatScroll.ScrollToBottom();
+        }
+
+        private void ShowCurrentCard(IngestProgress p)
+        {
+            _ingestCurrentContainer.Children.Clear();
+
+            var cardGrid = new Grid { Margin = new Thickness(0, 0, 0, 8) };
+            cardGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(72) });
+            cardGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+            var thumbClip = new Border
+            {
+                Width = 64,
+                Height = 48,
+                CornerRadius = new CornerRadius(10),
+                ClipToBounds = true,
+                Background = ThemeResources.BgChip,
+                Margin = new Thickness(0, 0, 8, 0)
+            };
+
+            var thumbGrid = new Grid();
+            try
+            {
+                var bmp = new BitmapImage();
+                bmp.BeginInit();
+                bmp.CacheOption = BitmapCacheOption.OnLoad;
+                bmp.UriSource = new Uri(p.PngPath);
+                bmp.DecodePixelHeight = 96;
+                bmp.EndInit();
+                bmp.Freeze();
+                thumbGrid.Children.Add(new Image
+                {
+                    Source = bmp,
+                    Stretch = Stretch.UniformToFill
+                });
+            }
+            catch { }
+
+            _ingestScanLine = new Border
+            {
+                Height = 24,
+                VerticalAlignment = VerticalAlignment.Top,
+                IsHitTestVisible = false,
+                Background = new LinearGradientBrush(
+                    Color.FromArgb(0, 249, 115, 22),
+                    Color.FromArgb(50, 249, 115, 22),
+                    new Point(0, 0), new Point(0, 1))
+            };
+            thumbGrid.Children.Add(_ingestScanLine);
+
+            try
+            {
+                var scanTransform = new TranslateTransform(0, -24);
+                _ingestScanLine.RenderTransform = scanTransform;
+                var scanAnim = new DoubleAnimation
+                {
+                    From = -24,
+                    To = 48,
+                    Duration = TimeSpan.FromSeconds(1.2),
+                    RepeatBehavior = RepeatBehavior.Forever,
+                    EasingFunction = new SineEase()
+                };
+                scanTransform.BeginAnimation(TranslateTransform.YProperty, scanAnim);
+            }
+            catch { }
+
+            thumbClip.Child = thumbGrid;
+            ThemeResources.ApplyRoundedClip(thumbClip, 10);
+            Grid.SetColumn(thumbClip, 0);
+            cardGrid.Children.Add(thumbClip);
+
+            var info = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
+            info.Children.Add(new TextBlock
+            {
+                Text = p.AssetId.Replace("_", " "),
+                FontSize = 12,
+                FontWeight = FontWeights.SemiBold,
+                Foreground = ThemeResources.TextMain,
+                FontFamily = ThemeResources.FontBase,
+                TextTrimming = TextTrimming.CharacterEllipsis
+            });
+
+            _ingestStageText = new TextBlock
+            {
+                FontSize = 11,
+                Foreground = IngestAccent,
+                FontFamily = ThemeResources.FontBase,
+                Margin = new Thickness(0, 3, 0, 0)
+            };
+            info.Children.Add(_ingestStageText);
+
+            Grid.SetColumn(info, 1);
+            cardGrid.Children.Add(info);
+
+            var wrapper = new Border
+            {
+                Child = cardGrid,
+                Background = IngestAccentDim,
+                CornerRadius = new CornerRadius(12),
+                Padding = new Thickness(10, 8, 10, 8),
+                Opacity = 0,
+                RenderTransform = new TranslateTransform(0, 8)
+            };
+
+            _ingestCurrentContainer.Children.Add(wrapper);
+
+            try
+            {
+                var fadeIn = new DoubleAnimation { To = 1, Duration = TimeSpan.FromMilliseconds(250), EasingFunction = new QuadraticEase() };
+                var slideUp = new DoubleAnimation { To = 0, Duration = TimeSpan.FromMilliseconds(250), EasingFunction = new QuadraticEase() };
+                wrapper.BeginAnimation(OpacityProperty, fadeIn);
+                ((TranslateTransform)wrapper.RenderTransform).BeginAnimation(TranslateTransform.YProperty, slideUp);
+            }
+            catch { wrapper.Opacity = 1; }
+        }
+
+        private void SetIngestStage(string stage)
+        {
+            _ingestStageBase = stage;
+            if (_ingestStageText != null)
+                _ingestStageText.Text = stage + "···";
+
+            if (_ingestDotsTimer != null) _ingestDotsTimer.Stop();
+            int dotCount = 1;
+            _ingestDotsTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(350) };
+            _ingestDotsTimer.Tick += (s, e) =>
+            {
+                dotCount = dotCount % 3 + 1;
+                if (_ingestStageText != null)
+                    _ingestStageText.Text = _ingestStageBase + new string('·', dotCount);
+            };
+            _ingestDotsTimer.Start();
+        }
+
+        private void ShowAssetDone(string kind)
+        {
+            if (_ingestStageText == null) return;
+            _ingestStageText.Text = $"완료 · {kind}";
+            _ingestStageText.Foreground = ThemeResources.StatusSuccess;
+        }
+
+        private void MoveCurrentToCompleted()
+        {
+            if (_ingestCurrentContainer == null || _ingestCurrentContainer.Children.Count == 0) return;
+
+            var current = _ingestCurrentContainer.Children[0] as Border;
+            if (current == null) return;
+
+            var cardGrid = current.Child as Grid;
+            if (cardGrid == null) return;
+
+            string name = "";
+            string kind = "";
+            foreach (var child in cardGrid.Children)
+            {
+                if (child is StackPanel sp && Grid.GetColumn((UIElement)child) == 1)
+                {
+                    foreach (var spChild in sp.Children)
+                    {
+                        var tb = spChild as TextBlock;
+                        if (tb == null) continue;
+                        if (tb.FontWeight == FontWeights.SemiBold) name = tb.Text;
+                        else kind = tb.Text;
+                    }
+                }
+            }
+
+            _ingestCurrentContainer.Children.Clear();
+
+            var row = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 3) };
+
+            row.Children.Add(new TextBlock
+            {
+                Text = "✓",
+                FontSize = 11,
+                FontWeight = FontWeights.Bold,
+                Foreground = ThemeResources.StatusSuccess,
+                Margin = new Thickness(0, 0, 6, 0),
+                VerticalAlignment = VerticalAlignment.Center
+            });
+
+            row.Children.Add(new TextBlock
+            {
+                Text = name,
+                FontSize = 11,
+                Foreground = ThemeResources.TextSub,
+                FontFamily = ThemeResources.FontBase,
+                VerticalAlignment = VerticalAlignment.Center
+            });
+
+            if (!string.IsNullOrEmpty(kind))
+            {
+                row.Children.Add(new TextBlock
+                {
+                    Text = $" · {kind.Replace("완료 · ", "")}",
+                    FontSize = 10,
+                    Foreground = ThemeResources.TextDim,
+                    FontFamily = ThemeResources.FontBase,
+                    VerticalAlignment = VerticalAlignment.Center
+                });
+            }
+
+            row.Opacity = 0;
+            _ingestCompletedStack.Children.Insert(0, row);
+
+            try
+            {
+                var fadeIn = new DoubleAnimation { To = 1, Duration = TimeSpan.FromMilliseconds(200) };
+                row.BeginAnimation(OpacityProperty, fadeIn);
+            }
+            catch { row.Opacity = 1; }
+        }
+
+        private void UpdateProgressBar(int index, int total, IngestStage stage)
+        {
+            var trackWidth = _ingestProgressTrack.ActualWidth;
+            if (trackWidth <= 0) trackWidth = 200;
+
+            double stageOffset = 0;
+            switch (stage)
+            {
+                case IngestStage.Understanding: stageOffset = 0; break;
+                case IngestStage.Embedding: stageOffset = 0.33; break;
+                case IngestStage.Uploading: stageOffset = 0.66; break;
+                case IngestStage.AssetDone: stageOffset = 1.0; break;
+            }
+
+            var pct = ((index - 1) + stageOffset) / total;
+            var targetWidth = pct * trackWidth;
+
+            try
+            {
+                var anim = new DoubleAnimation
+                {
+                    To = targetWidth,
+                    Duration = TimeSpan.FromMilliseconds(300),
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+                };
+                _ingestProgressFill.BeginAnimation(WidthProperty, anim);
+            }
+            catch { _ingestProgressFill.Width = targetWidth; }
+
+            var pctInt = (int)(pct * 100);
+            _ingestProgressText.Text = $"{index}/{total} · {pctInt}%";
+        }
+
+        private void ShowIngestComplete(int uploaded, int total)
+        {
+            MoveCurrentToCompleted();
+
+            _ingestProgressFill.BeginAnimation(WidthProperty, null);
+            _ingestProgressFill.Width = _ingestProgressTrack.ActualWidth > 0 ? _ingestProgressTrack.ActualWidth : 200;
+            _ingestProgressText.Text = $"{uploaded}/{total} · 완료";
+            _ingestProgressText.Foreground = ThemeResources.StatusSuccess;
+
+            _ingestCurrentContainer.Children.Clear();
+            var done = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(20, 16, 185, 129)),
+                CornerRadius = new CornerRadius(12),
+                Padding = new Thickness(14, 10, 14, 10),
+                Margin = new Thickness(0, 4, 0, 0)
+            };
+            var doneRow = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
+            doneRow.Children.Add(new TextBlock
+            {
+                Text = "✓",
+                FontSize = 14,
+                FontWeight = FontWeights.Bold,
+                Foreground = ThemeResources.StatusSuccess,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 8, 0)
+            });
+            doneRow.Children.Add(new TextBlock
+            {
+                Text = $"{uploaded}개 에셋 Supabase 업로드 완료",
+                FontSize = 13,
+                FontWeight = FontWeights.SemiBold,
+                Foreground = ThemeResources.StatusSuccess,
+                FontFamily = ThemeResources.FontBase,
+                VerticalAlignment = VerticalAlignment.Center
+            });
+            done.Child = doneRow;
+
+            done.Opacity = 0;
+            done.RenderTransform = new ScaleTransform(0.9, 0.9, 0.5, 0.5);
+            done.RenderTransformOrigin = new Point(0.5, 0.5);
+            _ingestCurrentContainer.Children.Add(done);
+
+            try
+            {
+                var fadeIn = new DoubleAnimation { To = 1, Duration = TimeSpan.FromMilliseconds(400), EasingFunction = new QuadraticEase() };
+                var scaleX = new DoubleAnimation { To = 1, Duration = TimeSpan.FromMilliseconds(400), EasingFunction = new ElasticEase { Oscillations = 1, Springiness = 8 } };
+                var scaleY = new DoubleAnimation { To = 1, Duration = TimeSpan.FromMilliseconds(400), EasingFunction = new ElasticEase { Oscillations = 1, Springiness = 8 } };
+                done.BeginAnimation(OpacityProperty, fadeIn);
+                ((ScaleTransform)done.RenderTransform).BeginAnimation(ScaleTransform.ScaleXProperty, scaleX);
+                ((ScaleTransform)done.RenderTransform).BeginAnimation(ScaleTransform.ScaleYProperty, scaleY);
+            }
+            catch { done.Opacity = 1; }
+        }
+
+        private void ShowIngestError(string message)
+        {
+            MoveCurrentToCompleted();
+            _ingestProgressText.Text = $"오류 · {_retryStartFrom}개 완료";
+            _ingestProgressText.Foreground = ThemeResources.StatusError;
+
+            _ingestCurrentContainer.Children.Clear();
+
+            var errPanel = new StackPanel();
+            var errCard = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(20, 248, 113, 113)),
+                CornerRadius = new CornerRadius(12),
+                Padding = new Thickness(14, 10, 14, 10)
+            };
+
+            bool isServerBusy = message.Contains("503") || message.Contains("429")
+                || message.Contains("high demand") || message.Contains("UNAVAILABLE");
+
+            var errStack = new StackPanel();
+            if (isServerBusy)
+            {
+                errStack.Children.Add(new TextBlock
+                {
+                    Text = "서버가 바빠요",
+                    FontSize = 13,
+                    FontWeight = FontWeights.SemiBold,
+                    Foreground = ThemeResources.StatusError,
+                    FontFamily = ThemeResources.FontBase,
+                    Margin = new Thickness(0, 0, 0, 4)
+                });
+            }
+            errStack.Children.Add(new TextBlock
+            {
+                Text = isServerBusy ? "일시적 과부하입니다. 잠시 후 다시 시도해주세요." : message,
+                FontSize = 11,
+                Foreground = ThemeResources.StatusError,
+                FontFamily = ThemeResources.FontBase,
+                TextWrapping = TextWrapping.Wrap
+            });
+            errCard.Child = errStack;
+            errPanel.Children.Add(errCard);
+
+            var retryBtn = new Border
+            {
+                Background = IngestAccent,
+                CornerRadius = new CornerRadius(10),
+                Padding = new Thickness(16, 9, 16, 9),
+                Margin = new Thickness(0, 10, 0, 0),
+                Cursor = Cursors.Hand,
+                HorizontalAlignment = HorizontalAlignment.Left
+            };
+
+            var retryRow = new StackPanel { Orientation = Orientation.Horizontal };
+            retryRow.Children.Add(new TextBlock
+            {
+                Text = "↻",
+                FontSize = 15,
+                FontWeight = FontWeights.Bold,
+                Foreground = Brushes.White,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 6, 0)
+            });
+            retryRow.Children.Add(new TextBlock
+            {
+                Text = $"다시 시도 ({_retryStartFrom}번부터)",
+                FontSize = 12,
+                FontWeight = FontWeights.SemiBold,
+                Foreground = Brushes.White,
+                FontFamily = ThemeResources.FontBase,
+                VerticalAlignment = VerticalAlignment.Center
+            });
+            retryBtn.Child = retryRow;
+
+            retryBtn.MouseEnter += (s, e) => retryBtn.Opacity = 0.85;
+            retryBtn.MouseLeave += (s, e) => retryBtn.Opacity = 1;
+            retryBtn.MouseLeftButtonUp += async (s, e) => await ResumeIngestAsync();
+
+            errPanel.Children.Add(retryBtn);
+            _ingestCurrentContainer.Children.Add(errPanel);
+        }
+
+        private void StopIngestAnimations()
+        {
+            if (_ingestDotsTimer != null) { _ingestDotsTimer.Stop(); _ingestDotsTimer = null; }
+            try { _ingestScanLine?.RenderTransform?.BeginAnimation(TranslateTransform.YProperty, null); } catch { }
         }
 
         public void AddAssetCard(AssetCard card, HeaderAsset asset)

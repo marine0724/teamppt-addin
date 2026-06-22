@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,12 @@ namespace TeampptAddin
 {
     public class SupabaseClient
     {
-        private static readonly HttpClient Http = new HttpClient();
+        private static readonly HttpClient Http;
+        static SupabaseClient()
+        {
+            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+            Http = new HttpClient();
+        }
         private readonly string _baseUrl;
         private readonly string _key;
 
@@ -29,7 +35,7 @@ namespace TeampptAddin
         {
             var req = new HttpRequestMessage(HttpMethod.Post, $"{_baseUrl}/rest/v1/assets");
             ApplyHeaders(req);
-            req.Headers.TryAddWithoutValidation("Prefer", "return=minimal");
+            req.Headers.TryAddWithoutValidation("Prefer", "return=minimal,resolution=merge-duplicates");
             req.Content = new StringContent(row.ToString(Formatting.None), Encoding.UTF8, "application/json");
             var resp = await Http.SendAsync(req).ConfigureAwait(false);
             var b = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);

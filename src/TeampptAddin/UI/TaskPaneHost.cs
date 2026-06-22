@@ -191,6 +191,13 @@ namespace TeampptAddin
             }
 
             _wpfPanel.ResetStatus();
+
+            var policy = new LocalFileAccessPolicy();
+            if (policy.CanIngest)
+            {
+                _wpfPanel.ShowIngestButton();
+                Logger.Log("[TaskPane] 관리자 모드 — 인제스트 버튼 표시");
+            }
         }
 
         #endregion

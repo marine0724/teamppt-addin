@@ -64,7 +64,7 @@ namespace TeampptAddin
             var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={_apiKey}";
             var bodyString = requestBody.ToString(Formatting.None);
 
-            const int maxAttempts = 3;
+            const int maxAttempts = 5;
             HttpResponseMessage response = null;
             string body = null;
 
@@ -82,7 +82,9 @@ namespace TeampptAddin
                 bool transient = status == 503 || status == 429 || status == 500;
                 if (transient && attempt < maxAttempts)
                 {
-                    await Task.Delay(500 * (1 << (attempt - 1))).ConfigureAwait(false);
+                    var delay = 1000 * (1 << (attempt - 1));
+                    Logger.Log($"[Understand] 재시도 대기 {delay}ms...");
+                    await Task.Delay(delay).ConfigureAwait(false);
                     continue;
                 }
                 throw new HttpRequestException($"Gemini 이해 API 오류 ({status}): {body}");

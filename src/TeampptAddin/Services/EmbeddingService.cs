@@ -18,16 +18,17 @@ namespace TeampptAddin
         {
             var body = new JObject
             {
-                ["model"] = "models/text-embedding-004",
+                ["model"] = "models/gemini-embedding-001",
                 ["content"] = new JObject
                 {
                     ["parts"] = new JArray { new JObject { ["text"] = text } }
-                }
+                },
+                ["outputDimensionality"] = 768
             }.ToString(Formatting.None);
 
-            var url = $"https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key={_apiKey}";
+            var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key={_apiKey}";
 
-            const int maxAttempts = 3;
+            const int maxAttempts = 5;
             for (int attempt = 1; attempt <= maxAttempts; attempt++)
             {
                 var content = new StringContent(body, Encoding.UTF8, "application/json");
@@ -47,7 +48,9 @@ namespace TeampptAddin
                 bool transient = status == 503 || status == 429 || status == 500;
                 if (transient && attempt < maxAttempts)
                 {
-                    await Task.Delay(500 * (1 << (attempt - 1))).ConfigureAwait(false);
+                    var delay = 1000 * (1 << (attempt - 1));
+                    Logger.Log($"[Embed] 재시도 대기 {delay}ms...");
+                    await Task.Delay(delay).ConfigureAwait(false);
                     continue;
                 }
                 throw new HttpRequestException($"임베딩 API 오류 ({status}): {respBody}");
