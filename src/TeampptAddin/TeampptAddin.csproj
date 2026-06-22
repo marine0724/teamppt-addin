@@ -91,6 +91,7 @@
     <Compile Include="Services\EmbedTextBuilder.cs" />
     <Compile Include="Services\AssetUnderstandingService.cs" />
     <Compile Include="Services\AdminCredentials.cs" />
+    <Compile Include="Services\IAccessPolicy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
