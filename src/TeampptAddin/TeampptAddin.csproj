@@ -93,6 +93,7 @@
     <Compile Include="Services\AdminCredentials.cs" />
     <Compile Include="Services\IAccessPolicy.cs" />
     <Compile Include="Services\AssetRowBuilder.cs" />
+    <Compile Include="Services\EmbeddingService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
