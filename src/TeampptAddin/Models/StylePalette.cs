@@ -44,6 +44,9 @@ namespace TeampptAddin
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        [JsonProperty("fallback")]
+        public string Fallback { get; set; }
+
         [JsonProperty("mood")]
         public List<string> Mood { get; set; }
 

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using Microsoft.Office.Core;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 
@@ -7,13 +9,39 @@ namespace TeampptAddin
 {
     public static class SlideStyleApplier
     {
+        private static readonly HashSet<string> _installedFonts = LoadInstalledFonts();
+
+        private static HashSet<string> LoadInstalledFonts()
+        {
+            var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            using (var ifc = new InstalledFontCollection())
+            {
+                foreach (var f in ifc.Families)
+                    set.Add(f.Name);
+            }
+            Logger.Log($"[StyleApply] InstalledFonts loaded: {set.Count} families");
+            return set;
+        }
+
+        internal static string ResolveFontName(StyleFont font)
+        {
+            if (font == null || string.IsNullOrEmpty(font.Name)) return null;
+            if (_installedFonts.Contains(font.Name)) return font.Name;
+            Logger.Log($"[StyleApply] font '{font.Name}' not installed, trying fallback '{font.Fallback}'");
+            if (!string.IsNullOrEmpty(font.Fallback) && _installedFonts.Contains(font.Fallback))
+                return font.Fallback;
+            Logger.Log($"[StyleApply] fallback '{font.Fallback}' also not installed, skipping font");
+            return null;
+        }
+
         public static void Apply(PowerPoint.Slide slide, StylePalette palette, StyleFont font)
         {
-            Logger.Log($"[StyleApply] palette={palette?.Name ?? "NULL"}, font={font?.Name ?? "NULL"}");
-            if (slide == null || palette?.Colors == null) return;
-            var c = palette.Colors;
+            var resolvedFontName = ResolveFontName(font);
+            Logger.Log($"[StyleApply] palette={palette?.Name ?? "NULL"}, font={font?.Name ?? "NULL"}, resolved={resolvedFontName ?? "NULL"}");
+            if (slide == null) return;
+            var c = palette?.Colors;
 
-            if (!string.IsNullOrEmpty(c.Background))
+            if (c != null && !string.IsNullOrEmpty(c.Background))
             {
                 try
                 {
@@ -32,7 +60,7 @@ namespace TeampptAddin
                     Logger.Log($"[StyleApply] shape={shape.Name}, type={shape.Type}, protected={IsProtected(shape)}, hasText={shape.HasTextFrame}");
                     if (IsProtected(shape)) continue;
 
-                    if (!string.IsNullOrEmpty(c.Main))
+                    if (c != null && !string.IsNullOrEmpty(c.Main))
                     {
                         try
                         {
@@ -42,7 +70,7 @@ namespace TeampptAddin
                         catch { }
                     }
 
-                    if (!string.IsNullOrEmpty(c.Sub1))
+                    if (c != null && !string.IsNullOrEmpty(c.Sub1))
                     {
                         try
                         {
@@ -56,17 +84,17 @@ namespace TeampptAddin
                     {
                         var tr = shape.TextFrame.TextRange;
                         int count = tr.Paragraphs().Count;
-                        Logger.Log($"[StyleApply]   textParagraphs={count}, fontToApply={font?.Name ?? "NULL"}");
+                        Logger.Log($"[StyleApply]   textParagraphs={count}, fontToApply={resolvedFontName ?? "NULL"}");
                         for (int i = 1; i <= count; i++)
                         {
                             var para = tr.Paragraphs(i);
-                            if (font != null && !string.IsNullOrEmpty(font.Name))
+                            if (!string.IsNullOrEmpty(resolvedFontName))
                             {
-                                Logger.Log($"[StyleApply]   para[{i}] before={para.Font.Name}, setting={font.Name}");
-                                para.Font.Name = font.Name;
+                                Logger.Log($"[StyleApply]   para[{i}] before={para.Font.Name}, setting={resolvedFontName}");
+                                para.Font.Name = resolvedFontName;
                                 Logger.Log($"[StyleApply]   para[{i}] after={para.Font.Name}");
                             }
-                            if (!string.IsNullOrEmpty(c.Text))
+                            if (c != null && !string.IsNullOrEmpty(c.Text))
                                 para.Font.Color.RGB = Ole(c.Text);
                         }
                     }
