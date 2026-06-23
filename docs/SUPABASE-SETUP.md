@@ -75,6 +75,7 @@ create policy "anon_read_assets" on assets for select to anon using (true);
   - **anon public** 키
   - **service_role** 키 (비밀! 관리자 PC에만)
 
+
 ## 7. 로컬 파일에 넣기 (이 둘 다 gitignore — 커밋 안 됨)
 - [ ] `src/TeampptAddin/Assets/api-keys.json` — 기존 `gemini` 값은 **그대로 두고** 두 줄만 추가:
 ```json

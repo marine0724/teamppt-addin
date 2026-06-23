@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>진행보드 — TEAMPPT</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">TEAM<span>PPT</span></a>
+  <ul class="nav-links">
+    <li><a href="features.html">기능</a></li>
+    <li><a href="data.html">데이터</a></li>
+    <li><a href="progress.html" class="active">진행보드</a></li>
+    <li><a href="pitch.html">피치</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-tag">진행보드 · Now</div>
+  <h1>지금 <em>여기</em></h1>
+  <p>PROGRESS-BOARD.md 기준 · 작업 완료 시 Cowork에서 "진행보드 업데이트해줘"</p>
+</div>
+
+<div class="abar">
+  <span class="atag atag-dev">진행보드</span>
+  <span class="abar-text">지금 여기 · PROGRESS-BOARD.md 기준 · 작업 완료 시 업데이트</span>
+</div>
+<div class="section-wrap">
+  <div class="section-label">Now</div>
+  <h2 class="stitle">지금 여기</h2>
+
+  <!-- 현재 Task -->
+  <div style="background:var(--hero);border-radius:var(--r);padding:28px 32px;margin-bottom:14px;position:relative;overflow:hidden">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 100% 50%,rgba(49,130,246,.15),transparent 70%);pointer-events:none"></div>
+    <div style="font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#7eb8ff;margin-bottom:12px">현재 진행 중</div>
+    <div style="font-size:20px;font-weight:800;color:#fff;letter-spacing:-.5px;margin-bottom:8px">#1.5 에셋 탭 Supabase 연동</div>
+    <div style="font-size:14px;color:rgba(255,255,255,.6);line-height:1.65">로컬 하드코딩 제거 → Supabase assets 테이블에서 카테고리별로 에셋 불러오기 → RemoteAssetCache로 pptx/thumb 다운로드 + 삽입</div>
+    <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+      <span style="background:rgba(49,130,246,.2);border:1px solid rgba(49,130,246,.35);color:#7eb8ff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:6px">다음 세션</span>
+    </div>
+  </div>
+
+  <!-- Task 큐 -->
+  <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin:28px 0 12px">Task 큐</div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+
+    <div style="background:var(--white);border-radius:var(--r-sm);padding:18px 22px;border:1px solid var(--border);display:grid;grid-template-columns:36px 1fr auto;align-items:center;gap:16px;box-shadow:var(--shadow)">
+      <div style="font-size:13px;font-weight:800;color:var(--text3)">#1.5</div>
+      <div>
+        <div style="font-size:14px;font-weight:700;margin-bottom:3px">에셋 탭 Supabase 연동</div>
+        <div style="font-size:12px;color:var(--text2)">로컬 하드코딩 제거, Supabase에서 에셋 로드</div>
+      </div>
+      <span style="font-size:11px;font-weight:700;background:var(--accent-light);color:var(--accent);padding:4px 12px;border-radius:99px;white-space:nowrap">다음</span>
+    </div>
+
+    <div style="background:var(--white);border-radius:var(--r-sm);padding:18px 22px;border:1px solid var(--border);display:grid;grid-template-columns:36px 1fr auto;align-items:center;gap:16px;box-shadow:var(--shadow)">
+      <div style="font-size:13px;font-weight:800;color:var(--text3)">#2</div>
+      <div>
+        <div style="font-size:14px;font-weight:700;margin-bottom:3px">UIUX 수정</div>
+        <div style="font-size:12px;color:var(--text2)">추천 칩·카테고리 필터·인풋바 Toss 스타일 교체 + 검색 애니메이션</div>
+      </div>
+      <span style="font-size:11px;font-weight:700;background:var(--bg);color:var(--text3);padding:4px 12px;border-radius:99px;white-space:nowrap;border:1px solid var(--border)">대기</span>
+    </div>
+
+    <div style="background:var(--white);border-radius:var(--r-sm);padding:18px 22px;border:1px solid var(--border);display:grid;grid-template-columns:36px 1fr auto;align-items:center;gap:16px;box-shadow:var(--shadow)">
+      <div style="font-size:13px;font-weight:800;color:var(--text3)">#3</div>
+      <div>
+        <div style="font-size:14px;font-weight:700;margin-bottom:3px">데이터 계층 수정</div>
+        <div style="font-size:12px;color:var(--text2)">layout/component → slide/layout/component 3계층</div>
+      </div>
+      <span style="font-size:11px;font-weight:700;background:var(--bg);color:var(--text3);padding:4px 12px;border-radius:99px;white-space:nowrap;border:1px solid var(--border)">대기</span>
+    </div>
+
+    <div style="background:var(--white);border-radius:var(--r-sm);padding:18px 22px;border:1px solid var(--border);display:grid;grid-template-columns:36px 1fr auto;align-items:center;gap:16px;box-shadow:var(--shadow)">
+      <div style="font-size:13px;font-weight:800;color:var(--text3)">#4</div>
+      <div>
+        <div style="font-size:14px;font-weight:700;margin-bottom:3px">화면공유 시스템 (A-2)</div>
+        <div style="font-size:12px;color:var(--text2)">슬라이드 리더 + [슬라이드 N 공유중] indicator</div>
+      </div>
+      <span style="font-size:11px;font-weight:700;background:var(--bg);color:var(--text3);padding:4px 12px;border-radius:99px;white-space:nowrap;border:1px solid var(--border)">대기</span>
+    </div>
+
+    <div style="background:var(--white);border-radius:var(--r-sm);padding:18px 22px;border:1px solid var(--border);display:grid;grid-template-columns:36px 1fr auto;align-items:center;gap:16px;box-shadow:var(--shadow)">
+      <div style="font-size:13px;font-weight:800;color:var(--text3)">#5</div>
+      <div>
+        <div style="font-size:14px;font-weight:700;margin-bottom:3px">Scratch 삽입</div>
+        <div style="font-size:12px;color:var(--text2)">에셋을 흑백/뼈대 형태로 삽입 → 스타일 탭에서 컨셉 적용</div>
+      </div>
+      <span style="font-size:11px;font-weight:700;background:var(--bg);color:var(--text3);padding:4px 12px;border-radius:99px;white-space:nowrap;border:1px solid var(--border)">대기</span>
+    </div>
+
+  </div>
+
+  <!-- 완료 -->
+  <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin:28px 0 12px">완료</div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="background:var(--green-light);border-radius:var(--r-sm);padding:14px 22px;border:1px solid #a7f3d0;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <span style="font-size:13px;font-weight:700;color:#065f46">A-1a · LLM 이해 어댑터</span>
+        <span style="font-size:12px;color:#0a7a50;margin-left:10px">PNG+섹션명 → Gemini 멀티모달 → 구조화 레코드</span>
+      </div>
+      <span style="font-size:11px;font-weight:700;color:#065f46">✓ 완료</span>
+    </div>
+    <div style="background:var(--green-light);border-radius:var(--r-sm);padding:14px 22px;border:1px solid #a7f3d0;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <span style="font-size:13px;font-weight:700;color:#065f46">A-1b/c · Supabase 적재경로</span>
+        <span style="font-size:12px;color:#0a7a50;margin-left:10px">임베딩 + 업로드 + 관리자 게이트</span>
+      </div>
+      <span style="font-size:11px;font-weight:700;color:#065f46">✓ 완료</span>
+    </div>
+    <div style="background:#fffbeb;border-radius:var(--r-sm);padding:14px 22px;border:1px solid #fde68a;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <span style="font-size:13px;font-weight:700;color:#92400e">A-1d · 벡터검색 읽기경로</span>
+        <span style="font-size:12px;color:#a05e0a;margin-left:10px">질의→임베딩→match_assets→추천 카드</span>
+      </div>
+      <span style="font-size:11px;font-weight:700;color:#92400e">구현완료 · 수동검증 대기</span>
+    </div>
+  </div>
+
+  <!-- 보류 -->
+  <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin:28px 0 12px">보류</div>
+  <div style="background:var(--white);border-radius:var(--r-sm);padding:20px 22px;border:1px solid var(--border);display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow)">
+    <div style="font-size:13px;color:var(--text2)">· 한글 폰트 커버리지 (영문 전용 폰트 → Font.NameFarEast 이원 체계 필요)</div>
+    <div style="font-size:13px;color:var(--text2)">· 폰트+팔레트 동시 적용 UX (버그 #3)</div>
+    <div style="font-size:13px;color:var(--text2)">· 에셋 추천 결과 애니메이션 효과</div>
+    <div style="font-size:13px;color:var(--text2)">· 덱 전체 통일 (Scratch 삽입 이후)</div>
+  </div>
+
+  <div style="margin-top:20px;padding:14px 18px;background:var(--bg);border-radius:var(--r-sm);font-size:12px;color:var(--text2);border-left:3px solid var(--border)">
+    이 보드는 <strong style="color:var(--text)">PROGRESS-BOARD.md</strong> 기준. 작업 완료 시 Cowork에서 "진행보드 업데이트해줘" 하면 동기화됨.
+  </div>
+</div>
+
+<footer>
+  <strong>TEAMPPT</strong> — Vibe Designing
+  <span><a href="index.html" style="color:rgba(255,255,255,.4);text-decoration:none">← 홈으로</a></span>
+</footer>
+
+</body>
+</html>

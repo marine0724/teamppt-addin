@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>데이터 — TEAMPPT</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">TEAM<span>PPT</span></a>
+  <ul class="nav-links">
+    <li><a href="features.html">기능</a></li>
+    <li><a href="data.html" class="active">데이터</a></li>
+    <li><a href="progress.html">진행보드</a></li>
+    <li><a href="pitch.html">피치</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-tag">데이터 · Schema</div>
+  <h1>모든 것의 중심 — <em>HeaderAsset</em></h1>
+  <p>에셋 한 개의 모든 정보가 HeaderAsset에 담긴다. 인제스트도, 추천도, 스타일도 여기서 시작한다.</p>
+</div>
+
+<div class="abar">
+  <span class="atag atag-dev">데이터</span>
+  <span class="abar-text">스키마 구조 · 설계 이유</span>
+</div>
+<div class="section-wrap">
+  <div class="section-label">Data Schema</div>
+  <h2 class="stitle">HeaderAsset 엔티티 관계</h2>
+  <p class="sdesc">에셋 한 개의 모든 정보가 HeaderAsset에 담긴다. 인제스트도, 추천도, 스타일도 여기서 시작한다.</p>
+
+  <!-- Schema relation diagram -->
+  <div class="schema-relation">
+    <div style="display:flex;align-items:flex-start;gap:32px;flex-wrap:wrap;justify-content:center">
+
+      <!-- Main entity -->
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <div class="schema-box center">
+          <div class="cls">HeaderAsset  <span style="font-size:10px;color:#3fb950;font-family:sans-serif">★ 중심 엔티티</span></div>
+          <div class="f"><span class="fn">file</span>&nbsp;<span class="ft">string</span>&nbsp;<span class="fc">// 원본 pptx 경로</span></div>
+          <div class="f"><span class="fn">name</span>&nbsp;<span class="ft">string</span></div>
+          <div class="f"><span class="fn">kind</span>&nbsp;<span class="ft">"layout" | "component"</span>&nbsp;<span class="fc">// 고정 enum</span></div>
+          <div class="f"><span class="fn">category</span>&nbsp;<span class="ft">string</span>&nbsp;<span class="fc">// 섹션명 (사람이 분류)</span></div>
+          <div class="f"><span class="fn">use_when</span>&nbsp;<span class="ft">string</span>&nbsp;<span class="fc">// LLM 자동 생성</span></div>
+          <div class="f"><span class="fn">tags</span>&nbsp;<span class="ft">string[]</span>&nbsp;<span class="fc">// LLM 자동 생성</span></div>
+          <div class="f"><span class="fn">colors</span>&nbsp;<span class="ft">AssetColor[]</span></div>
+          <div class="f"><span class="fn">fonts</span>&nbsp;<span class="ft">AssetFont[]</span></div>
+          <div class="f"><span class="fn">slots</span>&nbsp;<span class="ft">AssetSlot[]</span></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:14px">
+          <span style="font-size:11px;background:var(--green-light);color:#0a7a50;font-weight:700;padding:3px 10px;border-radius:6px">assets.json (로컬)</span>
+          <span style="font-size:11px;background:var(--accent-light);color:#1a56db;font-weight:700;padding:3px 10px;border-radius:6px">Supabase assets 테이블</span>
+        </div>
+      </div>
+
+      <!-- Sub-types -->
+      <div style="display:flex;flex-direction:column;gap:28px;padding-top:40px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:40px;height:2px;background:var(--border)"></div>
+          <span style="color:var(--text3);font-size:13px">›</span>
+          <div class="schema-box">
+            <div class="cls">AssetColor</div>
+            <div class="f"><span class="fn">role</span>&nbsp;<span class="ft">string</span>&nbsp;<span class="fc">// "main","text","background"…</span></div>
+            <div class="f"><span class="fn">value</span>&nbsp;<span class="ft">string</span>&nbsp;<span class="fc">// #RRGGBB 6자리 대문자</span></div>
+            <div class="f"><span class="fn">locked</span>&nbsp;<span class="ft">bool</span>&nbsp;<span class="fc">// true = 변경 금지</span></div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:40px;height:2px;background:var(--border)"></div>
+          <span style="color:var(--text3);font-size:13px">›</span>
+          <div class="schema-box">
+            <div class="cls">AssetFont</div>
+            <div class="f"><span class="fn">role</span>&nbsp;<span class="ft">string</span></div>
+            <div class="f"><span class="fn">family</span>&nbsp;<span class="ft">string</span>&nbsp;<span class="fc">// 실제 폰트명</span></div>
+            <div class="f"><span class="fn">weight</span>&nbsp;<span class="ft">string</span></div>
+            <div class="f"><span class="fn">source</span>&nbsp;<span class="ft">string</span>&nbsp;<span class="fc">// google / system</span></div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:40px;height:2px;background:var(--border)"></div>
+          <span style="color:var(--text3);font-size:13px">›</span>
+          <div class="schema-box">
+            <div class="cls">AssetSlot</div>
+            <div class="f"><span class="fn">name</span>&nbsp;<span class="ft">string</span>&nbsp;<span class="fc">// "title","image","body"…</span></div>
+            <div class="f"><span class="fn">type</span>&nbsp;<span class="ft">string</span>&nbsp;<span class="fc">// text / image / chart</span></div>
+            <div class="f"><span class="fn">perSlide</span>&nbsp;<span class="ft">bool</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style pipeline derived -->
+      <div style="display:flex;flex-direction:column;gap:8px;padding-top:20px">
+        <div style="font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">colors[] 에서 파생 (구현중 🔨)</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:28px;height:2px;background:var(--border)"></div>
+          <span style="font-size:11px;color:var(--text3)">PaletteRoleMapper</span>
+          <span style="color:var(--text3)">→</span>
+        </div>
+        <div class="schema-box" style="border-color:#f97316;opacity:.85">
+          <div class="cls">NormalizedPalette <span class="tag-wip">🔨</span></div>
+          <div class="f"><span class="fn">Background</span>&nbsp;<span class="ft">string</span></div>
+          <div class="f"><span class="fn">Main</span>&nbsp;<span class="ft">string</span></div>
+          <div class="f"><span class="fn">Sub1</span>&nbsp;<span class="ft">string</span></div>
+          <div class="f"><span class="fn">Sub2</span>&nbsp;<span class="ft">string</span></div>
+          <div class="f"><span class="fn">Text</span>&nbsp;<span class="ft">string</span></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:28px;height:2px;background:var(--border)"></div>
+          <span style="font-size:11px;color:var(--text3)">PaletteGenerator</span>
+          <span style="color:var(--text3)">→</span>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div class="schema-box" style="min-width:100px;border-color:#f97316;opacity:.85">
+            <div class="cls" style="font-size:11px">원본 팔레트 <span class="tag-wip">🔨</span></div>
+            <div class="f" style="font-size:10px"><span class="fc">에셋 색 그대로</span></div>
+          </div>
+          <div class="schema-box" style="min-width:100px;border-color:#f97316;opacity:.85">
+            <div class="cls" style="font-size:11px">반전 팔레트 <span class="tag-wip">🔨</span></div>
+            <div class="f" style="font-size:10px"><span class="fc">BG↔Text 명도 스왑</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Supabase schema -->
+  <div class="db-schema">
+    <h4>Supabase — assets 테이블</h4>
+    <div class="db-table">
+      <div class="dbt-h">컬럼</div><div class="dbt-h">타입</div><div class="dbt-h">설명</div>
+      <div class="dbt-r pk"><span class="col-name">id</span></div><div class="dbt-r pk"><span class="col-type">uuid</span></div><div class="dbt-r pk"><span class="col-note">PK · asset 고유 식별자</span></div>
+      <div class="dbt-r"><span class="col-name">asset_id</span></div><div class="dbt-r"><span class="col-type">text</span></div><div class="dbt-r"><span class="col-note">파일명 기반 결정적 ID (IngestPlanner 생성) · UNIQUE</span></div>
+      <div class="dbt-r"><span class="col-name">metadata</span></div><div class="dbt-r"><span class="col-type">jsonb</span></div><div class="dbt-r"><span class="col-note">HeaderAsset 전체 (name, kind, category, colors, fonts, slots, tags, use_when…)</span></div>
+      <div class="dbt-r"><span class="col-name">embed_text</span></div><div class="dbt-r"><span class="col-type">text</span></div><div class="dbt-r"><span class="col-note">임베딩 소스 텍스트 (EmbedTextBuilder가 조합). 벡터 재생성 시 활용.</span></div>
+      <div class="dbt-r"><span class="col-name">embedding</span></div><div class="dbt-r"><span class="col-type">vector(768)</span></div><div class="dbt-r"><span class="col-note">Gemini embedding-004 벡터. pgvector HNSW cosine 인덱스.</span></div>
+      <div class="dbt-r"><span class="col-name">image_url</span></div><div class="dbt-r"><span class="col-type">text</span></div><div class="dbt-r"><span class="col-note">Supabase Storage 썸네일 URL</span></div>
+      <div class="dbt-r"><span class="col-name">file_url</span></div><div class="dbt-r"><span class="col-type">text</span></div><div class="dbt-r"><span class="col-note">Supabase Storage 원본 PPTX URL</span></div>
+      <div class="dbt-r"><span class="col-name">created_at</span></div><div class="dbt-r"><span class="col-type">timestamptz</span></div><div class="dbt-r"><span class="col-note">인제스트 시각</span></div>
+    </div>
+  </div>
+
+  <!-- Why -->
+  <div class="section-label mt48">Design Decisions</div>
+  <h2 class="stitle" style="font-size:24px">왜 이렇게 짰나</h2>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="q">왜 kind는 "layout/component" 두 가지만?</div>
+      <h4>AI가 카테고리를 만들지 못하게</h4>
+      <p>"그래프 vs 차트 vs 도표" 같은 자유 분류 난립 차단. 사람이 정한 고정 enum에 LLM이 배정만 한다. 나머지 분류는 벡터 의미 검색이 처리한다.</p>
+    </div>
+    <div class="why-card">
+      <div class="q">왜 metadata를 jsonb로?</div>
+      <h4>스키마 진화에 자유롭게</h4>
+      <p>colors·fonts·slots 같은 서브필드를 DB 컬럼 추가 없이 확장 가능. 추천에 필요한 필드(embed_text·embedding)만 명시적 컬럼으로 분리, 나머지는 jsonb에 넣는다.</p>
+    </div>
+    <div class="why-card">
+      <div class="q">왜 embed_text와 embedding을 분리?</div>
+      <h4>재임베딩 비용을 0으로</h4>
+      <p>임베딩 모델이 바뀌거나 embed_text 포맷을 개선하면 embed_text 컬럼에서 바로 재생성 가능. 전체 이해 파이프라인을 다시 돌릴 필요가 없다.</p>
+    </div>
+    <div class="why-card">
+      <div class="q">왜 AssetColor에 role·locked를?</div>
+      <h4>팔레트 자동화 + 보호 동시에</h4>
+      <p>role로 "main/text/background"를 구분해 PaletteRoleMapper가 자동 팔레트를 만들 수 있다. locked=true인 색은 자동 팔레트가 건드리지 않는다.</p>
+    </div>
+    <div class="why-card">
+      <div class="q">왜 스타일 팔레트는 LLM 없이?</div>
+      <h4>속도 + 비용 + 예측 가능성</h4>
+      <p>WCAG 대비비·HSL 수학은 결정적(deterministic)이다. LLM을 쓰면 같은 에셋에서 매번 다른 팔레트가 나올 수 있고, 토큰 비용도 든다. 색상 수학이 더 정확하다.</p>
+    </div>
+    <div class="why-card">
+      <div class="q">왜 IAccessPolicy를 인터페이스로?</div>
+      <h4>유료화 전환 비용을 0으로</h4>
+      <p>지금은 admin.json 파일 존재 여부로 판단. 유료화 시 Supabase Auth 로그인 role 확인으로 교체만 하면 된다. 인제스트 코드·UI 코드 한 줄도 안 바뀐다.</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <strong>TEAMPPT</strong> — Vibe Designing
+  <span><a href="index.html" style="color:rgba(255,255,255,.4);text-decoration:none">← 홈으로</a></span>
+</footer>
+
+</body>
+</html>

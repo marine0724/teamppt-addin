@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>기능 — TEAMPPT</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">TEAM<span>PPT</span></a>
+  <ul class="nav-links">
+    <li><a href="features.html" class="active">기능</a></li>
+    <li><a href="data.html">데이터</a></li>
+    <li><a href="progress.html">진행보드</a></li>
+    <li><a href="pitch.html">피치</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-tag">기능 · Pipeline</div>
+  <h1>사용자 루트 &amp; <em>관리자</em></h1>
+  <p>세 가지 사용자 루트의 파이프라인 · 관리자 인제스트 · 보안 아키텍처 · LLM 모델</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     기능 — 사용자
+════════════════════════════════════════════════════════ -->
+<div class="abar" id="user">
+  <span class="atag atag-exec">사용자</span>
+  <span class="abar-text">세 가지 루트 · 각 루트의 동작 파이프라인</span>
+</div>
+<div class="section-wrap">
+  <div class="section-label">User Routes</div>
+  <h2 class="stitle">얼마나 위임하느냐의 차이</h2>
+  <p class="sdesc">루트가 달라져도 같은 데이터·추천 엔진을 공유한다. A를 완성하면 B·C는 그 위에 얹힌다.</p>
+
+  <div class="route-row">
+    <div class="rc active">
+      <span class="rc-badge rcb-now">지금 여기</span>
+      <div class="rc-ico">🧩</div>
+      <div class="rc-id">Route A</div>
+      <h3>에셋 조립 · 커서식</h3>
+      <p>사용자가 슬라이드에 직접 손을 댄다. AI는 옆에서 "이게 어울려"라고 추천하고 삽입을 도와준다.</p>
+    </div>
+    <div class="rc next">
+      <span class="rc-badge rcb-next">다음</span>
+      <div class="rc-ico">🎨</div>
+      <div class="rc-id">Route B</div>
+      <h3>리디자인 · 위임식</h3>
+      <p>컨셉만 고르면 AI가 전체 덱을 한 번에 바꾼다. Claude Code에 작업을 위임하는 것처럼.</p>
+    </div>
+    <div class="rc later">
+      <span class="rc-badge rcb-later">추후</span>
+      <div class="rc-ico">📐</div>
+      <div class="rc-id">Route C</div>
+      <h3>기획 + 에셋</h3>
+      <p>백지에서 구성 제안부터. 슬라이드 순서·내용 구조까지 AI가 함께 설계한다.</p>
+    </div>
+  </div>
+
+  <!-- ROUTE A PIPELINE -->
+  <div class="pipeline-block">
+    <div class="pipeline-title-row">
+      <span class="pipeline-badge pb-a">Route A</span>
+      <div>
+        <div class="pipeline-title">에셋 추천 → 삽입 → 스타일 적용</div>
+        <div class="pipeline-subtitle">사용자 발화에서 슬라이드 변경까지의 전체 흐름</div>
+      </div>
+    </div>
+    <div class="pipeline-card">
+      <div class="flow">
+        <div class="fnode">
+          <div class="fnode-icon ni-user"><span class="fnode-num">1</span>💬</div>
+          <div class="fnode-label">사용자 발화</div>
+          <div class="fnode-sub">"장점 나열할<br>에셋 추천해줘"</div>
+          <div class="fnode-tech">AssetPanel AI탭</div>
+        </div>
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">질의 텍스트</div>
+        </div>
+        <div class="fnode">
+          <div class="fnode-icon ni-parse"><span class="fnode-num">2</span>🔧</div>
+          <div class="fnode-label">질의 조합</div>
+          <div class="fnode-sub">발화 + 세션 컨텍스트 → embed 텍스트 빌드</div>
+          <div class="fnode-tech">EmbedTextBuilder</div>
+        </div>
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">embed 요청</div>
+        </div>
+        <div class="fnode">
+          <div class="fnode-icon ni-ai"><span class="fnode-num">3</span>✨</div>
+          <div class="fnode-label">임베딩 생성</div>
+          <div class="fnode-sub">텍스트 →<br>768차원 벡터</div>
+          <div class="fnode-tech">Gemini embedding-004</div>
+        </div>
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">벡터 전달</div>
+        </div>
+        <div class="fnode">
+          <div class="fnode-icon ni-data"><span class="fnode-num">4</span>🗄️</div>
+          <div class="fnode-label">벡터 검색</div>
+          <div class="fnode-sub">cosine 유사도<br>→ top 8 에셋 반환</div>
+          <div class="fnode-tech">Supabase match_assets</div>
+        </div>
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">메타데이터</div>
+        </div>
+        <div class="fnode">
+          <div class="fnode-icon ni-ai"><span class="fnode-num">5</span>🤖</div>
+          <div class="fnode-label">AI 선택 · 설명</div>
+          <div class="fnode-sub">top 8 중 2~3개<br>선택 + 이유 설명</div>
+          <div class="fnode-tech">GeminiAiService<br>(thinkingBudget=0)</div>
+        </div>
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">추천 카드</div>
+        </div>
+        <div class="fnode">
+          <div class="fnode-icon ni-ui"><span class="fnode-num">6</span>🃏</div>
+          <div class="fnode-label">카드 표시</div>
+          <div class="fnode-sub">에셋 썸네일 +<br>AI 추천 이유</div>
+          <div class="fnode-tech">AssetPanel</div>
+        </div>
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">클릭 / 드래그</div>
+        </div>
+        <div class="fnode">
+          <div class="fnode-icon ni-ui"><span class="fnode-num">7</span>📎</div>
+          <div class="fnode-label">슬라이드 삽입</div>
+          <div class="fnode-sub">PPT에 shape<br>직접 삽입</div>
+          <div class="fnode-tech">ShapeInserter<br>DragHandler</div>
+        </div>
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">에셋 색 앵커</div>
+        </div>
+        <div class="fnode">
+          <div class="fnode-icon ni-ui" style="background:#fdf4ff"><span class="fnode-num">8</span>🎨</div>
+          <div class="fnode-label">스타일 탭 갱신</div>
+          <div class="fnode-sub">원본·반전<br>팔레트 자동 생성</div>
+          <div class="fnode-tech">PaletteGenerator<br><span style="color:#f8961e">🔨 구현중</span></div>
+        </div>
+      </div>
+      <div class="branch-note" style="margin-top:24px">
+        <strong>캐시 레이어:</strong> VectorRecommendService는 RecommendationCache를 먼저 확인한다. 같은 질의가 반복되면 Supabase 호출 없이 캐시에서 즉시 반환. · <strong>오프라인 폴백:</strong> Supabase 미응답 시 RemoteAssetCache → 번들 기본 에셋 순으로 폴백.
+      </div>
+    </div>
+  </div>
+
+  <!-- ROUTE B (future) -->
+  <div class="pipeline-block">
+    <div class="pipeline-title-row">
+      <span class="pipeline-badge pb-b">Route B · 다음</span>
+      <div>
+        <div class="pipeline-title">리디자인 — 한방 변환 엔진</div>
+        <div class="pipeline-subtitle">A가 완성된 뒤 진입. Route A의 읽기 엔진을 공유한다.</div>
+      </div>
+    </div>
+    <div class="pipeline-card pipeline-future" style="position:relative">
+      <div class="future-overlay"><span class="future-chip">🚧 Route A 완성 후 개발 예정</span></div>
+      <div class="flow" style="opacity:.25">
+        <div class="fnode"><div class="fnode-icon ni-user"><span class="fnode-num">1</span>📂</div><div class="fnode-label">PPT 열기</div><div class="fnode-sub">기존 초안 PPT를<br>그대로 연다</div></div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div></div>
+        <div class="fnode"><div class="fnode-icon ni-ai"><span class="fnode-num">2</span>👁️</div><div class="fnode-label">전체 덱 읽기</div><div class="fnode-sub">슬라이드 전체를<br>온디맨드 스캔</div><div class="fnode-tech">SlideReader (A-2)</div></div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div></div>
+        <div class="fnode"><div class="fnode-icon ni-ai"><span class="fnode-num">3</span>🔎</div><div class="fnode-label">일관성 진단</div><div class="fnode-sub">색·헤더·구성<br>일관성 체크</div></div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div></div>
+        <div class="fnode"><div class="fnode-icon ni-user"><span class="fnode-num">4</span>🎯</div><div class="fnode-label">컨셉 선택</div><div class="fnode-sub">사용자가<br>컨셉만 고른다</div></div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div></div>
+        <div class="fnode"><div class="fnode-icon ni-ai"><span class="fnode-num">5</span>⚡</div><div class="fnode-label">한방 변환</div><div class="fnode-sub">전체 덱을<br>통째로 리디자인</div><div class="fnode-tech">D 실행엔진</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROUTE C (future) -->
+  <div class="pipeline-block">
+    <div class="pipeline-title-row">
+      <span class="pipeline-badge pb-c">Route C · 추후</span>
+      <div>
+        <div class="pipeline-title">기획 + 에셋 — 백지에서 시작</div>
+        <div class="pipeline-subtitle">내용 구성·순서까지 AI가 함께 설계한다.</div>
+      </div>
+    </div>
+    <div class="pipeline-card pipeline-future" style="position:relative">
+      <div class="future-overlay"><span class="future-chip">🔮 Route B 이후 설계 예정</span></div>
+      <div class="flow" style="opacity:.2">
+        <div class="fnode"><div class="fnode-icon ni-user"><span class="fnode-num">1</span>💡</div><div class="fnode-label">목적 입력</div><div class="fnode-sub">"IR 발표 자료<br>만들어줘"</div></div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div></div>
+        <div class="fnode"><div class="fnode-icon ni-ai"><span class="fnode-num">2</span>🗂️</div><div class="fnode-label">구성 제안</div><div class="fnode-sub">슬라이드 순서·<br>내용 초안 설계</div></div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div></div>
+        <div class="fnode"><div class="fnode-icon ni-data"><span class="fnode-num">3</span>🧩</div><div class="fnode-label">에셋 매핑</div><div class="fnode-sub">슬라이드별<br>최적 에셋 추천</div></div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div></div>
+        <div class="fnode"><div class="fnode-icon ni-ui"><span class="fnode-num">4</span>✅</div><div class="fnode-label">확정 → 생성</div><div class="fnode-sub">승인하면<br>덱 자동 조립</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     기능 — 관리자
+════════════════════════════════════════════════════════ -->
+<div class="abar" id="admin">
+  <span class="atag atag-dev">관리자</span>
+  <span class="abar-text">인제스트 파이프라인 · 보안 아키텍처 · 현재 LLM 모델</span>
+</div>
+<div class="section-wrap">
+  <div class="section-label">Admin Pipeline</div>
+  <h2 class="stitle">에셋 인제스트 — AI가 에셋을 "이해"한다</h2>
+  <p class="sdesc">관리자가 버튼 하나를 누르면 PPTX에서 Supabase까지 원스톱으로 처리된다.</p>
+
+  <div class="pipeline-block">
+    <div class="pipeline-title-row">
+      <span class="pipeline-badge pb-ingest">Ingest Pipeline</span>
+      <div>
+        <div class="pipeline-title">PPTX → 이해 → 임베딩 → Supabase 저장</div>
+        <div class="pipeline-subtitle">관리자 PC에서만 실행. anon 키가 아닌 service_role 키로 동작.</div>
+      </div>
+    </div>
+    <div class="pipeline-card">
+      <div class="flow">
+        <div class="fnode">
+          <div class="fnode-icon ni-user"><span class="fnode-num">1</span>📁</div>
+          <div class="fnode-label">PPTX 파일</div>
+          <div class="fnode-sub">섹션으로 구분된<br>에셋 원본 파일</div>
+          <div class="fnode-tech">admin.json 확인 후</div>
+        </div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div><div class="farrow-label">섹션 분할</div></div>
+        <div class="fnode">
+          <div class="fnode-icon ni-parse"><span class="fnode-num">2</span>✂️</div>
+          <div class="fnode-label">슬라이드 분리</div>
+          <div class="fnode-sub">섹션별로 슬라이드<br>분할 + PNG 렌더링</div>
+          <div class="fnode-tech">SlideSplitter<br>SlideImageRenderer</div>
+        </div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div><div class="farrow-label">PNG + 섹션명</div></div>
+        <div class="fnode">
+          <div class="fnode-icon ni-ai"><span class="fnode-num">3</span>👁️</div>
+          <div class="fnode-label">멀티모달 이해</div>
+          <div class="fnode-sub">PNG를 직접 보고<br>구조·색·슬롯·용도 분석</div>
+          <div class="fnode-tech">Gemini Flash<br>GeminiPromptBuilder</div>
+        </div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div><div class="farrow-label">JSON 응답</div></div>
+        <div class="fnode">
+          <div class="fnode-icon ni-parse"><span class="fnode-num">4</span>🔍</div>
+          <div class="fnode-label">파싱 · 검증</div>
+          <div class="fnode-sub">JSON → HeaderAsset<br>스키마 검증</div>
+          <div class="fnode-tech">UnderstandingParser<br>AssetSchemaMigrator</div>
+        </div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div><div class="farrow-label">embed_text 조합</div></div>
+        <div class="fnode">
+          <div class="fnode-icon ni-embed"><span class="fnode-num">5</span>🔢</div>
+          <div class="fnode-label">임베딩 생성</div>
+          <div class="fnode-sub">메타 → embed_text<br>→ 768차원 벡터</div>
+          <div class="fnode-tech">EmbeddingService<br>EmbedTextBuilder</div>
+        </div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div><div class="farrow-label">DB 행 조립</div></div>
+        <div class="fnode">
+          <div class="fnode-icon ni-parse"><span class="fnode-num">6</span>📦</div>
+          <div class="fnode-label">DB 행 조립</div>
+          <div class="fnode-sub">메타 + 벡터 →<br>upsert 페이로드</div>
+          <div class="fnode-tech">AssetRowBuilder</div>
+        </div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div><div class="farrow-label">HTTP REST</div></div>
+        <div class="fnode">
+          <div class="fnode-icon ni-data"><span class="fnode-num">7</span>☁️</div>
+          <div class="fnode-label">Supabase 저장</div>
+          <div class="fnode-sub">assets 테이블 upsert<br>+ Storage 이미지 업로드</div>
+          <div class="fnode-tech">AssetIngestUploader<br>SupabaseClient</div>
+        </div>
+      </div>
+      <div class="branch-note" style="margin-top:24px">
+        <strong>진행 UI:</strong> 각 단계마다 인제스트 패널에 실시간 진행 상태 표시 (애니메이션). · <strong>에러 격리:</strong> 슬라이드 하나 실패해도 나머지는 계속 진행. 실패 목록만 리포트.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECURITY -->
+  <div class="section-label mt48">Security Architecture</div>
+  <h2 class="stitle" style="font-size:24px">보안 — 읽기/쓰기 완전 분리</h2>
+
+  <div style="background:var(--white);border-radius:var(--r);padding:32px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:16px">
+    <div style="font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.3px;margin-bottom:20px;text-transform:uppercase">인제스트 버튼 — 앱 시작 시 판단 흐름</div>
+    <div style="display:flex;align-items:flex-start;gap:0;flex-wrap:wrap">
+      <div style="display:flex;flex-direction:column;align-items:center;text-align:center;width:130px;flex-shrink:0">
+        <div style="width:48px;height:48px;border-radius:14px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:10px">🚀</div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:4px">앱 시작</div>
+        <div style="font-size:11px;color:var(--text2)">TaskPaneHost<br>초기화</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 8px;margin-top:24px;gap:3px;flex-shrink:0">
+        <div style="display:flex;align-items:center"><div style="width:28px;height:2px;background:var(--border)"></div><span style="color:var(--text3);font-size:14px">›</span></div>
+        <div style="font-size:10px;color:var(--text3)">체크</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;text-align:center;width:140px;flex-shrink:0">
+        <div style="width:48px;height:48px;border-radius:14px;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:10px">📂</div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:4px">admin.json 존재?</div>
+        <div style="font-size:11px;color:var(--text2)">LocalFileAccessPolicy<br>.CanIngest</div>
+        <div style="font-family:'SF Mono','Fira Mono',monospace;font-size:10px;background:var(--hero);color:#7eb8ff;padding:3px 8px;border-radius:5px;margin-top:6px">%LOCALAPPDATA%\<br>TeampptAddin\admin.json</div>
+      </div>
+      <div style="display:flex;flex-direction:column;margin-top:0;flex-shrink:0">
+        <div style="display:flex;align-items:center;padding:0 8px;margin-top:24px;gap:3px">
+          <div style="display:flex;align-items:center"><div style="width:28px;height:2px;background:var(--green)"></div><span style="color:var(--green);font-size:14px">›</span></div>
+        </div>
+        <div style="font-size:10px;color:var(--green);font-weight:700;text-align:center;margin-top:2px">있음</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;text-align:center;width:130px;flex-shrink:0">
+        <div style="width:48px;height:48px;border-radius:14px;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:10px">👁️</div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:4px">버튼 표시</div>
+        <div style="font-size:11px;color:var(--text2)">ShowIngestButton()<br>Visibility.Visible</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 8px;margin-top:24px;gap:3px;flex-shrink:0">
+        <div style="display:flex;align-items:center"><div style="width:28px;height:2px;background:var(--border)"></div><span style="color:var(--text3);font-size:14px">›</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;text-align:center;width:130px;flex-shrink:0">
+        <div style="width:48px;height:48px;border-radius:14px;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:10px">⚡</div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:4px">인제스트 실행</div>
+        <div style="font-size:11px;color:var(--text2)">service_role 키로<br>Supabase 쓰기</div>
+      </div>
+    </div>
+    <div style="margin-top:20px;padding-top:20px;border-top:1px dashed var(--border);display:flex;align-items:center;gap:16px">
+      <div style="font-size:11px;font-weight:700;color:var(--red);min-width:40px">없음 ✕</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:48px;line-height:1">🙈</div>
+        <div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:3px">버튼 자체가 보이지 않는다</div>
+          <div style="font-size:12px;color:var(--text2)"><code style="font-family:monospace;font-size:11px;background:var(--bg);padding:2px 6px;border-radius:4px">Visibility.Collapsed</code> — 버튼이 UI에 존재하지만 완전히 숨겨진다. 일반 사용자는 인제스트 기능의 존재 자체를 알 수 없다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-grid">
+    <div class="sec-card">
+      <h4>🙋 일반 사용자 — 읽기 전용</h4>
+      <div class="sec-row">
+        <div class="sec-node user">사용자</div>
+        <span class="sec-arrow">→</span>
+        <div class="sec-node rls">anon key<br><span style="font-size:10px">앱에 번들</span></div>
+        <span class="sec-arrow">→</span>
+        <div class="sec-node rls">RLS 정책<br><span style="font-size:10px">읽기만 허용</span></div>
+      </div>
+      <div class="sec-row">
+        <div class="sec-node user">쓰기 시도</div>
+        <span class="sec-arrow">→</span>
+        <div class="sec-node blocked">❌ 차단<br><span style="font-size:10px">RLS 거부</span></div>
+      </div>
+      <div class="sec-policy">anon key가 유출되어도 <code>SELECT</code>만 가능. DB를 망칠 수 없다.<br>키 회전만으로 즉시 무력화.</div>
+    </div>
+    <div class="sec-card">
+      <h4>🔑 관리자 — 인제스트 전용</h4>
+      <div class="sec-row">
+        <div class="sec-node admin">관리자 PC</div>
+        <span class="sec-arrow">→</span>
+        <div class="sec-node rls">admin.json<br><span style="font-size:10px">로컬 파일 존재 여부</span></div>
+        <span class="sec-arrow">→</span>
+        <div class="sec-node rls">service_role<br><span style="font-size:10px">서버에만</span></div>
+      </div>
+      <div class="sec-row">
+        <div class="sec-node admin">인제스트 실행</div>
+        <span class="sec-arrow">→</span>
+        <div class="sec-node allowed">✅ 허용<br><span style="font-size:10px">INSERT / UPDATE</span></div>
+      </div>
+      <div class="sec-policy">판단 로직은 <code>IAccessPolicy</code> 인터페이스로 격리. 유료화 시 <code>IsAdmin()</code> 구현만 교체 — 나머지 코드 무변경.</div>
+    </div>
+  </div>
+
+  <!-- LLM MODELS -->
+  <div class="section-label mt48">LLM Models</div>
+  <h2 class="stitle" style="font-size:24px">현재 사용 중인 AI 모델</h2>
+  <table class="model-table" style="border-collapse:collapse">
+    <tr><th>역할</th><th>모델</th><th>세부 내용</th></tr>
+    <tr>
+      <td>에셋 이해 (인제스트)</td>
+      <td><span class="model-badge">gemini-2.0-flash</span></td>
+      <td style="color:var(--text2)">PNG + 섹션명을 직접 보고 kind·slots·colors·fonts·use_when 등을 추출. 멀티모달 이해. thinkingBudget 0.</td>
+    </tr>
+    <tr>
+      <td>텍스트 임베딩</td>
+      <td><span class="model-badge">text-embedding-004</span></td>
+      <td style="color:var(--text2)">768차원 벡터 생성. 인제스트 시(에셋 embed_text) + 추천 시(질의 텍스트) 양쪽에 사용.</td>
+    </tr>
+    <tr>
+      <td>AI 탭 추천 대화</td>
+      <td><span class="model-badge">gemini-2.0-flash</span></td>
+      <td style="color:var(--text2)">벡터검색 top 8 결과를 받아 2~3개 선택 + 이유 설명. 카탈로그 입력 다이어트 적용(slots·colors·fonts 제거)으로 토큰 최소화.</td>
+    </tr>
+    <tr>
+      <td>스타일 팔레트 생성</td>
+      <td><span style="color:var(--text2);font-size:12px">LLM 없음</span></td>
+      <td style="color:var(--text2)">순수 C# 색상수학(HSL 변환 + WCAG 대비비). ColorHsl · PaletteRoleMapper · PaletteGenerator. 토큰 0.</td>
+    </tr>
+  </table>
+</div>
+
+<footer>
+  <strong>TEAMPPT</strong> — Vibe Designing
+  <span><a href="index.html" style="color:rgba(255,255,255,.4);text-decoration:none">← 홈으로</a></span>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEAMPPT — 바이브 디자이닝</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+.page-nav-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:800px;margin:0 auto 0}
+.page-card{background:var(--white);border-radius:var(--r);padding:32px 28px 28px;box-shadow:var(--shadow-lg);border:1.5px solid var(--border);text-decoration:none;color:var(--text);display:block;transition:.18s;position:relative;overflow:hidden}
+.page-card:hover{border-color:var(--accent);box-shadow:0 8px 32px rgba(49,130,246,.12);transform:translateY(-2px)}
+.page-card-ico{font-size:32px;margin-bottom:16px}
+.page-card-tag{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.page-card h3{font-size:20px;font-weight:800;letter-spacing:-.4px;margin-bottom:8px}
+.page-card p{font-size:13px;color:var(--text2);line-height:1.65}
+.page-card-arrow{position:absolute;bottom:24px;right:24px;font-size:18px;color:var(--text3);transition:.18s}
+.page-card:hover .page-card-arrow{color:var(--accent);transform:translateX(3px)}
+.page-card.feat{border-top:3px solid var(--accent)}
+.page-card.data{border-top:3px solid var(--green)}
+.page-card.progress{border-top:3px solid var(--purple)}
+.page-card.pitch{border-top:3px solid var(--orange)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">TEAM<span>PPT</span></a>
+  <ul class="nav-links">
+    <li><a href="features.html">기능</a></li>
+    <li><a href="data.html">데이터</a></li>
+    <li><a href="progress.html">진행보드</a></li>
+    <li><a href="pitch.html">피치</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">PowerPoint AI Add-in</div>
+  <h1><em>바이브 디자이닝.</em></h1>
+  <p class="hero-sub" style="font-size:20px;color:rgba(255,255,255,.75);margin-bottom:14px"><strong>커서가 코딩을 바꿨듯,<br>TEAMPPT는 PPT 디자인을 바꾼다.</strong></p>
+  <p class="hero-sub" style="font-size:15px;margin-bottom:44px">전문가의 손이 없어도 — 같은 결과물.</p>
+  <div class="hero-chips">
+    <span class="hchip"><span class="dot dot-g"></span>COM Add-in (.NET 4.8)</span>
+    <span class="hchip"><span class="dot dot-b"></span>Gemini Flash · embedding-004</span>
+    <span class="hchip"><span class="dot dot-b"></span>Supabase pgvector</span>
+    <span class="hchip"><span class="dot dot-o"></span>C# WPF</span>
+  </div>
+</div>
+
+<div class="section-wrap" style="padding-top:64px;padding-bottom:80px">
+  <div class="section-label">Documentation</div>
+  <h2 class="stitle" style="margin-bottom:6px">문서 허브</h2>
+  <p class="sdesc">섹션을 클릭하면 해당 페이지로 이동합니다.</p>
+
+  <div class="page-nav-grid">
+
+    <a href="features.html" class="page-card feat">
+      <div class="page-card-ico">⚡</div>
+      <div class="page-card-tag">기능 · Pipeline</div>
+      <h3>기능</h3>
+      <p>사용자 루트 A/B/C 파이프라인 + 관리자 인제스트 파이프라인 · 보안 아키텍처 · LLM 모델</p>
+      <div class="page-card-arrow">→</div>
+    </a>
+
+    <a href="data.html" class="page-card data">
+      <div class="page-card-ico">🗄️</div>
+      <div class="page-card-tag">데이터 · Schema</div>
+      <h3>데이터</h3>
+      <p>HeaderAsset 중심 엔티티 관계도 · Supabase assets 테이블 스키마 · 설계 이유</p>
+      <div class="page-card-arrow">→</div>
+    </a>
+
+    <a href="progress.html" class="page-card progress">
+      <div class="page-card-ico">📋</div>
+      <div class="page-card-tag">진행보드 · Now</div>
+      <h3>진행보드</h3>
+      <p>지금 여기 · Task 큐 (#1.5~#5) · 완료된 것 · 보류 목록 — PROGRESS-BOARD.md 기준</p>
+      <div class="page-card-arrow">→</div>
+    </a>
+
+    <a href="pitch.html" class="page-card pitch">
+      <div class="page-card-ico">🚀</div>
+      <div class="page-card-tag">피치 · Investor</div>
+      <h3>피치</h3>
+      <p>대표·투자자용 — 왜 감동인가 · 3단계 위임 로드맵 · 유료화 전환 비용 0 전략</p>
+      <div class="page-card-arrow">→</div>
+    </a>
+
+  </div>
+</div>
+
+<footer>
+  <strong>TEAMPPT</strong> — Vibe Designing
+  <span>기능 추가 시 Cowork에서 업데이트</span>
+</footer>
+
+</body>
+</html>
