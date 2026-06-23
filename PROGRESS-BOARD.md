@@ -56,8 +56,8 @@
 | # | 무엇 | 상태 |
 |---|------|------|
 | 2 | **UIUX 수정** — 프롬프트 기반 (Michael이 제공 예정) | ⬜ 다음 |
-| 3 | **데이터 계층 수정** — layout/component → slide/layout/component 3계층 | ⬜ |
-| 4 | **화면공유 시스템** (A-2) | ⬜ |
+| 3 | **화면공유 시스템** (A-2) | ⬜ |
+| 4 | **데이터 계층 수정** — kind 2→3분류 (slide/layout/component). 분류 라벨만, 삽입 동작 보류. [스펙](docs/superpowers/specs/2026-06-23-kind-three-way-classification-design.md) 완료, 화면공유 다음에 구현 | ⬜ |
 | 5 | **Scratch 삽입** — 에셋을 흑백/뼈대 형태로 삽입, 스타일 탭에서 나중에 컨셉 적용 | ⬜ |
 
 > **보류:**
