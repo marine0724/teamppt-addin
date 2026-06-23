@@ -226,6 +226,7 @@ namespace TeampptAddin
             try
             {
                 ShapeInserter.InsertToActiveSlide(card.PptxPath);
+                _wpfPanel.SetStyleAnchorByFile(card.PptxPath);
                 _wpfPanel.SetStatus($"✓ {card.Title} 삽입 완료",
                     ThemeResources.StatusSuccess.Color);
             }

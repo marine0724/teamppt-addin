@@ -28,6 +28,7 @@ namespace TeampptAddin
         private IAiService _aiService;
         private StyleConfig _styleConfig;
         private RemoteAssetCache _remoteCache;
+        private HeaderAsset _anchorAsset;
 
         private Border[] _tabBorders;
         private FrameworkElement[] _tabPanels;
@@ -1172,6 +1173,7 @@ namespace TeampptAddin
                     try
                     {
                         ShapeInserter.InsertToActiveSlide(localPath);
+                        SetStyleAnchorByFile(remotePath);
                         SetStatus($"✓ {assetName} 삽입 완료", ThemeResources.StatusSuccess.Color);
                     }
                     catch (Exception ex)
@@ -1314,11 +1316,14 @@ namespace TeampptAddin
 
         private void PopulateStylePanel()
         {
-            if (_styleConfig == null || _styleStack == null) return;
+            if (_styleStack == null) return;
+            var effective = BuildEffectiveStyleConfig();
             _styleStack.Children.Clear();
 
-            var palettes = _styleConfig.Palettes ?? new List<StylePalette>();
-            var fonts    = _styleConfig.Fonts    ?? new List<StyleFont>();
+            var palettes = effective.Palettes ?? new List<StylePalette>();
+            var fonts    = effective.Fonts    ?? new List<StyleFont>();
+
+            if (palettes.Count == 0 && fonts.Count == 0) return;
 
             _selectedPalette = palettes.Count > 0 ? palettes[0] : null;
             _selectedFont    = fonts.Count    > 0 ? fonts[0]    : null;
@@ -1596,6 +1601,58 @@ namespace TeampptAddin
         public void SetAssets(List<HeaderAsset> assets)
         {
             _allAssets = assets ?? new List<HeaderAsset>();
+        }
+
+        public void SetStyleAnchorByFile(string pathOrFile)
+        {
+            if (string.IsNullOrEmpty(pathOrFile)) return;
+            var key = System.IO.Path.GetFileName(pathOrFile);
+            _anchorAsset = (_allAssets ?? new List<HeaderAsset>())
+                .FirstOrDefault(a =>
+                    string.Equals(System.IO.Path.GetFileName(a.File ?? ""), key,
+                        StringComparison.OrdinalIgnoreCase)
+                    || (a.Extra != null && a.Extra.TryGetValue("remote_file", out var rf)
+                        && string.Equals(System.IO.Path.GetFileName(rf.ToString()), key,
+                            StringComparison.OrdinalIgnoreCase)));
+            PopulateStylePanel();
+        }
+
+        private StyleConfig BuildEffectiveStyleConfig()
+        {
+            var palettes = new List<StylePalette>();
+            var fonts = new List<StyleFont>();
+
+            if (_anchorAsset != null)
+            {
+                var np = PaletteRoleMapper.Map(_anchorAsset.Colors);
+                palettes.AddRange(PaletteGenerator.Generate(np));
+
+                if (_anchorAsset.Fonts != null)
+                {
+                    foreach (var f in _anchorAsset.Fonts)
+                    {
+                        if (f == null || string.IsNullOrWhiteSpace(f.Family)) continue;
+                        if (fonts.Any(x => string.Equals(x.Name, f.Family,
+                                StringComparison.OrdinalIgnoreCase))) continue;
+                        fonts.Add(new StyleFont { Name = f.Family, Mood = new List<string>(),
+                            UseWhen = "에셋 폰트" });
+                    }
+                }
+            }
+
+            if (_styleConfig?.Palettes != null) palettes.AddRange(_styleConfig.Palettes);
+            if (_styleConfig?.Fonts != null)
+            {
+                foreach (var f in _styleConfig.Fonts)
+                {
+                    if (f == null || string.IsNullOrWhiteSpace(f.Name)) continue;
+                    if (fonts.Any(x => string.Equals(x.Name, f.Name,
+                            StringComparison.OrdinalIgnoreCase))) continue;
+                    fonts.Add(f);
+                }
+            }
+
+            return new StyleConfig { Palettes = palettes, Fonts = fonts };
         }
 
         public void InitAi(IAiService aiService, StyleConfig styles, RemoteAssetCache remoteCache = null)
