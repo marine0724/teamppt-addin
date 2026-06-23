@@ -31,6 +31,18 @@ namespace TeampptAddin
             req.Headers.TryAddWithoutValidation("Authorization", "Bearer " + _key);
         }
 
+        public async Task<string> GetAssetsAsync()
+        {
+            var req = new HttpRequestMessage(HttpMethod.Get, $"{_baseUrl}/rest/v1/assets?select=*");
+            ApplyHeaders(req);
+            var resp = await Http.SendAsync(req).ConfigureAwait(false);
+            var b = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
+            Logger.Log($"[Supabase] GET assets: HTTP {(int)resp.StatusCode}, len={b.Length}");
+            if (!resp.IsSuccessStatusCode)
+                throw new HttpRequestException($"Supabase select 오류 ({(int)resp.StatusCode}): {b}");
+            return b;
+        }
+
         public async Task InsertAssetAsync(JObject row)
         {
             var req = new HttpRequestMessage(HttpMethod.Post, $"{_baseUrl}/rest/v1/assets?on_conflict=file");

@@ -24,8 +24,9 @@ namespace TeampptAddin
 
         private readonly string _category;
         private readonly string _useWhen;
-        private readonly BitmapSource _bitmapThumb;
+        private BitmapSource _bitmapThumb;
 
+        private readonly Border _thumbBorder;
         private bool _mousePressed;
         private Point _dragStart;
 
@@ -77,10 +78,10 @@ namespace TeampptAddin
             grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(100) });
             grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(36) });
 
-            var thumbBorder = new Border { Background = ThemeResources.BgThumb, ClipToBounds = true };
+            _thumbBorder = new Border { Background = ThemeResources.BgThumb, ClipToBounds = true };
             if (_bitmapThumb != null)
             {
-                thumbBorder.Child = new Image
+                _thumbBorder.Child = new Image
                 {
                     Source = _bitmapThumb,
                     Stretch = Stretch.Uniform,
@@ -91,7 +92,7 @@ namespace TeampptAddin
             }
             else
             {
-                thumbBorder.Child = new TextBlock
+                _thumbBorder.Child = new TextBlock
                 {
                     Text = title,
                     Foreground = ThemeResources.TextSub,
@@ -101,8 +102,8 @@ namespace TeampptAddin
                     VerticalAlignment = VerticalAlignment.Center
                 };
             }
-            Grid.SetRow(thumbBorder, 0);
-            grid.Children.Add(thumbBorder);
+            Grid.SetRow(_thumbBorder, 0);
+            grid.Children.Add(_thumbBorder);
 
             var sep = new Border
             {
@@ -163,6 +164,19 @@ namespace TeampptAddin
             MouseLeftButtonDown += OnMouseDown;
             MouseMove += OnMouseMove;
             MouseLeftButtonUp += OnMouseUp;
+        }
+
+        public void SetThumbnail(DrawingImage img)
+        {
+            _bitmapThumb = ConvertToBitmapSource(img);
+            _thumbBorder.Child = new Image
+            {
+                Source = _bitmapThumb,
+                Stretch = Stretch.Uniform,
+                Margin = new Thickness(8),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
         }
 
         private void OnMouseEnter(object sender, MouseEventArgs e)

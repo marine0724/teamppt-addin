@@ -979,6 +979,7 @@ namespace TeampptAddin
                     popupTimer.Stop();
                     if (remotePopup != null) { remotePopup.IsOpen = false; remotePopup = null; }
                 };
+                var capturedAsset = suggestion.Asset;
                 card.MouseMove += (s, e) =>
                 {
                     if (!mouseDown || e.LeftButton != MouseButtonState.Pressed) return;
@@ -987,14 +988,14 @@ namespace TeampptAddin
                         Math.Abs(pos.Y - dragOrigin.Y) > SystemParameters.MinimumVerticalDragDistance)
                     {
                         mouseDown = false;
-                        DragRemoteAssetAsync(remoteFile, assetName);
+                        DragRemoteAssetAsync(remoteFile, assetName, capturedAsset);
                     }
                 };
                 card.MouseLeftButtonUp += (s, e) =>
                 {
                     if (!mouseDown) return;
                     mouseDown = false;
-                    InsertRemoteAssetAsync(remoteFile, assetName);
+                    InsertRemoteAssetAsync(remoteFile, assetName, capturedAsset);
                 };
             }
 
@@ -1129,7 +1130,25 @@ namespace TeampptAddin
             return outer;
         }
 
-        private async void DragRemoteAssetAsync(string remotePptx, string assetName)
+        private void EnsureAssetRegistered(HeaderAsset asset)
+        {
+            if (asset == null) return;
+            if (_allAssets == null) _allAssets = new List<HeaderAsset>();
+            var key = System.IO.Path.GetFileName(asset.File ?? "");
+            var remoteKey = asset.Extra != null && asset.Extra.TryGetValue("remote_file", out var rf)
+                ? System.IO.Path.GetFileName(rf.ToString()) : null;
+            bool exists = _allAssets.Any(a =>
+                (!string.IsNullOrEmpty(key) && string.Equals(System.IO.Path.GetFileName(a.File ?? ""), key, StringComparison.OrdinalIgnoreCase))
+                || (!string.IsNullOrEmpty(remoteKey) && a.Extra != null && a.Extra.TryGetValue("remote_file", out var arf)
+                    && string.Equals(System.IO.Path.GetFileName(arf.ToString()), remoteKey, StringComparison.OrdinalIgnoreCase)));
+            if (!exists)
+            {
+                _allAssets.Add(asset);
+                Logger.Log($"[Style] EnsureAssetRegistered added '{asset.Name}', allAssets={_allAssets.Count}");
+            }
+        }
+
+        private async void DragRemoteAssetAsync(string remotePptx, string assetName, HeaderAsset sourceAsset = null)
         {
             try
             {
@@ -1139,6 +1158,7 @@ namespace TeampptAddin
                 {
                     try
                     {
+                        EnsureAssetRegistered(sourceAsset);
                         var thumbCachePath = System.IO.Path.Combine(
                             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                             "TeampptAddin", "cache", "thumb-shape",
@@ -1162,7 +1182,7 @@ namespace TeampptAddin
             }
         }
 
-        private async void InsertRemoteAssetAsync(string remotePath, string assetName)
+        private async void InsertRemoteAssetAsync(string remotePath, string assetName, HeaderAsset sourceAsset = null)
         {
             try
             {
@@ -1172,6 +1192,7 @@ namespace TeampptAddin
                 {
                     try
                     {
+                        EnsureAssetRegistered(sourceAsset);
                         ShapeInserter.InsertToActiveSlide(localPath);
                         SetStyleAnchorByFile(remotePath);
                         SetStatus($"✓ {assetName} 삽입 완료", ThemeResources.StatusSuccess.Color);
@@ -1638,8 +1659,8 @@ namespace TeampptAddin
                         if (f == null || string.IsNullOrWhiteSpace(f.Family)) continue;
                         if (fonts.Any(x => string.Equals(x.Name, f.Family,
                                 StringComparison.OrdinalIgnoreCase))) continue;
-                        fonts.Add(new StyleFont { Name = f.Family, Mood = new List<string>(),
-                            UseWhen = "에셋 폰트" });
+                        fonts.Add(new StyleFont { Name = f.Family, Fallback = f.Fallback,
+                            Mood = new List<string>(), UseWhen = "에셋 폰트" });
                     }
                 }
             }

@@ -1,10 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
+using Newtonsoft.Json.Linq;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 
 namespace TeampptAddin
@@ -32,6 +36,10 @@ namespace TeampptAddin
         // WPF controls
         private ElementHost _elementHost;
         private AssetPanel _wpfPanel;
+
+        // Remote asset support
+        private RemoteAssetCache _remoteCache;
+        private SupabaseClient _supaClient;
 
         // WPF drag state
         private GhostWindow _wpfDragGhost;
@@ -160,54 +168,51 @@ namespace TeampptAddin
         private void LoadWpfCards()
         {
             var assetsDir = Globals.AssetsDir;
-
-            // Load metadata + styles
-            var assets = AssetLoader.Load(assetsDir);
             var styles = StyleLoader.Load(assetsDir);
             IAiService ai;
-            RemoteAssetCache remoteCache = null;
+
+            string supaUrl = null, supaAnon = null, gemini = null;
             try
             {
                 var keysPath = Path.Combine(assetsDir, "api-keys.json");
-                var keys = Newtonsoft.Json.Linq.JObject.Parse(File.ReadAllText(keysPath));
-                var gemini = keys["gemini"]?.ToString();
-                var supaUrl = keys["supabaseUrl"]?.ToString();
-                var supaAnon = keys["supabaseAnonKey"]?.ToString();
-
-                if (!string.IsNullOrEmpty(supaUrl) && !string.IsNullOrEmpty(supaAnon) && !string.IsNullOrEmpty(gemini))
-                {
-                    ai = new VectorRecommendService(supaUrl, supaAnon, gemini);
-                    remoteCache = new RemoteAssetCache(supaUrl, supaAnon);
-                    Logger.Log("[AI] VectorRecommendService (Supabase 벡터검색) 사용");
-                }
-                else
-                {
-                    ai = GeminiAiService.FromAssetsDir(assetsDir);
-                    Logger.Log("[AI] Supabase 설정 없음 → GeminiAiService(로컬 카탈로그) 사용");
-                }
+                var keys = JObject.Parse(File.ReadAllText(keysPath));
+                gemini = keys["gemini"]?.ToString();
+                supaUrl = keys["supabaseUrl"]?.ToString();
+                supaAnon = keys["supabaseAnonKey"]?.ToString();
             }
             catch (Exception ex)
             {
-                Logger.Log($"[AI] 초기화 실패, MockAiService 사용: {ex.Message}");
-                ai = new MockAiService();
+                Logger.Log($"[AI] api-keys 읽기 실패: {ex.Message}");
             }
 
-            _wpfPanel.SetAssets(assets);
-            _wpfPanel.InitAi(ai, styles, remoteCache);
-
-            // Create cards with thumbnails
-            foreach (var asset in assets)
+            if (!string.IsNullOrEmpty(supaUrl) && !string.IsNullOrEmpty(supaAnon))
             {
-                var pptxPath  = Path.Combine(assetsDir, asset.File);
-                var thumbPath = Path.Combine(Globals.ThumbnailDir,
-                    Path.GetFileNameWithoutExtension(asset.File) + ".png");
-                var thumb = ThumbnailService.LoadThumbnail(pptxPath, thumbPath);
-                _wpfPanel.AddAssetCard(
-                    new AssetCard(thumb, asset.Name, pptxPath, asset.Category, asset.UseWhen),
-                    asset);
+                _remoteCache = new RemoteAssetCache(supaUrl, supaAnon);
+                _supaClient = new SupabaseClient(supaUrl, supaAnon);
             }
 
-            _wpfPanel.ResetStatus();
+            if (!string.IsNullOrEmpty(supaUrl) && !string.IsNullOrEmpty(supaAnon) && !string.IsNullOrEmpty(gemini))
+            {
+                ai = new VectorRecommendService(supaUrl, supaAnon, gemini);
+                Logger.Log("[AI] VectorRecommendService (Supabase 벡터검색) 사용");
+            }
+            else
+            {
+                try { ai = GeminiAiService.FromAssetsDir(assetsDir); }
+                catch { ai = new MockAiService(); }
+                Logger.Log("[AI] Supabase 설정 없음 → 로컬 AI 사용");
+            }
+
+            _wpfPanel.InitAi(ai, styles, _remoteCache);
+
+            if (_supaClient != null)
+            {
+                LoadRemoteAssetsAsync();
+            }
+            else
+            {
+                LoadLocalAssets(assetsDir);
+            }
 
             var policy = new LocalFileAccessPolicy();
             if (policy.CanIngest)
@@ -217,12 +222,104 @@ namespace TeampptAddin
             }
         }
 
+        private void LoadLocalAssets(string assetsDir)
+        {
+            var assets = AssetLoader.Load(assetsDir);
+            _wpfPanel.SetAssets(assets);
+
+            foreach (var asset in assets)
+            {
+                var pptxPath = Path.Combine(assetsDir, asset.File);
+                var thumbPath = Path.Combine(Globals.ThumbnailDir,
+                    Path.GetFileNameWithoutExtension(asset.File) + ".png");
+                var thumb = ThumbnailService.LoadThumbnail(pptxPath, thumbPath);
+                _wpfPanel.AddAssetCard(
+                    new AssetCard(thumb, asset.Name, pptxPath, asset.Category, asset.UseWhen),
+                    asset);
+            }
+            _wpfPanel.ResetStatus();
+        }
+
+        private async void LoadRemoteAssetsAsync()
+        {
+            try
+            {
+                _wpfPanel.SetStatus("에셋 불러오는 중...", ThemeResources.TextSub.Color);
+                var json = await _supaClient.GetAssetsAsync().ConfigureAwait(false);
+                var rows = JArray.Parse(json);
+                var assets = rows.OfType<JObject>()
+                    .Select(SupabaseAssetMapper.Map)
+                    .ToList();
+
+                Logger.Log($"[TaskPane] Supabase에서 에셋 {assets.Count}개 로드");
+
+                Invoke(new Action(() =>
+                {
+                    _wpfPanel.SetAssets(assets);
+
+                    foreach (var asset in assets)
+                    {
+                        var card = new AssetCard(null, asset.Name, "",
+                            asset.Category, asset.UseWhen);
+                        _wpfPanel.AddAssetCard(card, asset);
+                        LoadRemoteThumbAsync(card, asset);
+                    }
+                    _wpfPanel.ResetStatus();
+                }));
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"[TaskPane] Supabase 에셋 로드 실패: {ex}");
+                Invoke(new Action(() =>
+                {
+                    LoadLocalAssets(Globals.AssetsDir);
+                }));
+            }
+        }
+
+        private async void LoadRemoteThumbAsync(AssetCard card, HeaderAsset asset)
+        {
+            if (_remoteCache == null || asset.Extra == null) return;
+            if (!asset.Extra.TryGetValue("remote_thumb", out var rt)) return;
+            var remoteThumb = rt.ToString();
+            if (string.IsNullOrEmpty(remoteThumb)) return;
+
+            try
+            {
+                var localThumb = await _remoteCache.GetThumbAsync(remoteThumb).ConfigureAwait(false);
+                Invoke(new Action(() =>
+                {
+                    var img = System.Drawing.Image.FromFile(localThumb);
+                    card.SetThumbnail(img);
+                }));
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"[TaskPane] 썸네일 로드 실패 ({asset.Name}): {ex.Message}");
+            }
+        }
+
         #endregion
 
         #region WPF Drag Handling
 
+        private bool IsRemoteAsset(AssetCard card)
+        {
+            var asset = card.Tag as HeaderAsset;
+            return asset?.Extra != null && asset.Extra.ContainsKey("remote_file")
+                && string.IsNullOrEmpty(card.PptxPath);
+        }
+
         private void OnWpfClickInsert(AssetCard card)
         {
+            if (IsRemoteAsset(card))
+            {
+                var asset = (HeaderAsset)card.Tag;
+                var remotePath = asset.Extra["remote_file"].ToString();
+                InsertRemoteAssetCardAsync(card, remotePath, asset);
+                return;
+            }
+
             try
             {
                 ShapeInserter.InsertToActiveSlide(card.PptxPath);
@@ -238,8 +335,39 @@ namespace TeampptAddin
             }
         }
 
+        private async void InsertRemoteAssetCardAsync(AssetCard card, string remotePath, HeaderAsset asset)
+        {
+            try
+            {
+                _wpfPanel.SetStatus($"⬇ {card.Title} 다운로드 중...", ThemeResources.TextSub.Color);
+                var localPath = await _remoteCache.GetPptxAsync(remotePath).ConfigureAwait(false);
+                Invoke(new Action(() =>
+                {
+                    ShapeInserter.InsertToActiveSlide(localPath);
+                    _wpfPanel.SetStyleAnchorByFile(remotePath);
+                    _wpfPanel.SetStatus($"✓ {card.Title} 삽입 완료",
+                        ThemeResources.StatusSuccess.Color);
+                }));
+            }
+            catch (Exception ex)
+            {
+                Invoke(new Action(() =>
+                    _wpfPanel.SetStatus($"삽입 실패: {ex.Message}",
+                        ThemeResources.StatusError.Color)));
+                Logger.Log($"[RemoteClickInsert] 실패: {ex}");
+            }
+        }
+
         private void OnWpfDragStart(AssetCard card)
         {
+            if (IsRemoteAsset(card))
+            {
+                var asset = (HeaderAsset)card.Tag;
+                var remotePath = asset.Extra["remote_file"].ToString();
+                DragRemoteAssetCardAsync(card, remotePath, asset);
+                return;
+            }
+
             try
             {
                 Logger.Log($"WPF BeginDrag: {card.Title}");
@@ -263,6 +391,44 @@ namespace TeampptAddin
                 _wpfPanel.SetStatus($"드래그 실패: {ex.Message}",
                     ThemeResources.StatusError.Color);
                 Logger.Log($"WPF BeginDrag fail: {ex}");
+            }
+        }
+
+        private async void DragRemoteAssetCardAsync(AssetCard card, string remotePath, HeaderAsset asset)
+        {
+            try
+            {
+                _wpfPanel.SetStatus($"⬇ {card.Title} 다운로드 중...", ThemeResources.TextSub.Color);
+                var localPath = await _remoteCache.GetPptxAsync(remotePath).ConfigureAwait(false);
+                Invoke(new Action(() =>
+                {
+                    var thumbCachePath = Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                        "TeampptAddin", "cache", "thumb-shape",
+                        Path.GetFileNameWithoutExtension(localPath) + ".png");
+                    var thumbImg = ThumbnailService.LoadThumbnail(localPath, thumbCachePath);
+                    var tempCard = new AssetCard(thumbImg, card.Title, localPath);
+                    tempCard.Tag = asset;
+
+                    _wpfDragGhost = new GhostWindow(thumbImg);
+                    _wpfDragGhost.MoveTo(Cursor.Position);
+                    _wpfDragGhost.Show();
+
+                    _wpfDragCard = tempCard;
+                    _wpfDragging = true;
+                    Capture = true;
+                    Cursor.Current = Cursors.Cross;
+
+                    _wpfPanel.SetStatus($"{card.Title} → 슬라이드에 놓으세요",
+                        ThemeResources.Accent.Color);
+                }));
+            }
+            catch (Exception ex)
+            {
+                Invoke(new Action(() =>
+                    _wpfPanel.SetStatus($"다운로드 실패: {ex.Message}",
+                        ThemeResources.StatusError.Color)));
+                Logger.Log($"[RemoteDrag] 다운로드 실패: {ex}");
             }
         }
 
