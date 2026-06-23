@@ -53,11 +53,11 @@
 
 ## 🍃 잎 — 현재 Task
 
-> **지금:** 스타일 탭 — 에셋 기반 팔레트 구현
+> **지금:** 스타일 탭 — 에셋 기반 팔레트 v1 **구현 완료, 수동 검증 대기**
 > - 설계: [2026-06-23-style-tab-asset-palette-design.md](docs/superpowers/specs/2026-06-23-style-tab-asset-palette-design.md) (✅ 완료)
-> - 핵심: 에셋의 실제 색을 앵커로 **원본+반전** 팔레트 자동생성(HSL+대비) → 활성 슬라이드 1장 배경·도형·텍스트+폰트 적용
+> - 구현: [plan](docs/superpowers/plans/2026-06-23-style-tab-asset-palette.md) Task 1~6 전부 완료. 76개 단위테스트 통과, 관리자 빌드 0 에러.
+> - **수동 검증 필요:** PowerPoint에서 에셋 삽입 → 스타일 탭에 원본·반전 표시 → 클릭 시 슬라이드 적용 확인
 > - 다음 단계(잊지 말 것): **덱 전체 통일** (누더기 덱 → 한 컨셉). v1 검증 후 바로.
-> - 구현: Sonnet 실행 예정. 다음 = writing-plans로 구현 plan 작성.
 >
 > **다음 (스타일 탭 후):** A-2 화면공유 시스템 개발
 >

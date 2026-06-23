@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEAMPPT — 바이브 디자이닝</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f2f5;
+  --white:#fff;
+  --hero:#0a0b0f;
+  --accent:#3182f6;
+  --accent-light:#e8f0fe;
+  --green:#00c471;
+  --green-light:#e6faf3;
+  --orange:#f5a623;
+  --orange-light:#fff8ec;
+  --purple:#7c3aed;
+  --purple-light:#f5f3ff;
+  --red:#ef4444;
+  --text:#111216;
+  --text2:#6b7280;
+  --text3:#9ca3af;
+  --border:#e5e7eb;
+  --r:14px;
+  --r-sm:10px;
+  --shadow:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);
+  --shadow-lg:0 4px 24px rgba(0,0,0,.09),0 1px 4px rgba(0,0,0,.05);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Pretendard Variable',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.6}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:60px}
+.logo{font-size:16px;font-weight:800;text-decoration:none;color:var(--text);letter-spacing:-.5px}
+.logo span{color:var(--accent)}
+.nav-links{display:flex;gap:2px;list-style:none}
+.nav-links a{text-decoration:none;color:var(--text2);font-size:13px;font-weight:500;padding:6px 14px;border-radius:8px;transition:.15s}
+.nav-links a:hover{background:var(--bg);color:var(--text)}
+
+/* HERO */
+.hero{background:var(--hero);padding:96px 48px 88px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(49,130,246,.2),transparent 65%);pointer-events:none}
+.hero-tag{display:inline-flex;align-items:center;gap:7px;background:rgba(49,130,246,.12);border:1px solid rgba(49,130,246,.28);color:#7eb8ff;font-size:12px;font-weight:600;letter-spacing:.4px;padding:5px 16px;border-radius:99px;margin-bottom:28px}
+.hero-tag::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0}
+.hero h1{font-size:clamp(44px,6vw,76px);font-weight:900;color:#fff;letter-spacing:-2.5px;line-height:1.08;margin-bottom:22px}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,#60a5fa 0%,#a78bfa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:18px;color:rgba(255,255,255,.5);max-width:480px;margin:0 auto 44px;font-weight:400;line-height:1.7}
+.hero-sub strong{color:rgba(255,255,255,.88);font-weight:600}
+.hero-chips{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.hchip{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);font-size:13px;font-weight:500;padding:7px 16px;border-radius:99px}
+.hchip .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.dot-g{background:var(--green)} .dot-b{background:var(--accent)} .dot-o{background:var(--orange)}
+
+/* AUDIENCE BAR */
+.abar{background:var(--white);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:13px 48px;display:flex;align-items:center;gap:10px}
+.atag{font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:4px 11px;border-radius:6px}
+.atag-exec{background:#fef3c7;color:#92400e}
+.atag-dev{background:#ede9fe;color:#4c1d95}
+.abar-text{font-size:13px;color:var(--text2)}
+
+/* SECTION */
+.section-wrap{padding:72px 48px;max-width:1140px;margin:0 auto}
+.section-label{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.section-label::before{content:'';width:16px;height:2px;background:var(--accent);border-radius:2px}
+h2.stitle{font-size:clamp(26px,3.5vw,38px);font-weight:800;letter-spacing:-1.2px;margin-bottom:10px;line-height:1.15}
+.sdesc{font-size:15px;color:var(--text2);max-width:540px;margin-bottom:48px;line-height:1.7}
+
+/* ROUTE OVERVIEW CARDS */
+.route-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:56px}
+.rc{background:var(--white);border-radius:var(--r);padding:26px 24px;box-shadow:var(--shadow);border:1.5px solid var(--border);position:relative;transition:.2s}
+.rc.active{border-color:var(--accent)}
+.rc.next{opacity:.8}
+.rc.later{opacity:.6}
+.rc-badge{position:absolute;top:14px;right:14px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:99px}
+.rcb-now{background:var(--accent);color:#fff}
+.rcb-next{background:var(--orange-light);color:#a05e0a}
+.rcb-later{background:var(--bg);color:var(--text3);border:1px solid var(--border)}
+.rc-ico{font-size:28px;margin-bottom:14px}
+.rc-id{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.4px;text-transform:uppercase;margin-bottom:5px}
+.rc h3{font-size:19px;font-weight:800;letter-spacing:-.4px;margin-bottom:7px}
+.rc p{font-size:13px;color:var(--text2);line-height:1.65}
+
+/* ── PIPELINE DIAGRAM ──────────────────────────────── */
+.pipeline-block{margin-bottom:56px}
+.pipeline-title-row{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.pipeline-badge{font-size:12px;font-weight:700;padding:5px 14px;border-radius:99px}
+.pb-a{background:var(--accent-light);color:#1a56db}
+.pb-b{background:var(--purple-light);color:var(--purple)}
+.pb-c{background:var(--orange-light);color:#a05e0a}
+.pb-ingest{background:var(--green-light);color:#0a7a50}
+.pipeline-title{font-size:17px;font-weight:700;letter-spacing:-.3px}
+.pipeline-subtitle{font-size:13px;color:var(--text2);margin-top:2px}
+
+/* Pipeline diagram card */
+.pipeline-card{background:var(--white);border-radius:var(--r);padding:36px 32px;box-shadow:var(--shadow-lg);border:1px solid var(--border);overflow-x:auto}
+
+/* Horizontal flow */
+.flow{display:flex;align-items:flex-start;gap:0;min-width:max-content}
+
+/* Node */
+.fnode{flex-shrink:0;width:140px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.fnode-icon{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:12px;position:relative}
+.fnode-num{position:absolute;top:-6px;left:-6px;width:20px;height:20px;background:var(--text);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.fnode-label{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;letter-spacing:-.2px}
+.fnode-sub{font-size:11px;color:var(--text2);line-height:1.5}
+.fnode-tech{font-size:10px;font-weight:600;color:var(--text3);margin-top:6px;font-family:'SF Mono','Fira Mono',monospace;background:var(--bg);padding:3px 8px;border-radius:5px;letter-spacing:-.2px}
+
+/* Node color variants */
+.ni-user{background:var(--accent-light)}
+.ni-ai{background:var(--orange-light)}
+.ni-data{background:var(--green-light)}
+.ni-ui{background:var(--purple-light)}
+.ni-sec{background:#fef2f2}
+.ni-parse{background:#fef3c7}
+.ni-embed{background:#ecfdf5}
+
+/* Arrow between nodes */
+.farrow{flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 6px;margin-top:26px;gap:3px}
+.farrow-line{display:flex;align-items:center;gap:0}
+.farrow-body{width:32px;height:2px;background:var(--border)}
+.farrow-head{font-size:14px;color:var(--text3);line-height:1;margin-left:-2px}
+.farrow-label{font-size:10px;color:var(--text3);white-space:nowrap;max-width:60px;text-align:center;line-height:1.4}
+
+/* Branch note */
+.branch-note{background:var(--bg);border-radius:var(--r-sm);padding:14px 18px;margin-top:20px;font-size:13px;color:var(--text2);border-left:3px solid var(--border)}
+.branch-note strong{color:var(--text);font-weight:600}
+
+/* Future pipeline overlay */
+.pipeline-future{position:relative}
+.future-overlay{position:absolute;inset:0;background:rgba(255,255,255,.72);backdrop-filter:blur(3px);border-radius:var(--r);display:flex;align-items:center;justify-content:center;z-index:2}
+.future-chip{background:var(--white);border:1.5px solid var(--border);padding:10px 22px;border-radius:99px;font-size:13px;font-weight:700;color:var(--text2);box-shadow:var(--shadow)}
+
+/* ── SECURITY DIAGRAM ─────────────────────────────── */
+.sec-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.sec-card{background:var(--white);border-radius:var(--r);padding:28px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.sec-card h4{font-size:15px;font-weight:700;margin-bottom:16px;letter-spacing:-.2px}
+.sec-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.sec-node{flex:1;background:var(--bg);border-radius:8px;padding:9px 14px;font-size:12px;font-weight:600;text-align:center;border:1px solid var(--border)}
+.sec-arrow{color:var(--text3);font-size:14px;flex-shrink:0}
+.sec-node.user{background:var(--accent-light);border-color:#bfdbfe;color:#1d4ed8}
+.sec-node.admin{background:var(--green-light);border-color:#a7f3d0;color:#065f46}
+.sec-node.blocked{background:#fef2f2;border-color:#fecaca;color:var(--red)}
+.sec-node.allowed{background:var(--green-light);border-color:#a7f3d0;color:#065f46}
+.sec-node.rls{background:#fef3c7;border-color:#fde68a;color:#92400e}
+.sec-policy{font-size:12px;color:var(--text2);margin-top:12px;padding-top:12px;border-top:1px solid var(--border);line-height:1.6}
+.sec-policy code{font-family:'SF Mono','Fira Mono',monospace;font-size:11px;background:var(--bg);padding:2px 6px;border-radius:4px}
+
+/* LLM MODELS TABLE */
+.model-table{background:var(--white);border-radius:var(--r);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden;width:100%;margin-top:14px}
+.model-table th{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.4px;text-transform:uppercase;padding:14px 20px;background:var(--bg);text-align:left;border-bottom:1px solid var(--border)}
+.model-table td{font-size:13px;padding:14px 20px;border-bottom:1px solid var(--border);vertical-align:top}
+.model-table tr:last-child td{border-bottom:none}
+.model-table td:first-child{font-weight:600;color:var(--text);width:180px}
+.model-badge{display:inline-block;font-size:11px;font-weight:700;font-family:'SF Mono','Fira Mono',monospace;background:var(--hero);color:#7eb8ff;padding:3px 10px;border-radius:6px}
+
+/* ── DATA SCHEMA ──────────────────────────────────── */
+.schema-relation{background:var(--white);border-radius:var(--r);padding:40px;box-shadow:var(--shadow-lg);border:1px solid var(--border);margin-bottom:24px;overflow-x:auto}
+.sr-center{display:flex;justify-content:center;align-items:flex-start;gap:0}
+.sr-main{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.schema-box{background:var(--hero);border-radius:12px;padding:20px 20px;border:1px solid #1f2022;min-width:200px;font-family:'SF Mono','Fira Mono',monospace;font-size:12px}
+.schema-box.center{min-width:220px}
+.schema-box .cls{font-size:14px;font-weight:700;color:#7eb8ff;font-family:'Pretendard Variable',sans-serif;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #1f2022}
+.schema-box .f{display:flex;gap:8px;margin-bottom:6px;line-height:1.4}
+.schema-box .fn{color:#c9d1d9}
+.schema-box .ft{color:#79c0ff}
+.schema-box .fc{color:#6e7681;font-size:10px}
+.schema-box .tag-wip{display:inline-block;font-size:10px;font-weight:700;color:#f8961e;font-family:'Pretendard Variable',sans-serif;margin-left:4px}
+
+.sr-branch{display:flex;flex-direction:column;align-items:flex-start;gap:12px;margin-left:0}
+.sr-connector{display:flex;align-items:center;gap:0}
+.sr-hline{width:40px;height:2px;background:var(--border);flex-shrink:0}
+.sr-vline-wrap{display:flex;flex-direction:column;align-items:flex-end}
+
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+.why-card{background:var(--white);border-radius:var(--r-sm);padding:22px 20px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.why-card .q{font-size:12px;color:var(--accent);font-weight:700;margin-bottom:8px}
+.why-card h4{font-size:14px;font-weight:700;margin-bottom:8px;letter-spacing:-.2px}
+.why-card p{font-size:13px;color:var(--text2);line-height:1.65}
+
+/* SUPABASE SCHEMA */
+.db-schema{background:var(--white);border-radius:var(--r);padding:32px;box-shadow:var(--shadow);border:1px solid var(--border);margin-top:24px}
+.db-schema h4{font-size:15px;font-weight:700;margin-bottom:20px;letter-spacing:-.2px}
+.db-table{display:grid;grid-template-columns:160px 120px 1fr;gap:0;font-size:12px;font-family:'SF Mono','Fira Mono',monospace;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.dbt-h{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:10px 14px;background:var(--bg);color:var(--text2);font-family:'Pretendard Variable',sans-serif;border-bottom:1px solid var(--border)}
+.dbt-r{padding:9px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center}
+.dbt-r:last-child{border-bottom:none}
+.dbt-r.pk{background:#fffbeb}
+.col-name{color:var(--text);font-weight:600}
+.col-type{color:#3182f6}
+.col-note{font-size:11px;color:var(--text2);font-family:'Pretendard Variable',sans-serif}
+
+/* FOOTER */
+footer{background:var(--hero);color:rgba(255,255,255,.3);text-align:center;padding:44px;font-size:13px;margin-top:0}
+footer strong{color:rgba(255,255,255,.7)}
+footer span{display:block;margin-top:6px;font-size:11px}
+
+/* UTILS */
+.divider{width:100%;height:1px;background:var(--border)}
+.mt32{margin-top:32px}
+.mt48{margin-top:48px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">TEAM<span>PPT</span></a>
+  <ul class="nav-links">
+    <li><a href="#features">기능</a></li>
+    <li><a href="#admin">관리자</a></li>
+    <li><a href="#data">데이터</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">PowerPoint AI Add-in</div>
+  <h1><em>바이브 디자이닝.</em></h1>
+  <p class="hero-sub" style="font-size:20px;color:rgba(255,255,255,.75);margin-bottom:14px"><strong>커서가 코딩을 바꿨듯,<br>TEAMPPT는 PPT 디자인을 바꾼다.</strong></p>
+  <p class="hero-sub" style="font-size:15px;margin-bottom:44px">전문가의 손이 없어도 — 같은 결과물.</p>
+  <div class="hero-chips">
+    <span class="hchip"><span class="dot dot-g"></span>COM Add-in (.NET 4.8)</span>
+    <span class="hchip"><span class="dot dot-b"></span>Gemini Flash · embedding-004</span>
+    <span class="hchip"><span class="dot dot-b"></span>Supabase pgvector</span>
+    <span class="hchip"><span class="dot dot-o"></span>C# WPF</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     기능 — 사용자
+════════════════════════════════════════════════════════ -->
+<div class="abar" id="features">
+  <span class="atag atag-exec">사용자</span>
+  <span class="abar-text">세 가지 루트 · 각 루트의 동작 파이프라인</span>
+</div>
+<div class="section-wrap">
+  <div class="section-label">User Routes</div>
+  <h2 class="stitle">얼마나 위임하느냐의 차이</h2>
+  <p class="sdesc">루트가 달라져도 같은 데이터·추천 엔진을 공유한다. A를 완성하면 B·C는 그 위에 얹힌다.</p>
+
+  <!-- Route overview cards -->
+  <div class="route-row">
+    <div class="rc active">
+      <span class="rc-badge rcb-now">지금 여기</span>
+      <div class="rc-ico">🧩</div>
+      <div class="rc-id">Route A</div>
+      <h3>에셋 조립 · 커서식</h3>
+      <p>사용자가 슬라이드에 직접 손을 댄다. AI는 옆에서 "이게 어울려"라고 추천하고 삽입을 도와준다.</p>
+    </div>
+    <div class="rc next">
+      <span class="rc-badge rcb-next">다음</span>
+      <div class="rc-ico">🎨</div>
+      <div class="rc-id">Route B</div>
+      <h3>리디자인 · 위임식</h3>
+      <p>컨셉만 고르면 AI가 전체 덱을 한 번에 바꾼다. Claude Code에 작업을 위임하는 것처럼.</p>
+    </div>
+    <div class="rc later">
+      <span class="rc-badge rcb-later">추후</span>
+      <div class="rc-ico">📐</div>
+      <div class="rc-id">Route C</div>
+      <h3>기획 + 에셋</h3>
+      <p>백지에서 구성 제안부터. 슬라이드 순서·내용 구조까지 AI가 함께 설계한다.</p>
+    </div>
+  </div>
+
+  <!-- ── ROUTE A PIPELINE ──────────────────────── -->
+  <div class="pipeline-block">
+    <div class="pipeline-title-row">
+      <span class="pipeline-badge pb-a">Route A</span>
+      <div>
+        <div class="pipeline-title">에셋 추천 → 삽입 → 스타일 적용</div>
+        <div class="pipeline-subtitle">사용자 발화에서 슬라이드 변경까지의 전체 흐름</div>
+      </div>
+    </div>
+    <div class="pipeline-card">
+      <div class="flow">
+
+        <div class="fnode">
+          <div class="fnode-icon ni-user">
+            <span class="fnode-num">1</span>💬
+          </div>
+          <div class="fnode-label">사용자 발화</div>
+          <div class="fnode-sub">"장점 나열할<br>에셋 추천해줘"</div>
+          <div class="fnode-tech">AssetPanel AI탭</div>
+        </div>
+
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">질의 텍스트</div>
+        </div>
+
+        <div class="fnode">
+          <div class="fnode-icon ni-parse">
+            <span class="fnode-num">2</span>🔧
+          </div>
+          <div class="fnode-label">질의 조합</div>
+          <div class="fnode-sub">발화 + 세션 컨텍스트 → embed 텍스트 빌드</div>
+          <div class="fnode-tech">EmbedTextBuilder</div>
+        </div>
+
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">embed 요청</div>
+        </div>
+
+        <div class="fnode">
+          <div class="fnode-icon ni-ai">
+            <span class="fnode-num">3</span>✨
+          </div>
+          <div class="fnode-label">임베딩 생성</div>
+          <div class="fnode-sub">텍스트 →<br>768차원 벡터</div>
+          <div class="fnode-tech">Gemini embedding-004</div>
+        </div>
+
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">벡터 전달</div>
+        </div>
+
+        <div class="fnode">
+          <div class="fnode-icon ni-data">
+            <span class="fnode-num">4</span>🗄️
+          </div>
+          <div class="fnode-label">벡터 검색</div>
+          <div class="fnode-sub">cosine 유사도<br>→ top 8 에셋 반환</div>
+          <div class="fnode-tech">Supabase match_assets</div>
+        </div>
+
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">메타데이터</div>
+        </div>
+
+        <div class="fnode">
+          <div class="fnode-icon ni-ai">
+            <span class="fnode-num">5</span>🤖
+          </div>
+          <div class="fnode-label">AI 선택 · 설명</div>
+          <div class="fnode-sub">top 8 중 2~3개<br>선택 + 이유 설명</div>
+          <div class="fnode-tech">GeminiAiService<br>(thinkingBudget=0)</div>
+        </div>
+
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">추천 카드</div>
+        </div>
+
+        <div class="fnode">
+          <div class="fnode-icon ni-ui">
+            <span class="fnode-num">6</span>🃏
+          </div>
+          <div class="fnode-label">카드 표시</div>
+          <div class="fnode-sub">에셋 썸네일 +<br>AI 추천 이유</div>
+          <div class="fnode-tech">AssetPanel</div>
+        </div>
+
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">클릭 / 드래그</div>
+        </div>
+
+        <div class="fnode">
+          <div class="fnode-icon ni-ui">
+            <span class="fnode-num">7</span>📎
+          </div>
+          <div class="fnode-label">슬라이드 삽입</div>
+          <div class="fnode-sub">PPT에 shape<br>직접 삽입</div>
+          <div class="fnode-tech">ShapeInserter<br>DragHandler</div>
+        </div>
+
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">에셋 색 앵커</div>
+        </div>
+
+        <div class="fnode">
+          <div class="fnode-icon ni-ui" style="background:#fdf4ff">
+            <span class="fnode-num">8</span>🎨
+          </div>
+          <div class="fnode-label">스타일 탭 갱신</div>
+          <div class="fnode-sub">원본·반전<br>팔레트 자동 생성</div>
+          <div class="fnode-tech">PaletteGenerator<br><span style="color:#f8961e">🔨 구현중</span></div>
+        </div>
+
+      </div>
+      <div class="branch-note" style="margin-top:24px">
+        <strong>캐시 레이어:</strong> VectorRecommendService는 RecommendationCache를 먼저 확인한다. 같은 질의가 반복되면 Supabase 호출 없이 캐시에서 즉시 반환. · <strong>오프라인 폴백:</strong> Supabase 미응답 시 RemoteAssetCache → 번들 기본 에셋 순으로 폴백.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ROUTE B PIPELINE (future) ──────────────── -->
+  <div class="pipeline-block">
+    <div class="pipeline-title-row">
+      <span class="pipeline-badge pb-b">Route B · 다음</span>
+      <div>
+        <div class="pipeline-title">리디자인 — 한방 변환 엔진</div>
+        <div class="pipeline-subtitle">A가 완성된 뒤 진입. Route A의 읽기 엔진을 공유한다.</div>
+      </div>
+    </div>
+    <div class="pipeline-card pipeline-future" style="position:relative">
+      <div class="future-overlay">
+        <span class="future-chip">🚧 Route A 완성 후 개발 예정</span>
+      </div>
+      <div class="flow" style="opacity:.25">
+
+        <div class="fnode">
+          <div class="fnode-icon ni-user"><span class="fnode-num">1</span>📂</div>
+          <div class="fnode-label">PPT 열기</div>
+          <div class="fnode-sub">기존 초안 PPT를<br>그대로 연다</div>
+        </div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div></div>
+
+        <div class="fnode">
+          <div class="fnode-icon ni-ai"><span class="fnode-num">2</span>👁️</div>
+          <div class="fnode-label">전체 덱 읽기</div>
+          <div class="fnode-sub">슬라이드 전체를<br>온디맨드 스캔</div>
+          <div class="fnode-tech">SlideReader (A-2)</div>
+        </div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div></div>
+
+        <div class="fnode">
+          <div class="fnode-icon ni-ai"><span class="fnode-num">3</span>🔎</div>
+          <div class="fnode-label">일관성 진단</div>
+          <div class="fnode-sub">색·헤더·구성<br>일관성 체크</div>
+        </div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div></div>
+
+        <div class="fnode">
+          <div class="fnode-icon ni-user"><span class="fnode-num">4</span>🎯</div>
+          <div class="fnode-label">컨셉 선택</div>
+          <div class="fnode-sub">사용자가<br>컨셉만 고른다</div>
+        </div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div></div>
+
+        <div class="fnode">
+          <div class="fnode-icon ni-ai"><span class="fnode-num">5</span>⚡</div>
+          <div class="fnode-label">한방 변환</div>
+          <div class="fnode-sub">전체 덱을<br>통째로 리디자인</div>
+          <div class="fnode-tech">D 실행엔진</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ROUTE C (future) ────────────────────────── -->
+  <div class="pipeline-block">
+    <div class="pipeline-title-row">
+      <span class="pipeline-badge pb-c">Route C · 추후</span>
+      <div>
+        <div class="pipeline-title">기획 + 에셋 — 백지에서 시작</div>
+        <div class="pipeline-subtitle">내용 구성·순서까지 AI가 함께 설계한다.</div>
+      </div>
+    </div>
+    <div class="pipeline-card pipeline-future" style="position:relative">
+      <div class="future-overlay">
+        <span class="future-chip">🔮 Route B 이후 설계 예정</span>
+      </div>
+      <div class="flow" style="opacity:.2">
+        <div class="fnode"><div class="fnode-icon ni-user"><span class="fnode-num">1</span>💡</div><div class="fnode-label">목적 입력</div><div class="fnode-sub">"IR 발표 자료<br>만들어줘"</div></div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div></div>
+        <div class="fnode"><div class="fnode-icon ni-ai"><span class="fnode-num">2</span>🗂️</div><div class="fnode-label">구성 제안</div><div class="fnode-sub">슬라이드 순서·<br>내용 초안 설계</div></div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div></div>
+        <div class="fnode"><div class="fnode-icon ni-data"><span class="fnode-num">3</span>🧩</div><div class="fnode-label">에셋 매핑</div><div class="fnode-sub">슬라이드별<br>최적 에셋 추천</div></div>
+        <div class="farrow"><div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div></div>
+        <div class="fnode"><div class="fnode-icon ni-ui"><span class="fnode-num">4</span>✅</div><div class="fnode-label">확정 → 생성</div><div class="fnode-sub">승인하면<br>덱 자동 조립</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     기능 — 관리자
+════════════════════════════════════════════════════════ -->
+<div class="abar" id="admin">
+  <span class="atag atag-dev">관리자</span>
+  <span class="abar-text">인제스트 파이프라인 · 보안 아키텍처 · 현재 LLM 모델</span>
+</div>
+<div class="section-wrap">
+  <div class="section-label">Admin Pipeline</div>
+  <h2 class="stitle">에셋 인제스트 — AI가 에셋을 "이해"한다</h2>
+  <p class="sdesc">관리자가 버튼 하나를 누르면 PPTX에서 Supabase까지 원스톱으로 처리된다.</p>
+
+  <!-- ── INGEST PIPELINE ───────────────────────── -->
+  <div class="pipeline-block">
+    <div class="pipeline-title-row">
+      <span class="pipeline-badge pb-ingest">Ingest Pipeline</span>
+      <div>
+        <div class="pipeline-title">PPTX → 이해 → 임베딩 → Supabase 저장</div>
+        <div class="pipeline-subtitle">관리자 PC에서만 실행. anon 키가 아닌 service_role 키로 동작.</div>
+      </div>
+    </div>
+    <div class="pipeline-card">
+      <div class="flow">
+
+        <div class="fnode">
+          <div class="fnode-icon ni-user">
+            <span class="fnode-num">1</span>📁
+          </div>
+          <div class="fnode-label">PPTX 파일</div>
+          <div class="fnode-sub">섹션으로 구분된<br>에셋 원본 파일</div>
+          <div class="fnode-tech">admin.json 확인 후</div>
+        </div>
+
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">섹션 분할</div>
+        </div>
+
+        <div class="fnode">
+          <div class="fnode-icon ni-parse">
+            <span class="fnode-num">2</span>✂️
+          </div>
+          <div class="fnode-label">슬라이드 분리</div>
+          <div class="fnode-sub">섹션별로 슬라이드<br>분할 + PNG 렌더링</div>
+          <div class="fnode-tech">SlideSplitter<br>SlideImageRenderer</div>
+        </div>
+
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">PNG + 섹션명</div>
+        </div>
+
+        <div class="fnode">
+          <div class="fnode-icon ni-ai">
+            <span class="fnode-num">3</span>👁️
+          </div>
+          <div class="fnode-label">멀티모달 이해</div>
+          <div class="fnode-sub">PNG를 직접 보고<br>구조·색·슬롯·용도 분석</div>
+          <div class="fnode-tech">Gemini Flash<br>GeminiPromptBuilder</div>
+        </div>
+
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">JSON 응답</div>
+        </div>
+
+        <div class="fnode">
+          <div class="fnode-icon ni-parse">
+            <span class="fnode-num">4</span>🔍
+          </div>
+          <div class="fnode-label">파싱 · 검증</div>
+          <div class="fnode-sub">JSON → HeaderAsset<br>스키마 검증</div>
+          <div class="fnode-tech">UnderstandingParser<br>AssetSchemaMigrator</div>
+        </div>
+
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">embed_text 조합</div>
+        </div>
+
+        <div class="fnode">
+          <div class="fnode-icon ni-embed">
+            <span class="fnode-num">5</span>🔢
+          </div>
+          <div class="fnode-label">임베딩 생성</div>
+          <div class="fnode-sub">메타 → embed_text<br>→ 768차원 벡터</div>
+          <div class="fnode-tech">EmbeddingService<br>EmbedTextBuilder</div>
+        </div>
+
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">DB 행 조립</div>
+        </div>
+
+        <div class="fnode">
+          <div class="fnode-icon ni-parse">
+            <span class="fnode-num">6</span>📦
+          </div>
+          <div class="fnode-label">DB 행 조립</div>
+          <div class="fnode-sub">메타 + 벡터 →<br>upsert 페이로드</div>
+          <div class="fnode-tech">AssetRowBuilder</div>
+        </div>
+
+        <div class="farrow">
+          <div class="farrow-line"><div class="farrow-body"></div><div class="farrow-head">›</div></div>
+          <div class="farrow-label">HTTP REST</div>
+        </div>
+
+        <div class="fnode">
+          <div class="fnode-icon ni-data">
+            <span class="fnode-num">7</span>☁️
+          </div>
+          <div class="fnode-label">Supabase 저장</div>
+          <div class="fnode-sub">assets 테이블 upsert<br>+ Storage 이미지 업로드</div>
+          <div class="fnode-tech">AssetIngestUploader<br>SupabaseClient</div>
+        </div>
+
+      </div>
+      <div class="branch-note" style="margin-top:24px">
+        <strong>진행 UI:</strong> 각 단계마다 인제스트 패널에 실시간 진행 상태 표시 (애니메이션). · <strong>에러 격리:</strong> 슬라이드 하나 실패해도 나머지는 계속 진행. 실패 목록만 리포트.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECURITY ──────────────────────────────── -->
+  <div class="section-label mt48">Security Architecture</div>
+  <h2 class="stitle" style="font-size:24px">보안 — 읽기/쓰기 완전 분리</h2>
+
+  <!-- Button visibility flow -->
+  <div style="background:var(--white);border-radius:var(--r);padding:32px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:16px">
+    <div style="font-size:13px;font-weight:700;color:var(--text2);letter-spacing:.3px;margin-bottom:20px;text-transform:uppercase;font-size:11px">인제스트 버튼 — 앱 시작 시 판단 흐름</div>
+    <div style="display:flex;align-items:flex-start;gap:0;flex-wrap:wrap">
+
+      <div style="display:flex;flex-direction:column;align-items:center;text-align:center;width:130px;flex-shrink:0">
+        <div style="width:48px;height:48px;border-radius:14px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:10px">🚀</div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:4px">앱 시작</div>
+        <div style="font-size:11px;color:var(--text2)">TaskPaneHost<br>초기화</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 8px;margin-top:24px;gap:3px;flex-shrink:0">
+        <div style="display:flex;align-items:center"><div style="width:28px;height:2px;background:var(--border)"></div><span style="color:var(--text3);font-size:14px">›</span></div>
+        <div style="font-size:10px;color:var(--text3)">체크</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;text-align:center;width:140px;flex-shrink:0">
+        <div style="width:48px;height:48px;border-radius:14px;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:10px">📂</div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:4px">admin.json 존재?</div>
+        <div style="font-size:11px;color:var(--text2)">LocalFileAccessPolicy<br>.CanIngest</div>
+        <div style="font-family:'SF Mono','Fira Mono',monospace;font-size:10px;background:var(--hero);color:#7eb8ff;padding:3px 8px;border-radius:5px;margin-top:6px">%LOCALAPPDATA%\<br>TeampptAddin\admin.json</div>
+      </div>
+
+      <!-- YES branch -->
+      <div style="display:flex;flex-direction:column;margin-top:0;flex-shrink:0">
+        <!-- Yes arrow -->
+        <div style="display:flex;align-items:center;padding:0 8px;margin-top:24px;gap:3px">
+          <div style="display:flex;align-items:center"><div style="width:28px;height:2px;background:var(--green)"></div><span style="color:var(--green);font-size:14px">›</span></div>
+        </div>
+        <div style="font-size:10px;color:var(--green);font-weight:700;text-align:center;margin-top:2px">있음</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;text-align:center;width:130px;flex-shrink:0">
+        <div style="width:48px;height:48px;border-radius:14px;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:10px">👁️</div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:4px">버튼 표시</div>
+        <div style="font-size:11px;color:var(--text2)">ShowIngestButton()<br>Visibility.Visible</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 8px;margin-top:24px;gap:3px;flex-shrink:0">
+        <div style="display:flex;align-items:center"><div style="width:28px;height:2px;background:var(--border)"></div><span style="color:var(--text3);font-size:14px">›</span></div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;text-align:center;width:130px;flex-shrink:0">
+        <div style="width:48px;height:48px;border-radius:14px;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:10px">⚡</div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:4px">인제스트 실행</div>
+        <div style="font-size:11px;color:var(--text2)">service_role 키로<br>Supabase 쓰기</div>
+      </div>
+    </div>
+
+    <!-- No branch -->
+    <div style="margin-top:20px;padding-top:20px;border-top:1px dashed var(--border);display:flex;align-items:center;gap:16px">
+      <div style="font-size:11px;font-weight:700;color:var(--red);min-width:40px">없음 ✕</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:48px;line-height:1">🙈</div>
+        <div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:3px">버튼 자체가 보이지 않는다</div>
+          <div style="font-size:12px;color:var(--text2)"><code style="font-family:monospace;font-size:11px;background:var(--bg);padding:2px 6px;border-radius:4px">Visibility.Collapsed</code> — 버튼이 UI에 존재하지만 완전히 숨겨진다. 일반 사용자는 인제스트 기능의 존재 자체를 알 수 없다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-grid">
+    <div class="sec-card">
+      <h4>🙋 일반 사용자 — 읽기 전용</h4>
+      <div class="sec-row">
+        <div class="sec-node user">사용자</div>
+        <span class="sec-arrow">→</span>
+        <div class="sec-node rls">anon key<br><span style="font-size:10px">앱에 번들</span></div>
+        <span class="sec-arrow">→</span>
+        <div class="sec-node rls">RLS 정책<br><span style="font-size:10px">읽기만 허용</span></div>
+      </div>
+      <div class="sec-row">
+        <div class="sec-node user">쓰기 시도</div>
+        <span class="sec-arrow">→</span>
+        <div class="sec-node blocked">❌ 차단<br><span style="font-size:10px">RLS 거부</span></div>
+      </div>
+      <div class="sec-policy">anon key가 유출되어도 <code>SELECT</code>만 가능. DB를 망칠 수 없다.<br>키 회전만으로 즉시 무력화.</div>
+    </div>
+    <div class="sec-card">
+      <h4>🔑 관리자 — 인제스트 전용</h4>
+      <div class="sec-row">
+        <div class="sec-node admin">관리자 PC</div>
+        <span class="sec-arrow">→</span>
+        <div class="sec-node rls">admin.json<br><span style="font-size:10px">로컬 파일 존재 여부</span></div>
+        <span class="sec-arrow">→</span>
+        <div class="sec-node rls">service_role<br><span style="font-size:10px">서버에만</span></div>
+      </div>
+      <div class="sec-row">
+        <div class="sec-node admin">인제스트 실행</div>
+        <span class="sec-arrow">→</span>
+        <div class="sec-node allowed">✅ 허용<br><span style="font-size:10px">INSERT / UPDATE</span></div>
+      </div>
+      <div class="sec-policy">판단 로직은 <code>IAccessPolicy</code> 인터페이스로 격리. 유료화 시 <code>IsAdmin()</code> 구현만 교체 — 나머지 코드 무변경.</div>
+    </div>
+  </div>
+
+  <!-- ── LLM MODELS ────────────────────────────── -->
+  <div class="section-label mt48">LLM Models</div>
+  <h2 class="stitle" style="font-size:24px">현재 사용 중인 AI 모델</h2>
+  <table class="model-table" style="border-collapse:collapse">
+    <tr>
+      <th>역할</th><th>모델</th><th>세부 내용</th>
+    </tr>
+    <tr>
+      <td>에셋 이해 (인제스트)</td>
+      <td><span class="model-badge">gemini-2.0-flash</span></td>
+      <td style="color:var(--text2)">PNG + 섹션명을 직접 보고 kind·slots·colors·fonts·use_when 등을 추출. 멀티모달 이해. thinkingBudget 0.</td>
+    </tr>
+    <tr>
+      <td>텍스트 임베딩</td>
+      <td><span class="model-badge">text-embedding-004</span></td>
+      <td style="color:var(--text2)">768차원 벡터 생성. 인제스트 시(에셋 embed_text) + 추천 시(질의 텍스트) 양쪽에 사용.</td>
+    </tr>
+    <tr>
+      <td>AI 탭 추천 대화</td>
+      <td><span class="model-badge">gemini-2.0-flash</span></td>
+      <td style="color:var(--text2)">벡터검색 top 8 결과를 받아 2~3개 선택 + 이유 설명. 카탈로그 입력 다이어트 적용(slots·colors·fonts 제거)으로 토큰 최소화.</td>
+    </tr>
+    <tr>
+      <td>스타일 팔레트 생성</td>
+      <td><span style="color:var(--text2);font-size:12px">LLM 없음</span></td>
+      <td style="color:var(--text2)">순수 C# 색상수학(HSL 변환 + WCAG 대비비). ColorHsl · PaletteRoleMapper · PaletteGenerator. 토큰 0.</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     데이터
+════════════════════════════════════════════════════════ -->
+<div class="abar" id="data">
+  <span class="atag atag-dev">데이터</span>
+  <span class="abar-text">스키마 구조 · 설계 이유</span>
+</div>
+<div class="section-wrap">
+  <div class="section-label">Data Schema</div>
+  <h2 class="stitle">모든 것의 중심 — HeaderAsset</h2>
+  <p class="sdesc">에셋 한 개의 모든 정보가 HeaderAsset에 담긴다. 인제스트도, 추천도, 스타일도 여기서 시작한다.</p>
+
+  <!-- Schema relation diagram -->
+  <div class="schema-relation">
+    <div style="display:flex;align-items:flex-start;gap:32px;flex-wrap:wrap;justify-content:center">
+
+      <!-- Main entity -->
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <div class="schema-box center">
+          <div class="cls">HeaderAsset  <span style="font-size:10px;color:#3fb950;font-family:sans-serif">★ 중심 엔티티</span></div>
+          <div class="f"><span class="fn">file</span>&nbsp;<span class="ft">string</span>&nbsp;<span class="fc">// 원본 pptx 경로</span></div>
+          <div class="f"><span class="fn">name</span>&nbsp;<span class="ft">string</span></div>
+          <div class="f"><span class="fn">kind</span>&nbsp;<span class="ft">"layout" | "component"</span>&nbsp;<span class="fc">// 고정 enum</span></div>
+          <div class="f"><span class="fn">category</span>&nbsp;<span class="ft">string</span>&nbsp;<span class="fc">// 섹션명 (사람이 분류)</span></div>
+          <div class="f"><span class="fn">use_when</span>&nbsp;<span class="ft">string</span>&nbsp;<span class="fc">// LLM 자동 생성</span></div>
+          <div class="f"><span class="fn">tags</span>&nbsp;<span class="ft">string[]</span>&nbsp;<span class="fc">// LLM 자동 생성</span></div>
+          <div class="f"><span class="fn">colors</span>&nbsp;<span class="ft">AssetColor[]</span></div>
+          <div class="f"><span class="fn">fonts</span>&nbsp;<span class="ft">AssetFont[]</span></div>
+          <div class="f"><span class="fn">slots</span>&nbsp;<span class="ft">AssetSlot[]</span></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:14px">
+          <span style="font-size:11px;background:var(--green-light);color:#0a7a50;font-weight:700;padding:3px 10px;border-radius:6px">assets.json (로컬)</span>
+          <span style="font-size:11px;background:var(--accent-light);color:#1a56db;font-weight:700;padding:3px 10px;border-radius:6px">Supabase assets 테이블</span>
+        </div>
+      </div>
+
+      <!-- Arrow -->
+      <div style="display:flex;flex-direction:column;gap:28px;padding-top:40px">
+
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:40px;height:2px;background:var(--border)"></div>
+          <span style="color:var(--text3);font-size:13px">›</span>
+          <div class="schema-box">
+            <div class="cls">AssetColor</div>
+            <div class="f"><span class="fn">role</span>&nbsp;<span class="ft">string</span>&nbsp;<span class="fc">// "main","text","background"…</span></div>
+            <div class="f"><span class="fn">value</span>&nbsp;<span class="ft">string</span>&nbsp;<span class="fc">// #RRGGBB 6자리 대문자</span></div>
+            <div class="f"><span class="fn">locked</span>&nbsp;<span class="ft">bool</span>&nbsp;<span class="fc">// true = 변경 금지</span></div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:40px;height:2px;background:var(--border)"></div>
+          <span style="color:var(--text3);font-size:13px">›</span>
+          <div class="schema-box">
+            <div class="cls">AssetFont</div>
+            <div class="f"><span class="fn">role</span>&nbsp;<span class="ft">string</span></div>
+            <div class="f"><span class="fn">family</span>&nbsp;<span class="ft">string</span>&nbsp;<span class="fc">// 실제 폰트명</span></div>
+            <div class="f"><span class="fn">weight</span>&nbsp;<span class="ft">string</span></div>
+            <div class="f"><span class="fn">source</span>&nbsp;<span class="ft">string</span>&nbsp;<span class="fc">// google / system</span></div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:40px;height:2px;background:var(--border)"></div>
+          <span style="color:var(--text3);font-size:13px">›</span>
+          <div class="schema-box">
+            <div class="cls">AssetSlot</div>
+            <div class="f"><span class="fn">name</span>&nbsp;<span class="ft">string</span>&nbsp;<span class="fc">// "title","image","body"…</span></div>
+            <div class="f"><span class="fn">type</span>&nbsp;<span class="ft">string</span>&nbsp;<span class="fc">// text / image / chart</span></div>
+            <div class="f"><span class="fn">perSlide</span>&nbsp;<span class="ft">bool</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Style pipeline derived -->
+      <div style="display:flex;flex-direction:column;gap:8px;padding-top:20px">
+        <div style="font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">colors[] 에서 파생 (구현중 🔨)</div>
+
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:28px;height:2px;background:var(--border)"></div>
+          <span style="font-size:11px;color:var(--text3)">PaletteRoleMapper</span>
+          <span style="color:var(--text3)">→</span>
+        </div>
+        <div class="schema-box" style="border-color:#f97316;opacity:.85">
+          <div class="cls">NormalizedPalette <span class="tag-wip">🔨</span></div>
+          <div class="f"><span class="fn">Background</span>&nbsp;<span class="ft">string</span></div>
+          <div class="f"><span class="fn">Main</span>&nbsp;<span class="ft">string</span></div>
+          <div class="f"><span class="fn">Sub1</span>&nbsp;<span class="ft">string</span></div>
+          <div class="f"><span class="fn">Sub2</span>&nbsp;<span class="ft">string</span></div>
+          <div class="f"><span class="fn">Text</span>&nbsp;<span class="ft">string</span></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:28px;height:2px;background:var(--border)"></div>
+          <span style="font-size:11px;color:var(--text3)">PaletteGenerator</span>
+          <span style="color:var(--text3)">→</span>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div class="schema-box" style="min-width:100px;border-color:#f97316;opacity:.85">
+            <div class="cls" style="font-size:11px">원본 팔레트 <span class="tag-wip">🔨</span></div>
+            <div class="f" style="font-size:10px"><span class="fc">에셋 색 그대로</span></div>
+          </div>
+          <div class="schema-box" style="min-width:100px;border-color:#f97316;opacity:.85">
+            <div class="cls" style="font-size:11px">반전 팔레트 <span class="tag-wip">🔨</span></div>
+            <div class="f" style="font-size:10px"><span class="fc">BG↔Text 명도 스왑</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Supabase table schema -->
+  <div class="db-schema">
+    <h4>Supabase — assets 테이블</h4>
+    <div class="db-table">
+      <div class="dbt-h">컬럼</div><div class="dbt-h">타입</div><div class="dbt-h">설명</div>
+      <div class="dbt-r pk"><span class="col-name">id</span></div><div class="dbt-r pk"><span class="col-type">uuid</span></div><div class="dbt-r pk"><span class="col-note">PK · asset 고유 식별자</span></div>
+      <div class="dbt-r"><span class="col-name">asset_id</span></div><div class="dbt-r"><span class="col-type">text</span></div><div class="dbt-r"><span class="col-note">파일명 기반 결정적 ID (IngestPlanner 생성) · UNIQUE</span></div>
+      <div class="dbt-r"><span class="col-name">metadata</span></div><div class="dbt-r"><span class="col-type">jsonb</span></div><div class="dbt-r"><span class="col-note">HeaderAsset 전체 (name, kind, category, colors, fonts, slots, tags, use_when…)</span></div>
+      <div class="dbt-r"><span class="col-name">embed_text</span></div><div class="dbt-r"><span class="col-type">text</span></div><div class="dbt-r"><span class="col-note">임베딩 소스 텍스트 (EmbedTextBuilder가 조합). 벡터 재생성 시 활용.</span></div>
+      <div class="dbt-r"><span class="col-name">embedding</span></div><div class="dbt-r"><span class="col-type">vector(768)</span></div><div class="dbt-r"><span class="col-note">Gemini embedding-004 벡터. pgvector HNSW cosine 인덱스.</span></div>
+      <div class="dbt-r"><span class="col-name">image_url</span></div><div class="dbt-r"><span class="col-type">text</span></div><div class="dbt-r"><span class="col-note">Supabase Storage 썸네일 URL</span></div>
+      <div class="dbt-r"><span class="col-name">file_url</span></div><div class="dbt-r"><span class="col-type">text</span></div><div class="dbt-r"><span class="col-note">Supabase Storage 원본 PPTX URL</span></div>
+      <div class="dbt-r"><span class="col-name">created_at</span></div><div class="dbt-r"><span class="col-type">timestamptz</span></div><div class="dbt-r"><span class="col-note">인제스트 시각</span></div>
+    </div>
+  </div>
+
+  <!-- WHY -->
+  <div class="section-label mt48">Design Decisions</div>
+  <h2 class="stitle" style="font-size:24px">왜 이렇게 짰나</h2>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="q">왜 kind는 "layout/component" 두 가지만?</div>
+      <h4>AI가 카테고리를 만들지 못하게</h4>
+      <p>"그래프 vs 차트 vs 도표" 같은 자유 분류 난립 차단. 사람이 정한 고정 enum에 LLM이 배정만 한다. 나머지 분류는 벡터 의미 검색이 처리한다.</p>
+    </div>
+    <div class="why-card">
+      <div class="q">왜 metadata를 jsonb로?</div>
+      <h4>스키마 진화에 자유롭게</h4>
+      <p>colors·fonts·slots 같은 서브필드를 DB 컬럼 추가 없이 확장 가능. 추천에 필요한 필드(embed_text·embedding)만 명시적 컬럼으로 분리, 나머지는 jsonb에 넣는다.</p>
+    </div>
+    <div class="why-card">
+      <div class="q">왜 embed_text와 embedding을 분리?</div>
+      <h4>재임베딩 비용을 0으로</h4>
+      <p>임베딩 모델이 바뀌거나 embed_text 포맷을 개선하면 embed_text 컬럼에서 바로 재생성 가능. 전체 이해 파이프라인을 다시 돌릴 필요가 없다.</p>
+    </div>
+    <div class="why-card">
+      <div class="q">왜 AssetColor에 role·locked를?</div>
+      <h4>팔레트 자동화 + 보호 동시에</h4>
+      <p>role로 "main/text/background"를 구분해 PaletteRoleMapper가 자동 팔레트를 만들 수 있다. locked=true인 색은 자동 팔레트가 건드리지 않는다.</p>
+    </div>
+    <div class="why-card">
+      <div class="q">왜 스타일 팔레트는 LLM 없이?</div>
+      <h4>속도 + 비용 + 예측 가능성</h4>
+      <p>WCAG 대비비·HSL 수학은 결정적(deterministic)이다. LLM을 쓰면 같은 에셋에서 매번 다른 팔레트가 나올 수 있고, 토큰 비용도 든다. 색상 수학이 더 정확하다.</p>
+    </div>
+    <div class="why-card">
+      <div class="q">왜 IAccessPolicy를 인터페이스로?</div>
+      <h4>유료화 전환 비용을 0으로</h4>
+      <p>지금은 admin.json 파일 존재 여부로 판단. 유료화 시 Supabase Auth 로그인 role 확인으로 교체만 하면 된다. 인제스트 코드·UI 코드 한 줄도 안 바뀐다.</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <strong>TEAMPPT</strong> — Vibe Designing
+  <span>C:\Projects\teamppt-addin\docs\overview.html · 기능 추가 시 Cowork에서 업데이트</span>
+</footer>
+
+</body>
+</html>
