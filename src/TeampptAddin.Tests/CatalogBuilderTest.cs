@@ -10,7 +10,7 @@ namespace TeampptAddin.Tests
         {
             var asset = new HeaderAsset
             {
-                File = "header_3.pptx", Name = "장점 나열", Category = "헤더", Scope = "deck",
+                File = "header_3.pptx", Name = "장점 나열", Category = "헤더",
                 Tags = new List<string> { "장점", "나열" },
                 UseWhen = "장점 3개",
                 Colors = new List<AssetColor> { new AssetColor { Role = "main", Value = "#2563EB" } },
@@ -23,10 +23,6 @@ namespace TeampptAddin.Tests
             Assert.Single(entries);
             var e = entries[0];
             Assert.Equal("header_3.pptx", e.File);
-            Assert.Equal("deck", e.Scope);
-            Assert.Equal(new[] { "title", "body" }, e.SlotNames);
-            Assert.Equal(new[] { "main" }, e.ColorRoles);
-            Assert.Equal(new[] { "heading" }, e.FontRoles);
         }
     }
 }

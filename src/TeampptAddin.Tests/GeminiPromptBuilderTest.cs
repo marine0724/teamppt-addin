@@ -16,12 +16,8 @@ namespace TeampptAddin.Tests
                     Name = "깔끔한 제목",
                     Kind = "component",
                     Category = "헤더",
-                    Scope = "slide",
                     Tags = new List<string> { "심플", "제목" },
-                    UseWhen = "간결한 제목 슬라이드가 필요할 때",
-                    SlotNames = new List<string> { "title", "subtitle" },
-                    ColorRoles = new List<string> { "main", "text" },
-                    FontRoles = new List<string> { "heading", "body" }
+                    UseWhen = "간결한 제목 슬라이드가 필요할 때"
                 }
             };
         }
