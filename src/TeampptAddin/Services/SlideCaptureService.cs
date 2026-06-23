@@ -19,7 +19,7 @@ namespace TeampptAddin
             if (win == null) return null;
 
             PowerPoint.Slide slide;
-            try { slide = win.View.Slide; }
+            try { slide = (PowerPoint.Slide)win.View.Slide; }
             catch { return null; }
             if (slide == null) return null;
 

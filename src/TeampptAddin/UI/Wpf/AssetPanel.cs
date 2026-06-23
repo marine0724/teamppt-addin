@@ -52,6 +52,7 @@ namespace TeampptAddin
         private Border[] _fontBtns;
 
         private Border _sendBtn;
+        private Border _shareBar;
 
         private TextBlock _statusText;
         private Border _ingestButton;
@@ -298,9 +299,11 @@ namespace TeampptAddin
             Grid.SetRow(_chatScroll, 0);
             grid.Children.Add(_chatScroll);
 
-            var inputBar = BuildInputBar();
-            Grid.SetRow(inputBar, 1);
-            grid.Children.Add(inputBar);
+            var bottom = new StackPanel();
+            bottom.Children.Add(BuildShareBar());
+            bottom.Children.Add(BuildInputBar());
+            Grid.SetRow(bottom, 1);
+            grid.Children.Add(bottom);
 
             return grid;
         }
@@ -522,6 +525,257 @@ namespace TeampptAddin
 
             bar.Child = grid;
             return bar;
+        }
+
+        private Border BuildShareBar()
+        {
+            _shareBar = new Border
+            {
+                Background = ThemeResources.BgChip,
+                CornerRadius = new CornerRadius(10),
+                Margin = new Thickness(10, 8, 10, 0),
+                Padding = new Thickness(12, 8, 12, 8),
+                Cursor = Cursors.Hand
+            };
+            SetShareBarIdle();
+            return _shareBar;
+        }
+
+        private void SetShareBarIdle()
+        {
+            _shareBar.RenderTransform = null;
+            _shareBar.Opacity = 1;
+            _shareBar.Background = ThemeResources.BgChip;
+            _shareBar.Cursor = Cursors.Hand;
+
+            var row = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+            row.Children.Add(new TextBlock
+            {
+                Text = "\U0001F5A5", FontSize = 13,
+                Margin = new Thickness(0, 0, 6, 0),
+                VerticalAlignment = VerticalAlignment.Center
+            });
+            row.Children.Add(new TextBlock
+            {
+                Text = "화면 공유 진단", FontSize = 12, FontWeight = FontWeights.SemiBold,
+                Foreground = ThemeResources.TextAccent, FontFamily = ThemeResources.FontBase,
+                VerticalAlignment = VerticalAlignment.Center
+            });
+            _shareBar.Child = row;
+
+            _shareBar.MouseLeftButtonUp -= ShareBarClick;
+            _shareBar.MouseLeftButtonUp += ShareBarClick;
+        }
+
+        private async void ShareBarClick(object sender, MouseButtonEventArgs e)
+        {
+            await RunDiagnosisAsync();
+        }
+
+        private void EnterSharingState(int slideNumber)
+        {
+            _shareBar.MouseLeftButtonUp -= ShareBarClick;
+            _shareBar.Cursor = Cursors.Arrow;
+            _shareBar.Background = ThemeResources.BgCategoryActive;
+
+            var grid = new Grid();
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+            var dotScale = new ScaleTransform(1, 1);
+            var dot = new Border
+            {
+                Width = 8, Height = 8, CornerRadius = new CornerRadius(4),
+                Background = new SolidColorBrush(Color.FromRgb(79, 92, 245)),
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 8, 0),
+                RenderTransform = dotScale,
+                RenderTransformOrigin = new Point(0.5, 0.5)
+            };
+            try
+            {
+                var pulse = new DoubleAnimation
+                {
+                    From = 1.0, To = 1.5,
+                    Duration = TimeSpan.FromSeconds(0.8),
+                    AutoReverse = true,
+                    RepeatBehavior = RepeatBehavior.Forever,
+                    EasingFunction = new SineEase()
+                };
+                dotScale.BeginAnimation(ScaleTransform.ScaleXProperty, pulse);
+                dotScale.BeginAnimation(ScaleTransform.ScaleYProperty, pulse);
+            }
+            catch { }
+            Grid.SetColumn(dot, 0);
+            grid.Children.Add(dot);
+
+            var lbl = new TextBlock
+            {
+                Text = $"슬라이드 {slideNumber} 공유 중",
+                FontSize = 12, FontWeight = FontWeights.SemiBold,
+                Foreground = ThemeResources.TextAccent, FontFamily = ThemeResources.FontBase,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            Grid.SetColumn(lbl, 1);
+            grid.Children.Add(lbl);
+
+            var close = new TextBlock
+            {
+                Text = "✕", FontSize = 12,
+                Foreground = ThemeResources.TextSub, FontFamily = ThemeResources.FontBase,
+                Cursor = Cursors.Hand, VerticalAlignment = VerticalAlignment.Center
+            };
+            close.MouseLeftButtonUp += (s, e) => { e.Handled = true; ExitSharingState(); };
+            Grid.SetColumn(close, 2);
+            grid.Children.Add(close);
+
+            _shareBar.Child = grid;
+
+            try
+            {
+                _shareBar.Opacity = 0;
+                var tt = new TranslateTransform(0, 8);
+                _shareBar.RenderTransform = tt;
+                _shareBar.BeginAnimation(OpacityProperty,
+                    new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(150)));
+                tt.BeginAnimation(TranslateTransform.YProperty,
+                    new DoubleAnimation(8, 0, TimeSpan.FromMilliseconds(150))
+                    { EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut } });
+            }
+            catch { _shareBar.Opacity = 1; }
+        }
+
+        private void ExitSharingState()
+        {
+            SetShareBarIdle();
+        }
+
+        private FrameworkElement AddDiagnosisLoadingBubble()
+        {
+            var wrapper = new StackPanel { Margin = new Thickness(12, 4, 40, 4) };
+            wrapper.Children.Add(new TextBlock
+            {
+                Text = "TEAMPPT AI", FontSize = 10, FontWeight = FontWeights.SemiBold,
+                Foreground = ThemeResources.Accent, Margin = new Thickness(4, 0, 0, 3)
+            });
+
+            var content = new StackPanel();
+            content.Children.Add(new TextBlock
+            {
+                Text = "화면을 읽는 중···", FontSize = 11,
+                Foreground = ThemeResources.TextDim, FontFamily = ThemeResources.FontBase,
+                Margin = new Thickness(0, 0, 0, 6)
+            });
+
+            var track = new Border
+            {
+                Height = 6, Width = 180, CornerRadius = new CornerRadius(3),
+                Background = ThemeResources.BgSurface, ClipToBounds = true,
+                HorizontalAlignment = HorizontalAlignment.Left
+            };
+            var scan = new Border
+            {
+                Width = 50, CornerRadius = new CornerRadius(3),
+                Background = ThemeResources.Accent,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                RenderTransform = new TranslateTransform(-50, 0)
+            };
+            track.Child = scan;
+            content.Children.Add(track);
+
+            var border = new Border
+            {
+                Background = ThemeResources.BgAiResponse,
+                CornerRadius = new CornerRadius(4, 13, 13, 13),
+                Padding = new Thickness(14, 10, 14, 10),
+                HorizontalAlignment = HorizontalAlignment.Left,
+                MinWidth = 180,
+                Child = content
+            };
+            wrapper.Children.Add(border);
+            _chatStack.Children.Add(wrapper);
+
+            var scanTt = (TranslateTransform)scan.RenderTransform;
+            double x = -50; bool fwd = true;
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(16) };
+            timer.Tick += (s, e) =>
+            {
+                x += fwd ? 8 : -8;
+                if (x >= 180) fwd = false;
+                if (x <= -50) fwd = true;
+                scanTt.X = x;
+            };
+            timer.Start();
+            border.Tag = timer;
+
+            return wrapper;
+        }
+
+        private async Task RunDiagnosisAsync()
+        {
+            if (_aiService == null)
+            {
+                AddAiBubble("AI 서비스를 초기화 중입니다.");
+                return;
+            }
+
+            SlideCapture capture;
+            try { capture = SlideCaptureService.CaptureCurrentSlide(); }
+            catch (Exception ex)
+            {
+                AddAiBubble($"슬라이드를 읽지 못했어요: {ex.Message}");
+                return;
+            }
+            if (capture == null)
+            {
+                AddAiBubble("공유할 슬라이드가 없어요. PowerPoint에서 슬라이드를 여세요.");
+                return;
+            }
+
+            if (_emptyState != null && _emptyState.Visibility == Visibility.Visible)
+                _emptyState.Visibility = Visibility.Collapsed;
+
+            EnterSharingState(capture.SlideNumber);
+            var loading = AddDiagnosisLoadingBubble();
+            _chatScroll.ScrollToBottom();
+
+            try
+            {
+                var diag = await _aiService.DiagnoseSlideAsync(capture.PngPath);
+                RemoveLoadingBubble(loading);
+                AddDiagnosisResult(diag);
+            }
+            catch (Exception ex)
+            {
+                RemoveLoadingBubble(loading);
+                AddAiBubble($"진단 중 오류: {ex.Message}");
+            }
+
+            _chatScroll.ScrollToBottom();
+        }
+
+        private void AddDiagnosisResult(SlideDiagnosis diag)
+        {
+            AddAiBubble(diag?.Message ?? "진단 결과를 확인해보세요.");
+
+            var qs = diag?.SuggestedQuestions ?? new List<string>();
+            if (qs.Count == 0) return;
+
+            _chatStack.Children.Add(new TextBlock
+            {
+                Text = "이어서 물어보기", FontSize = 11, FontWeight = FontWeights.SemiBold,
+                Foreground = ThemeResources.TextSub, Margin = new Thickness(12, 8, 0, 2)
+            });
+
+            var wrap = new WrapPanel { Margin = new Thickness(8, 0, 12, 4) };
+            foreach (var q in qs.Take(3))
+                wrap.Children.Add(BuildChip(q));
+            _chatStack.Children.Add(wrap);
         }
 
         private void UpdateSendButtonState()
