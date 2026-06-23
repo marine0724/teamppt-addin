@@ -271,27 +271,7 @@ namespace TeampptAddin
             try
             {
                 var slide = (PowerPoint.Slide)Globals.Application.ActiveWindow.View.Slide;
-
-                Color textColor = palette?.Colors?.Text != null
-                    ? ColorFromHex(palette.Colors.Text)
-                    : Color.FromArgb(0x19, 0x1F, 0x28);
-
-                foreach (PowerPoint.Shape shape in slide.Shapes)
-                {
-                    try
-                    {
-                        if (shape.HasTextFrame != Microsoft.Office.Core.MsoTriState.msoTrue) continue;
-                        var tf = shape.TextFrame.TextRange;
-                        for (int i = 1; i <= tf.Paragraphs().Count; i++)
-                        {
-                            var para = tf.Paragraphs(i);
-                            if (font != null && !string.IsNullOrEmpty(font.Name))
-                                para.Font.Name = font.Name;
-                            para.Font.Color.RGB = ColorTranslator.ToOle(textColor);
-                        }
-                    }
-                    catch { }
-                }
+                SlideStyleApplier.Apply(slide, palette, font);
 
                 _wpfPanel.SetStatus(
                     $"✓ {palette?.Name ?? "팔레트"} · {font?.Name ?? "폰트"} 적용 완료",
@@ -302,15 +282,6 @@ namespace TeampptAddin
                 _wpfPanel.SetStatus($"적용 실패: {ex.Message}", ThemeResources.StatusError.Color);
                 Logger.Log($"StyleApply fail: {ex}");
             }
-        }
-
-        private static Color ColorFromHex(string hex)
-        {
-            hex = hex.TrimStart('#');
-            return Color.FromArgb(
-                Convert.ToInt32(hex.Substring(0, 2), 16),
-                Convert.ToInt32(hex.Substring(2, 2), 16),
-                Convert.ToInt32(hex.Substring(4, 2), 16));
         }
 
         protected override void OnMouseMove(MouseEventArgs e)

@@ -53,6 +53,7 @@
     <Compile Include="Core\ShapeInserter.cs" />
     <Compile Include="Core\ThumbnailGenerator.cs" />
     <Compile Include="Core\CoordinateConverter.cs" />
+    <Compile Include="Core\SlideStyleApplier.cs" />
     <Compile Include="Core\WindowSweep.cs" />
     <Compile Include="Core\SectionReader.cs" />
     <Compile Include="Core\SlideSplitter.cs" />
